@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create Submission - Connected Underwriting</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Manrope',sans-serif;background:#FAFAFC;color:#222;font-size:16px}
+
+/* ── GRADIENT BAR ── */
+.gradient-bar{height:8px;background:linear-gradient(90deg,#1a0a6e 0%,#3023ae 20%,#c86dd7 50%,#f7a84b 80%,#f5c842 100%);position:fixed;top:0;left:0;right:0;z-index:200}
+
+/* ── SIDEBAR ── */
+.sidebar{width:270px;background:#0A0A48;position:fixed;top:8px;left:0;bottom:0;z-index:100;display:flex;flex-direction:column}
+.sidebar-top{padding:18px 18px 0;display:flex;align-items:center;gap:6px}
+.sidebar-logo{height:32px;flex-shrink:0}
+.sidebar-appname{padding:8px 18px 18px;color:#fff;font-size:18px;line-height:1.3}
+.nav-item{display:flex;align-items:center;padding:14px 20px;color:rgba(255,255,255,.8);cursor:pointer;font-size:16px;gap:12px;border-left:3px solid transparent;transition:all .12s}
+.nav-item:hover{background:rgba(255,255,255,.07);color:#fff}
+.nav-item.active{background:rgba(60,90,255,.3);color:#fff;font-weight:600;border-left-color:#5b8aff}
+.nav-item i{width:16px;text-align:center;font-size:15px}
+.sidebar-bottom{padding:16px 18px;border-top:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:10px;color:rgba(255,255,255,.65);font-size:15px;margin-top:auto}
+.sidebar-bottom .av{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:700}
+
+/* ── MAIN ── */
+.main{margin-left:270px;min-height:100vh;padding-top:8px}
+
+/* ── PAGE HEADER ── */
+.pg-hdr{background:linear-gradient(90deg,#F3F3FE 0%,#F0E8FB 12%,#F0E6FA 25%,#FCE8F5 45%,#FDEFF3 64%,#FFFDF4 100%);padding:28px 30px}
+.pg-hdr-top{display:flex;align-items:center;justify-content:space-between}
+.pg-title{display:flex;align-items:center;gap:10px;font-size:22px;font-weight:700;color:#1a1a2e}
+.pg-title .pg-ico{width:28px;height:28px;background:#0A0A48;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px}
+.pg-breadcrumb{font-size:22px;font-weight:700;color:#1a1a2e;display:flex;align-items:center;gap:8px}
+.pg-breadcrumb .bc-link{color:#555;cursor:pointer;font-weight:600}.pg-breadcrumb .bc-link:hover{text-decoration:underline}
+.pg-breadcrumb .bc-sep{color:#aaa;font-size:16px}
+.pg-breadcrumb .bc-ico{width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px}
+
+/* ── TABS ── */
+.tabs{display:flex;gap:0;padding:0 30px;border-bottom:1px solid #e3e4ec;background:#fff}
+.tab{padding:15px 20px;color:#666;font-size:16px;cursor:pointer;border-bottom:3px solid transparent;display:flex;align-items:center;gap:6px;transition:all .1s}
+.tab:hover{color:#333}
+.tab.active{color:#1a1a2e;font-weight:600;border-bottom-color:#1a1a2e;background:#F0F2FF}
+.tab i{font-size:13px;color:#999}.tab.active i{color:#555}
+
+/* ── CONTENT ── */
+.content{padding:24px 30px}
+
+/* ── BUTTONS ── */
+.btn-create{background:#2322F0;color:#fff;border:none;padding:7px 16px;border-radius:4px;font-size:15px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;font-family:'Manrope',sans-serif}
+.btn-create:hover{background:#1c1cc0}
+.btn-outline{background:#fff;color:#2322F0;border:2px solid #2322F0;padding:5px 14px;border-radius:4px;font-size:15px;font-weight:500;cursor:pointer;font-family:'Manrope',sans-serif}
+.btn-outline:hover{background:#f0f0ff}
+.btn-cancel{background:#fff;color:#333;border:2px solid #d0d1da;padding:7px 16px;border-radius:4px;font-size:12px;font-weight:500;cursor:pointer;font-family:'Manrope',sans-serif}
+
+/* ── PANELS ── */
+.pnl{display:none}.pnl.vis{display:block}
+
+/* ── BADGES ── */
+.badge{display:inline-block;padding:2px 10px;border-radius:3px;font-size:12px;font-weight:600;background:#e8eaf6;color:#0A0A48}
+.badge.green{background:#e8f5e9;color:#2e7d32}
+.badge.orange{background:#fff3e0;color:#e65100}
+.badge.red{background:#fce4ec;color:#c62828}
+.badge.blue{background:#e8eaf6;color:#0A0A48}
+
+/* ── WIZARD ── */
+.wizard-steps{display:flex;align-items:center;padding:20px 30px;background:#fff;border-bottom:1px solid #e3e4ec;gap:0}
+.wz-step{display:flex;align-items:center;gap:10px;cursor:pointer;padding:8px 16px;border-radius:6px;transition:background .1s}
+.wz-step:hover{background:#f5f6fa}
+.wz-step .wz-num{width:28px;height:28px;border-radius:50%;background:#e0e1e9;color:#888;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
+.wz-step.active .wz-num{background:#2322F0;color:#fff}
+.wz-step.done .wz-num{background:#27ae60;color:#fff}
+.wz-step .wz-label{font-size:14px;color:#888;font-weight:500}
+.wz-step.active .wz-label{color:#1a1a2e;font-weight:600}
+.wz-step.done .wz-label{color:#27ae60;font-weight:600}
+.wz-connector{width:40px;height:2px;background:#e0e1e9;flex-shrink:0}
+.wz-connector.done{background:#27ae60}
+
+/* ── FORM SECTIONS ── */
+.fsec{background:#fff;border:1px solid #e0e1e9;border-radius:6px;padding:22px;margin-bottom:16px}
+.fsec h3{font-size:17px;font-weight:600;color:#1a1a2e;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.fsec h3 i{color:#2322F0;font-size:15px}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.fgrid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.ff label{display:block;font-size:12px;font-weight:600;color:#333;margin-bottom:5px}
+.ff label .req{color:#e74c3c}
+.ff input,.ff select,.ff textarea{width:100%;padding:9px 12px;border:1px solid #d0d1da;border-radius:4px;font-size:13px;font-family:'Manrope',sans-serif;color:#333}
+.ff textarea{resize:vertical;min-height:80px}
+.ff .hint{font-size:11px;color:#999;margin-top:3px}
+.modal-req{font-size:12px;color:#888;margin-bottom:16px}
+
+/* ── WIZARD FOOTER ── */
+.wz-footer{display:flex;align-items:center;justify-content:space-between;padding:18px 30px;background:#fff;border-top:1px solid #e0e1e9;position:sticky;bottom:0}
+
+/* ── SUBMISSION SUMMARY ── */
+.sum-hdr{display:flex;align-items:center;gap:16px;margin-bottom:20px}
+.sum-hdr .sum-ico{width:48px;height:48px;background:#2322F0;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px}
+.sum-hdr .sum-info h2{font-size:20px;font-weight:600;color:#1a1a2e}
+.sum-hdr .sum-info .sum-meta{font-size:14px;color:#888;margin-top:2px}
+.sum-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+.sum-card{background:#fff;border:1px solid #e0e1e9;border-top:3px solid #2322F0;border-radius:6px;padding:18px}
+.sum-card.purple{border-top-color:#9b59b6}
+.sum-card.green{border-top-color:#27ae60}
+.sum-card.orange{border-top-color:#e67e22}
+.sum-card .sc-label{font-size:12px;color:#888;text-transform:uppercase;letter-spacing:.3px;margin-bottom:4px}
+.sum-card .sc-val{font-size:16px;font-weight:600;color:#1a1a2e}
+.sum-detail{background:#fff;border:1px solid #e0e1e9;border-radius:6px;overflow:hidden;margin-bottom:16px}
+.sum-detail-hdr{padding:16px 20px;font-size:16px;font-weight:600;color:#1a1a2e;border-bottom:1px solid #e0e1e9;display:flex;align-items:center;gap:8px}
+.sum-detail-hdr i{color:#2322F0;font-size:14px}
+.sum-detail-body{padding:0}
+.sum-row{display:flex;border-bottom:1px solid #f0f1f5;padding:12px 20px}
+.sum-row:last-child{border-bottom:none}
+.sum-row .sr-label{width:200px;font-size:14px;color:#888;flex-shrink:0}
+.sum-row .sr-val{font-size:14px;color:#333;font-weight:500}
+
+/* ── CONFIRMATION ── */
+.confirm-box{text-align:center;padding:60px 40px;background:#fff;border:1px solid #e0e1e9;border-radius:8px;max-width:600px;margin:40px auto}
+.confirm-box .cb-ico{width:64px;height:64px;background:#e8f5e9;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;color:#27ae60;font-size:28px}
+.confirm-box h2{font-size:22px;font-weight:600;color:#1a1a2e;margin-bottom:8px}
+.confirm-box .cb-id{font-size:16px;color:#2322F0;font-weight:600;margin-bottom:6px}
+.confirm-box p{font-size:15px;color:#888;line-height:1.6;margin-bottom:24px}
+.confirm-box .cb-btns{display:flex;gap:12px;justify-content:center}
+
+/* ── TASK CARDS ── */
+.task-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:24px}
+.task-card{background:#fff;border:1px solid #e0e1e9;border-left:4px solid #2322F0;border-radius:6px;padding:16px 18px;cursor:pointer;transition:box-shadow .12s}
+.task-card:hover{box-shadow:0 2px 10px rgba(0,0,0,.06)}
+.task-card.purple{border-left-color:#9b59b6}
+.task-card.green{border-left-color:#27ae60}
+.task-card.orange{border-left-color:#e67e22}
+.task-card .tc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.task-card .tc-name{font-size:15px;font-weight:600;color:#1a1a2e}
+.task-card .tc-desc{font-size:13px;color:#888;line-height:1.5}
+.task-card .tc-footer{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:12px;color:#888}
+
+/* ── TIMELINE ── */
+.timeline{position:relative;padding-left:28px;margin-bottom:24px}
+.timeline::before{content:'';position:absolute;left:10px;top:0;bottom:0;width:2px;background:#e0e1e9}
+.tl-item{position:relative;padding-bottom:20px}
+.tl-item:last-child{padding-bottom:0}
+.tl-item .tl-dot{position:absolute;left:-22px;top:4px;width:10px;height:10px;border-radius:50%;background:#2322F0;border:2px solid #fff;box-shadow:0 0 0 2px #2322F0}
+.tl-item .tl-dot.green{background:#27ae60;box-shadow:0 0 0 2px #27ae60}
+.tl-item .tl-dot.orange{background:#e67e22;box-shadow:0 0 0 2px #e67e22}
+.tl-item .tl-dot.grey{background:#ccc;box-shadow:0 0 0 2px #ccc}
+.tl-item .tl-content{font-size:14px;color:#333}
+.tl-item .tl-content strong{font-weight:600}
+.tl-item .tl-time{font-size:12px;color:#999;margin-top:2px}
+
+/* ── DOC LIST ── */
+.doc-row{display:flex;align-items:center;gap:12px;padding:12px 20px;border-bottom:1px solid #f0f1f5}
+.doc-row:last-child{border-bottom:none}
+.doc-row .doc-ico{width:36px;height:36px;background:#e8eaf6;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#2322F0;font-size:16px}
+.doc-row .doc-info .doc-name{font-size:14px;font-weight:600;color:#1a1a2e}
+.doc-row .doc-info .doc-meta{font-size:12px;color:#888}
+.doc-row .doc-actions{margin-left:auto;display:flex;gap:8px}
+.doc-row .doc-actions i{color:#2322F0;cursor:pointer;font-size:14px;padding:4px}
+
+/* ── UPLOAD AREA ── */
+.upload-area{border:2px dashed #d0d1da;border-radius:8px;padding:40px;text-align:center;cursor:pointer;transition:border-color .15s;margin-bottom:16px}
+.upload-area:hover{border-color:#2322F0}
+.upload-area i{font-size:32px;color:#ccc;margin-bottom:12px}
+.upload-area .ua-text{font-size:15px;color:#888}
+.upload-area .ua-text span{color:#2322F0;font-weight:600}
+.upload-area .ua-hint{font-size:12px;color:#bbb;margin-top:4px}
+</style>
+</head>
+<body>
+<div class="gradient-bar"></div>
+
+<!-- ── SIDEBAR ── -->
+<div class="sidebar">
+  <div class="sidebar-top">
+    <svg class="sidebar-logo" viewBox="0 0 120 28" fill="none" xmlns="http://www.w3.org/2000/svg"><text x="0" y="22" font-family="'Manrope',sans-serif" font-size="24" font-weight="700" fill="#fff" letter-spacing="1">appian</text></svg>
+  </div>
+  <div class="sidebar-appname">Connected Underwriting</div>
+  <div class="nav-item" onclick="goPage('workbench',this)"><i class="fas fa-th-large"></i>Workbench</div>
+  <div class="nav-item active" onclick="goPage('submissions',this)"><i class="fas fa-briefcase"></i>Submissions</div>
+  <div class="nav-item" onclick="goPage('customers',this)"><i class="fas fa-users"></i>Customers</div>
+  <div class="nav-item" onclick="goPage('brokers',this)"><i class="fas fa-building"></i>Brokers</div>
+  <div class="nav-item" onclick="goPage('reports',this)"><i class="fas fa-chart-line"></i>Reports</div>
+  <div class="sidebar-bottom"><div class="av">DN</div>Dheeraj Nivedan</div>
+</div>
+
+<div class="main">
+
+<!-- ===== SUBMISSIONS LIST ===== -->
+<div id="pg-submissions" class="pnl vis">
+  <div class="pg-hdr">
+    <div class="pg-hdr-top">
+      <div class="pg-title"><span class="pg-ico"><i class="fas fa-briefcase"></i></span>Submissions</div>
+      <button class="btn-create" onclick="startCreateSubmission()"><i class="fas fa-plus" style="font-size:12px"></i> CREATE SUBMISSION</button>
+    </div>
+  </div>
+  <div class="tabs">
+    <div class="tab active"><i class="fas fa-inbox"></i> All Submissions</div>
+    <div class="tab"><i class="fas fa-user"></i> My Submissions</div>
+    <div class="tab"><i class="fas fa-users"></i> Team Queue</div>
+  </div>
+  <div class="content">
+    <div style="background:#fff;border:1px solid #e0e1e9;border-radius:0;overflow:hidden">
+      <div style="padding:14px 18px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;border-bottom:1px solid #e0e1e9">
+        <div style="display:flex;align-items:center;background:#fff;border:1px solid #d0d1da;border-radius:4px;padding:7px 12px;gap:8px;width:280px"><i class="fas fa-search" style="color:#999;font-size:14px"></i><input type="text" placeholder="Search submissions..." style="border:none;outline:none;font-size:15px;flex:1;color:#333;font-family:'Manrope',sans-serif"></div>
+        <div style="display:flex;align-items:center;border:1px solid #d0d1da;border-radius:4px;background:#fff;overflow:hidden;height:40px;padding-right:10px"><span style="font-size:13px;font-weight:600;color:#999;text-transform:uppercase;padding:0 12px;letter-spacing:.3px;white-space:nowrap;border-right:1px solid #d0d1da;display:flex;align-items:center;height:100%">STATUS</span><select style="padding:0 28px 0 6px;border:none;font-size:15px;font-family:'Manrope',sans-serif;color:#333;background:transparent;outline:none;min-width:140px;cursor:pointer;height:100%"><option>All</option><option>Open</option><option>In Review</option><option>Quoted</option><option>Bound</option><option>Declined</option></select></div>
+        <div style="display:flex;align-items:center;border:1px solid #d0d1da;border-radius:4px;background:#fff;overflow:hidden;height:40px;padding-right:10px"><span style="font-size:13px;font-weight:600;color:#999;text-transform:uppercase;padding:0 12px;letter-spacing:.3px;white-space:nowrap;border-right:1px solid #d0d1da;display:flex;align-items:center;height:100%">CATEGORY</span><select style="padding:0 28px 0 6px;border:none;font-size:15px;font-family:'Manrope',sans-serif;color:#333;background:transparent;outline:none;min-width:140px;cursor:pointer;height:100%"><option>All</option><option>New Business</option><option>Renewals</option><option>Endorsements</option><option>Quotes Only</option></select></div>
+      </div>
+      <table style="width:100%;border-collapse:collapse">
+        <thead><tr>
+          <th style="background:#fff;padding:14px 18px;text-align:left;font-size:14px;font-weight:600;color:#555;border-bottom:2px solid #e0e1e9">Submission ID</th>
+          <th style="background:#fff;padding:14px 18px;text-align:left;font-size:14px;font-weight:600;color:#555;border-bottom:2px solid #e0e1e9">Customer</th>
+          <th style="background:#fff;padding:14px 18px;text-align:left;font-size:14px;font-weight:600;color:#555;border-bottom:2px solid #e0e1e9">Category / Type</th>
+          <th style="background:#fff;padding:14px 18px;text-align:left;font-size:14px;font-weight:600;color:#555;border-bottom:2px solid #e0e1e9">LOB</th>
+          <th style="background:#fff;padding:14px 18px;text-align:left;font-size:14px;font-weight:600;color:#555;border-bottom:2px solid #e0e1e9">Status</th>
+          <th style="background:#fff;padding:14px 18px;text-align:left;font-size:14px;font-weight:600;color:#555;border-bottom:2px solid #e0e1e9">Priority Score</th>
+          <th style="background:#fff;padding:14px 18px;text-align:left;font-size:14px;font-weight:600;color:#555;border-bottom:2px solid #e0e1e9">Assigned To</th>
+          <th style="background:#fff;padding:14px 18px;text-align:left;font-size:14px;font-weight:600;color:#555;border-bottom:2px solid #e0e1e9">Created</th>
+        </tr></thead>
+        <tbody>
+          <tr style="cursor:pointer" onclick="viewSubmission('SUB-2026-0042')"><td style="padding:16px 18px;border-bottom:1px solid #f0f1f5;font-size:15px;color:#2322F0;font-weight:600">SUB-2026-0042</td><td style="padding:16px 18px;border-bottom:1px solid #f0f1f5;font-size:15px">Acme Industries</td><td style="padding:16px 18px;border-bottom:1px solid #f0f1f5;font-size:15px">New Business / Commercial Property</td><td style="padding:16px 18px;border-bottom:1px solid #f0f1f5;font-size:15px">Property</td><td style="padding:16px 18px;border-bottom:1px solid #f0f1f5"><span class="badge green">In Review</span></td><td style="padding:16px 18px;border-bottom:1px solid #f0f1f5;font-size:15px;font-weight:600">87</td><td style="padding:16px 18px;border-bottom:1px solid #f0f1f5;font-size:15px">Sarah Chen</td><td style="padding:16px 18px;border-bottom:1px solid #f0f1f5;font-size:15px">Apr 8, 2026</td></tr>
+          <tr style="cursor:pointer" onclick="viewSubmission('SUB-2026-0041')"><td style="padding:16px 18px;border-bottom:1px solid #f0f1f5;font-size:15px;color:#2322F0;font-weight:600">SUB-2026-0041</td><td style="padding:16px 18px;border-bottom:1px solid #f0f1f5;font-size:15px">TechCorp LLC</td><td style="padding:16px 18px;border-bottom:1px solid #f0f1f5;font-size:15px">New Business / D&amp;O</td><td style="padding:16px 18px;border-bottom:1px solid #f0f1f5;font-size:15px">Mgmt Liability</td><td style="padding:16px 18px;border-bottom:1px solid #f0f1f5"><span class="badge blue">Open</span></td><td style="padding:16px 18px;border-bottom:1px solid #f0f1f5;font-size:15px;font-weight:600">72</td><td style="padding:16px 18px;border-bottom:1px solid #f0f1f5;font-size:15px">James Park</td><td style="padding:16px 18px;border-bottom:1px solid #f0f1f5;font-size:15px">Apr 7, 2026</td></tr>
+          <tr style="cursor:pointer" onclick="viewSubmission('SUB-2026-0040')"><td style="padding:16px 18px;border-bottom:1px solid #f0f1f5;font-size:15px;color:#2322F0;font-weight:600">SUB-2026-0040</td><td style="padding:16px 18px;border-bottom:1px solid #f0f1f5;font-size:15px">Metro Logistics</td><td style="padding:16px 18px;border-bottom:1px solid #f0f1f5;font-size:15px">Renewals / Auto Renewal</td><td style="padding:16px 18px;border-bottom:1px solid #f0f1f5;font-size:15px">Auto</td><td style="padding:16px 18px;border-bottom:1px solid #f0f1f5"><span class="badge orange">Quoted</span></td><td style="padding:16px 18px;border-bottom:1px solid #f0f1f5;font-size:15px;font-weight:600">65</td><td style="padding:16px 18px;border-bottom:1px solid #f0f1f5;font-size:15px">Sarah Chen</td><td style="padding:16px 18px;border-bottom:1px solid #f0f1f5;font-size:15px">Apr 5, 2026</td></tr>
+          <tr style="cursor:pointer"><td style="padding:16px 18px;border-bottom:1px solid #f0f1f5;font-size:15px;color:#2322F0;font-weight:600">SUB-2026-0039</td><td style="padding:16px 18px;border-bottom:1px solid #f0f1f5;font-size:15px">Greenfield Farms</td><td style="padding:16px 18px;border-bottom:1px solid #f0f1f5;font-size:15px">Endorsements / Coverage Change</td><td style="padding:16px 18px;border-bottom:1px solid #f0f1f5;font-size:15px">General Liability</td><td style="padding:16px 18px;border-bottom:1px solid #f0f1f5"><span class="badge green">In Review</span></td><td style="padding:16px 18px;border-bottom:1px solid #f0f1f5;font-size:15px;font-weight:600">54</td><td style="padding:16px 18px;border-bottom:1px solid #f0f1f5;font-size:15px">James Park</td><td style="padding:16px 18px;border-bottom:1px solid #f0f1f5;font-size:15px">Apr 3, 2026</td></tr>
+          <tr style="cursor:pointer"><td style="padding:16px 18px;border-bottom:1px solid #f0f1f5;font-size:15px;color:#2322F0;font-weight:600">SUB-2026-0038</td><td style="padding:16px 18px;border-bottom:1px solid #f0f1f5;font-size:15px">Pacific Builders</td><td style="padding:16px 18px;border-bottom:1px solid #f0f1f5;font-size:15px">Quotes Only / Indication Request</td><td style="padding:16px 18px;border-bottom:1px solid #f0f1f5;font-size:15px">Property</td><td style="padding:16px 18px;border-bottom:1px solid #f0f1f5"><span class="badge blue">Open</span></td><td style="padding:16px 18px;border-bottom:1px solid #f0f1f5;font-size:15px;font-weight:600">91</td><td style="padding:16px 18px;border-bottom:1px solid #f0f1f5;font-size:15px">Unassigned</td><td style="padding:16px 18px;border-bottom:1px solid #f0f1f5;font-size:15px">Apr 1, 2026</td></tr>
+        </tbody>
+      </table>
+      <div style="display:flex;align-items:center;justify-content:flex-end;gap:2px;padding:8px 14px"><span style="font-size:14px;color:#888">5 items</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== CREATE SUBMISSION WIZARD ===== -->
+<div id="pg-create" class="pnl">
+  <div class="pg-hdr">
+    <div class="pg-hdr-top">
+      <div class="pg-breadcrumb">
+        <span class="bc-ico" style="background:#0A0A48"><i class="fas fa-briefcase"></i></span>
+        <span class="bc-link" onclick="goPage('submissions')">Submissions</span>
+        <span class="bc-sep">/</span>
+        <span>Create Submission</span>
+      </div>
+    </div>
+  </div>
+  <div class="wizard-steps" id="wz-steps">
+    <div class="wz-step active" data-step="1" onclick="goWizStep(1)"><div class="wz-num">1</div><div class="wz-label">Category & Type</div></div>
+    <div class="wz-connector"></div>
+    <div class="wz-step" data-step="2" onclick="goWizStep(2)"><div class="wz-num">2</div><div class="wz-label">General Information</div></div>
+    <div class="wz-connector"></div>
+    <div class="wz-step" data-step="3" onclick="goWizStep(3)"><div class="wz-num">3</div><div class="wz-label">Customer & Broker</div></div>
+    <div class="wz-connector"></div>
+    <div class="wz-step" data-step="4" onclick="goWizStep(4)"><div class="wz-num">4</div><div class="wz-label">Documents</div></div>
+    <div class="wz-connector"></div>
+    <div class="wz-step" data-step="5" onclick="goWizStep(5)"><div class="wz-num">5</div><div class="wz-label">Review & Submit</div></div>
+  </div>
+  <div class="content">
+    <div class="modal-req">Required fields are marked with an asterisk (*)</div>
+
+    <!-- STEP 1: Category & Type -->
+    <div id="wz-1" class="pnl vis">
+      <div class="fsec">
+        <h3><i class="fas fa-folder"></i> Submission Category & Type</h3>
+        <p style="font-size:14px;color:#888;margin-bottom:18px">Select the submission category and type based on your configured hierarchy.</p>
+        <div class="fgrid">
+          <div class="ff">
+            <label>Submission Category <span class="req">*</span></label>
+            <select id="cs-category" onchange="updateTypes()">
+              <option value="">Select Category</option>
+              <option value="new-business">New Business</option>
+              <option value="renewals">Renewals</option>
+              <option value="endorsements">Endorsements</option>
+              <option value="quotes">Quotes Only</option>
+            </select>
+          </div>
+          <div class="ff">
+            <label>Submission Type <span class="req">*</span></label>
+            <select id="cs-type">
+              <option value="">Select a Category first</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="fsec">
+        <h3><i class="fas fa-layer-group"></i> Line of Business</h3>
+        <div class="fgrid">
+          <div class="ff">
+            <label>Primary Line of Business <span class="req">*</span></label>
+            <select id="cs-lob">
+              <option value="">Select Line of Business</option>
+              <option>Commercial Property</option>
+              <option>Commercial Auto</option>
+              <option>Management Liability</option>
+              <option>General Liability</option>
+              <option>Workers' Compensation</option>
+            </select>
+          </div>
+          <div class="ff">
+            <label>Product</label>
+            <select id="cs-product">
+              <option value="">Select Product (optional)</option>
+              <option>Personal Auto Standard</option>
+              <option>Commercial Auto Fleet</option>
+              <option>Workers' Comp Standard</option>
+              <option>Homeowners Standard</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 2: General Information -->
+    <div id="wz-2" class="pnl">
+      <div class="fsec">
+        <h3><i class="fas fa-info-circle"></i> General Information</h3>
+        <div class="fgrid">
+          <div class="ff"><label>Submission Name <span class="req">*</span></label><input type="text" id="cs-name" placeholder="e.g. Acme Industries - Commercial Property"></div>
+          <div class="ff"><label>Priority</label><select id="cs-priority"><option>Low</option><option selected>Medium</option><option>High</option><option>Rush</option></select></div>
+          <div class="ff"><label>Effective Date <span class="req">*</span></label><input type="date" id="cs-eff-date"></div>
+          <div class="ff"><label>Expiration Date</label><input type="date" id="cs-exp-date"></div>
+          <div class="ff"><label>Total Insured Value</label><input type="text" id="cs-tiv" placeholder="$0.00"></div>
+          <div class="ff"><label>Channel</label><select><option>Email Intake</option><option>Broker Portal</option><option>API</option><option>Manual Upload</option></select></div>
+        </div>
+      </div>
+      <div class="fsec">
+        <h3><i class="fas fa-map-marker-alt"></i> Risk Location</h3>
+        <div class="fgrid3">
+          <div class="ff"><label>State / Province <span class="req">*</span></label><select id="cs-state"><option value="">Select State</option><option>California</option><option>New York</option><option>Texas</option><option>Florida</option><option>Illinois</option><option>Pennsylvania</option></select></div>
+          <div class="ff"><label>City</label><input type="text" id="cs-city" placeholder=""></div>
+          <div class="ff"><label>ZIP Code</label><input type="text" id="cs-zip" placeholder=""></div>
+        </div>
+      </div>
+      <div class="fsec">
+        <h3><i class="fas fa-align-left"></i> Description</h3>
+        <div class="ff"><label>Submission Description</label><textarea id="cs-desc" placeholder="Provide any additional details about this submission..." style="min-height:100px"></textarea></div>
+      </div>
+    </div>
+
+    <!-- STEP 3: Customer & Broker -->
+    <div id="wz-3" class="pnl">
+      <div class="fsec">
+        <h3><i class="fas fa-user"></i> Customer Information</h3>
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+          <input type="text" placeholder="Search existing customers..." style="flex:1;padding:9px 12px;border:1px solid #d0d1da;border-radius:4px;font-size:13px;font-family:'Manrope',sans-serif">
+          <span style="font-size:14px;color:#888">or</span>
+          <button class="btn-outline" style="font-size:13px;padding:7px 14px"><i class="fas fa-plus" style="font-size:11px;margin-right:4px"></i> New Customer</button>
+        </div>
+        <div class="fgrid">
+          <div class="ff"><label>Customer Name <span class="req">*</span></label><input type="text" id="cs-cust-name" value="Acme Industries"></div>
+          <div class="ff"><label>NAICS Code</label><input type="text" id="cs-naics" value="236220"></div>
+          <div class="ff"><label>Contact Name</label><input type="text" id="cs-contact" value="John Smith"></div>
+          <div class="ff"><label>Contact Email</label><input type="email" id="cs-email" value="[email]"></div>
+          <div class="ff"><label>Phone</label><input type="text" id="cs-phone" value="[phone_number]"></div>
+          <div class="ff"><label>Address</label><input type="text" id="cs-addr" value="[address]"></div>
+        </div>
+      </div>
+      <div class="fsec">
+        <h3><i class="fas fa-building"></i> Broker Information</h3>
+        <div class="fgrid">
+          <div class="ff"><label>Broker Name <span class="req">*</span></label><input type="text" id="cs-broker" value="Marsh McLennan"></div>
+          <div class="ff"><label>Broker Office</label><input type="text" id="cs-broker-office" value="New York Office"></div>
+          <div class="ff"><label>Broker Contact</label><input type="text" id="cs-broker-contact" value="Emily Davis"></div>
+          <div class="ff"><label>Broker Email</label><input type="email" id="cs-broker-email" value="[email]"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 4: Documents -->
+    <div id="wz-4" class="pnl">
+      <div class="fsec">
+        <h3><i class="fas fa-file-upload"></i> Upload Documents</h3>
+        <p style="font-size:14px;color:#888;margin-bottom:18px">Upload ACORD forms, loss runs, supplemental applications, and other supporting documents.</p>
+        <div class="upload-area" onclick="addDemoDoc()">
+          <i class="fas fa-cloud-upload-alt"></i>
+          <div class="ua-text">Drag & drop files here or <span>browse</span></div>
+          <div class="ua-hint">PDF, DOCX, XLSX, JPG up to 25MB each</div>
+        </div>
+        <div id="doc-list">
+          <div class="doc-row"><div class="doc-ico"><i class="fas fa-file-pdf"></i></div><div class="doc-info"><div class="doc-name">ACORD_125_Application.pdf</div><div class="doc-meta">2.4 MB · Uploaded just now</div></div><div class="doc-actions"><i class="fas fa-eye"></i><i class="fas fa-trash-alt" onclick="this.closest('.doc-row').remove()"></i></div></div>
+          <div class="doc-row"><div class="doc-ico"><i class="fas fa-file-excel" style="color:#27ae60"></i></div><div class="doc-info"><div class="doc-name">Loss_Run_Report_2025.xlsx</div><div class="doc-meta">1.1 MB · Uploaded just now</div></div><div class="doc-actions"><i class="fas fa-eye"></i><i class="fas fa-trash-alt" onclick="this.closest('.doc-row').remove()"></i></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 5: Review & Submit -->
+    <div id="wz-5" class="pnl">
+      <div class="fsec" style="border-left:4px solid #2322F0">
+        <h3><i class="fas fa-clipboard-check"></i> Review Submission</h3>
+        <p style="font-size:14px;color:#888;margin-bottom:18px">Please review all details before submitting. You can go back to any step to make changes.</p>
+      </div>
+      <div class="sum-detail">
+        <div class="sum-detail-hdr"><i class="fas fa-folder"></i> Category & Type</div>
+        <div class="sum-detail-body">
+          <div class="sum-row"><div class="sr-label">Category</div><div class="sr-val" id="rv-cat">—</div></div>
+          <div class="sum-row"><div class="sr-label">Submission Type</div><div class="sr-val" id="rv-type">—</div></div>
+          <div class="sum-row"><div class="sr-label">Line of Business</div><div class="sr-val" id="rv-lob">—</div></div>
+          <div class="sum-row"><div class="sr-label">Product</div><div class="sr-val" id="rv-product">—</div></div>
+        </div>
+      </div>
+      <div class="sum-detail">
+        <div class="sum-detail-hdr"><i class="fas fa-info-circle"></i> General Information</div>
+        <div class="sum-detail-body">
+          <div class="sum-row"><div class="sr-label">Submission Name</div><div class="sr-val" id="rv-name">—</div></div>
+          <div class="sum-row"><div class="sr-label">Priority</div><div class="sr-val" id="rv-priority">—</div></div>
+          <div class="sum-row"><div class="sr-label">Effective Date</div><div class="sr-val" id="rv-eff">—</div></div>
+          <div class="sum-row"><div class="sr-label">Total Insured Value</div><div class="sr-val" id="rv-tiv">—</div></div>
+          <div class="sum-row"><div class="sr-label">State</div><div class="sr-val" id="rv-state">—</div></div>
+        </div>
+      </div>
+      <div class="sum-detail">
+        <div class="sum-detail-hdr"><i class="fas fa-user"></i> Customer</div>
+        <div class="sum-detail-body">
+          <div class="sum-row"><div class="sr-label">Customer Name</div><div class="sr-val" id="rv-cust">—</div></div>
+          <div class="sum-row"><div class="sr-label">Contact</div><div class="sr-val" id="rv-contact">—</div></div>
+          <div class="sum-row"><div class="sr-label">Broker</div><div class="sr-val" id="rv-broker">—</div></div>
+        </div>
+      </div>
+      <div class="sum-detail">
+        <div class="sum-detail-hdr"><i class="fas fa-file-alt"></i> Documents</div>
+        <div class="sum-detail-body">
+          <div class="sum-row"><div class="sr-label">Uploaded Documents</div><div class="sr-val" id="rv-docs">0</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="wz-footer">
+    <button class="btn-cancel" id="wz-back" onclick="wizBack()">BACK</button>
+    <div style="display:flex;gap:10px">
+      <button class="btn-cancel" onclick="cancelCreate()">CANCEL</button>
+      <button class="btn-create" id="wz-next" onclick="wizNext()">NEXT</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== CONFIRMATION ===== -->
+<div id="pg-confirm" class="pnl">
+  <div class="pg-hdr">
+    <div class="pg-hdr-top">
+      <div class="pg-title"><span class="pg-ico"><i class="fas fa-briefcase"></i></span>Submission Created</div>
+    </div>
+  </div>
+  <div class="content">
+    <div class="confirm-box">
+      <div class="cb-ico"><i class="fas fa-check"></i></div>
+      <h2>Submission Created Successfully</h2>
+      <div class="cb-id" id="confirm-id">SUB-2026-0043</div>
+      <p>Your submission has been created and assigned to the underwriting team based on your configured assignment rules. Tasks have been generated from the applicable task blocks.</p>
+      <div class="cb-btns">
+        <button class="btn-outline" onclick="goPage('submissions')">Back to Submissions</button>
+        <button class="btn-create" onclick="viewSubmission('SUB-2026-0043')">View Submission</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SUBMISSION SUMMARY (Record View) ===== -->
+<div id="pg-summary" class="pnl">
+  <div class="pg-hdr">
+    <div class="pg-hdr-top">
+      <div class="pg-breadcrumb">
+        <span class="bc-ico" style="background:#0A0A48"><i class="fas fa-briefcase"></i></span>
+        <span class="bc-link" onclick="goPage('submissions')">Submissions</span>
+        <span class="bc-sep">/</span>
+        <span id="sum-id">SUB-2026-0042</span>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn-outline" style="font-size:13px;padding:6px 14px">ASSIGN</button>
+        <button class="btn-create" style="font-size:13px;padding:6px 14px"><i class="fas fa-gavel" style="font-size:11px"></i> MAKE DECISION</button>
+      </div>
+    </div>
+  </div>
+  <div class="tabs">
+    <div class="tab active" onclick="goSumTab('summary',this)"><i class="fas fa-th-large"></i> Summary</div>
+    <div class="tab" onclick="goSumTab('risk',this)"><i class="fas fa-shield-alt"></i> Risk Details</div>
+    <div class="tab" onclick="goSumTab('docs',this)"><i class="fas fa-file-alt"></i> Documents</div>
+    <div class="tab" onclick="goSumTab('tasks',this)"><i class="fas fa-tasks"></i> Tasks</div>
+    <div class="tab" onclick="goSumTab('messages',this)"><i class="fas fa-envelope"></i> Messages</div>
+    <div class="tab" onclick="goSumTab('history',this)"><i class="fas fa-history"></i> Event History</div>
+  </div>
+  <div class="content">
+    <!-- SUMMARY TAB -->
+    <div id="sum-summary" class="pnl vis">
+      <div class="sum-hdr">
+        <div class="sum-ico"><i class="fas fa-briefcase"></i></div>
+        <div class="sum-info">
+          <h2>Acme Industries - Commercial Property</h2>
+          <div class="sum-meta">SUB-2026-0042 · New Business / Commercial Property · Created Apr 8, 2026</div>
+        </div>
+        <div style="margin-left:auto;display:flex;gap:8px">
+          <span class="badge green" style="font-size:14px;padding:4px 14px">In Review</span>
+          <span class="badge" style="font-size:14px;padding:4px 14px">Score: 87</span>
+        </div>
+      </div>
+      <div class="sum-cards">
+        <div class="sum-card"><div class="sc-label">Customer</div><div class="sc-val">Acme Industries</div></div>
+        <div class="sum-card purple"><div class="sc-label">Broker</div><div class="sc-val">Marsh McLennan</div></div>
+        <div class="sum-card green"><div class="sc-label">Total Insured Value</div><div class="sc-val">$12,500,000</div></div>
+        <div class="sum-card orange"><div class="sc-label">SLA Remaining</div><div class="sc-val">2 Business Days</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div class="sum-detail">
+          <div class="sum-detail-hdr"><i class="fas fa-info-circle"></i> General Information</div>
+          <div class="sum-detail-body">
+            <div class="sum-row"><div class="sr-label">Category</div><div class="sr-val">New Business</div></div>
+            <div class="sum-row"><div class="sr-label">Submission Type</div><div class="sr-val">Commercial Property</div></div>
+            <div class="sum-row"><div class="sr-label">Line of Business</div><div class="sr-val">Property</div></div>
+            <div class="sum-row"><div class="sr-label">Priority</div><div class="sr-val">High</div></div>
+            <div class="sum-row"><div class="sr-label">Effective Date</div><div class="sr-val">May 1, 2026</div></div>
+            <div class="sum-row"><div class="sr-label">Expiration Date</div><div class="sr-val">May 1, 2027</div></div>
+            <div class="sum-row"><div class="sr-label">Channel</div><div class="sr-val">Email Intake</div></div>
+            <div class="sum-row"><div class="sr-label">State</div><div class="sr-val">California</div></div>
+          </div>
+        </div>
+        <div class="sum-detail">
+          <div class="sum-detail-hdr"><i class="fas fa-user"></i> Customer & Broker</div>
+          <div class="sum-detail-body">
+            <div class="sum-row"><div class="sr-label">Customer</div><div class="sr-val">Acme Industries</div></div>
+            <div class="sum-row"><div class="sr-label">NAICS Code</div><div class="sr-val">236220</div></div>
+            <div class="sum-row"><div class="sr-label">Contact</div><div class="sr-val">John Smith</div></div>
+            <div class="sum-row"><div class="sr-label">Broker</div><div class="sr-val">Marsh McLennan</div></div>
+            <div class="sum-row"><div class="sr-label">Broker Office</div><div class="sr-val">New York Office</div></div>
+            <div class="sum-row"><div class="sr-label">Broker Contact</div><div class="sr-val">Emily Davis</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="sum-detail" style="margin-top:16px">
+        <div class="sum-detail-hdr"><i class="fas fa-users"></i> Assignment</div>
+        <div class="sum-detail-body">
+          <div class="sum-row"><div class="sr-label">Assigned To</div><div class="sr-val">Sarah Chen</div></div>
+          <div class="sum-row"><div class="sr-label">Assignment Group</div><div class="sr-val">Property Team</div></div>
+          <div class="sum-row"><div class="sr-label">Routing Method</div><div class="sr-val">Workload Balance</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TASKS TAB -->
+    <div id="sum-tasks" class="pnl">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+        <div style="font-size:17px;font-weight:600;color:#1a1a2e">Submission Tasks</div>
+        <span class="badge" style="font-size:13px;padding:3px 10px">3 of 5 completed</span>
+      </div>
+      <div class="task-grid">
+        <div class="task-card green"><div class="tc-top"><div class="tc-name">Document Review</div><span class="badge green">Completed</span></div><div class="tc-desc">Review uploaded ACORD forms and loss run reports for completeness.</div><div class="tc-footer"><i class="fas fa-user" style="font-size:11px"></i> Sarah Chen · <i class="fas fa-clock" style="font-size:11px"></i> Apr 8, 2026</div></div>
+        <div class="task-card green"><div class="tc-top"><div class="tc-name">Sanctions Check</div><span class="badge green">Completed</span></div><div class="tc-desc">Automated OFAC sanctions screening for customer and related parties.</div><div class="tc-footer"><i class="fas fa-robot" style="font-size:11px"></i> Automated · <i class="fas fa-clock" style="font-size:11px"></i> Apr 8, 2026</div></div>
+        <div class="task-card green"><div class="tc-top"><div class="tc-name">Data Extraction</div><span class="badge green">Completed</span></div><div class="tc-desc">AI-powered extraction of key data from uploaded documents.</div><div class="tc-footer"><i class="fas fa-robot" style="font-size:11px"></i> Automated · <i class="fas fa-clock" style="font-size:11px"></i> Apr 8, 2026</div></div>
+        <div class="task-card"><div class="tc-top"><div class="tc-name">Underwriting Review</div><span class="badge blue">In Progress</span></div><div class="tc-desc">Review risk details, loss history, and coverage requirements.</div><div class="tc-footer"><i class="fas fa-user" style="font-size:11px"></i> Sarah Chen · <i class="fas fa-clock" style="font-size:11px"></i> Due Apr 11</div></div>
+        <div class="task-card" style="border-left-color:#ccc"><div class="tc-top"><div class="tc-name">Generate Quote</div><span class="badge" style="background:#f5f5f5;color:#999">Queued</span></div><div class="tc-desc">Generate premium quote based on risk assessment and scoring.</div><div class="tc-footer"><i class="fas fa-clock" style="font-size:11px"></i> Pending</div></div>
+      </div>
+    </div>
+
+    <!-- DOCUMENTS TAB -->
+    <div id="sum-docs" class="pnl">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+        <div style="font-size:17px;font-weight:600;color:#1a1a2e">Documents</div>
+        <button class="btn-create" style="font-size:13px;padding:6px 14px"><i class="fas fa-upload" style="font-size:11px"></i> UPLOAD</button>
+      </div>
+      <div class="sum-detail">
+        <div class="sum-detail-body">
+          <div class="doc-row"><div class="doc-ico"><i class="fas fa-file-pdf"></i></div><div class="doc-info"><div class="doc-name">ACORD_125_Application.pdf</div><div class="doc-meta">2.4 MB · Uploaded Apr 8, 2026 · <span style="color:#27ae60">Extracted</span></div></div><div class="doc-actions"><i class="fas fa-eye"></i><i class="fas fa-download"></i></div></div>
+          <div class="doc-row"><div class="doc-ico"><i class="fas fa-file-excel" style="color:#27ae60"></i></div><div class="doc-info"><div class="doc-name">Loss_Run_Report_2025.xlsx</div><div class="doc-meta">1.1 MB · Uploaded Apr 8, 2026 · <span style="color:#27ae60">Extracted</span></div></div><div class="doc-actions"><i class="fas fa-eye"></i><i class="fas fa-download"></i></div></div>
+          <div class="doc-row"><div class="doc-ico"><i class="fas fa-file-pdf"></i></div><div class="doc-info"><div class="doc-name">Supplemental_Application.pdf</div><div class="doc-meta">856 KB · Uploaded Apr 8, 2026 · <span style="color:#e67e22">Pending</span></div></div><div class="doc-actions"><i class="fas fa-eye"></i><i class="fas fa-download"></i></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RISK DETAILS TAB -->
+    <div id="sum-risk" class="pnl">
+      <div style="font-size:17px;font-weight:600;color:#1a1a2e;margin-bottom:16px">Risk Details</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div class="sum-detail">
+          <div class="sum-detail-hdr"><i class="fas fa-building"></i> Property Details</div>
+          <div class="sum-detail-body">
+            <div class="sum-row"><div class="sr-label">Construction Type</div><div class="sr-val">Fire Resistive</div></div>
+            <div class="sum-row"><div class="sr-label">Year Built</div><div class="sr-val">2015</div></div>
+            <div class="sum-row"><div class="sr-label">Roof Age</div><div class="sr-val">9 years</div></div>
+            <div class="sum-row"><div class="sr-label">Number of Locations</div><div class="sr-val">3</div></div>
+            <div class="sum-row"><div class="sr-label">Sprinkler System</div><div class="sr-val">Yes</div></div>
+            <div class="sum-row"><div class="sr-label">Square Footage</div><div class="sr-val">45,000 sq ft</div></div>
+          </div>
+        </div>
+        <div class="sum-detail">
+          <div class="sum-detail-hdr"><i class="fas fa-chart-bar"></i> Loss History</div>
+          <div class="sum-detail-body">
+            <div class="sum-row"><div class="sr-label">Claims (5yr)</div><div class="sr-val">2</div></div>
+            <div class="sum-row"><div class="sr-label">Total Incurred</div><div class="sr-val">$125,000</div></div>
+            <div class="sum-row"><div class="sr-label">Largest Loss</div><div class="sr-val">$85,000</div></div>
+            <div class="sum-row"><div class="sr-label">Loss Ratio</div><div class="sr-val">32%</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MESSAGES TAB -->
+    <div id="sum-messages" class="pnl">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+        <div style="font-size:17px;font-weight:600;color:#1a1a2e">Messages</div>
+        <button class="btn-create" style="font-size:13px;padding:6px 14px"><i class="fas fa-plus" style="font-size:11px"></i> NEW MESSAGE</button>
+      </div>
+      <div style="text-align:center;padding:40px;color:#999;font-size:14px"><i class="fas fa-envelope-open" style="font-size:24px;color:#ddd;display:block;margin-bottom:10px"></i>No messages yet.</div>
+    </div>
+
+    <!-- EVENT HISTORY TAB -->
+    <div id="sum-history" class="pnl">
+      <div style="font-size:17px;font-weight:600;color:#1a1a2e;margin-bottom:16px">Event History</div>
+      <div class="timeline">
+        <div class="tl-item"><div class="tl-dot green"></div><div class="tl-content"><strong>Document Review</strong> task completed by Sarah Chen</div><div class="tl-time">Apr 9, 2026 · 2:15 PM</div></div>
+        <div class="tl-item"><div class="tl-dot green"></div><div class="tl-content"><strong>Sanctions Check</strong> completed — No matches found</div><div class="tl-time">Apr 8, 2026 · 4:32 PM</div></div>
+        <div class="tl-item"><div class="tl-dot green"></div><div class="tl-content"><strong>Data Extraction</strong> completed — 24 fields extracted from ACORD form</div><div class="tl-time">Apr 8, 2026 · 4:30 PM</div></div>
+        <div class="tl-item"><div class="tl-dot"></div><div class="tl-content">Submission <strong>assigned</strong> to <strong>Sarah Chen</strong> (Property Team) via Workload Balance</div><div class="tl-time">Apr 8, 2026 · 3:05 PM</div></div>
+        <div class="tl-item"><div class="tl-dot"></div><div class="tl-content">Priority score calculated: <strong>87</strong></div><div class="tl-time">Apr 8, 2026 · 3:04 PM</div></div>
+        <div class="tl-item"><div class="tl-dot"></div><div class="tl-content">Submission <strong>created</strong> by Dheeraj Nivedan</div><div class="tl-time">Apr 8, 2026 · 3:00 PM</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end .main -->
+
+<script>
+/* ── Type data matching the 3-level hierarchy from Insurance Settings ── */
+var typesByCategory = {
+  'new-business': ['Commercial Property','Commercial Auto','D&O','General Liability'],
+  'renewals': ['Property Renewal','Auto Renewal','GL Renewal'],
+  'endorsements': ['Coverage Change','Named Insured Change'],
+  'quotes': ['Indication Request','Budgetary Quote']
+};
+var catLabels = {'new-business':'New Business','renewals':'Renewals','endorsements':'Endorsements','quotes':'Quotes Only'};
+
+function updateTypes(){
+  var cat = document.getElementById('cs-category').value;
+  var sel = document.getElementById('cs-type');
+  sel.innerHTML = '<option value="">Select Submission Type</option>';
+  if(cat && typesByCategory[cat]){
+    typesByCategory[cat].forEach(function(t){ sel.innerHTML += '<option>'+t+'</option>'; });
+  }
+}
+
+/* ── Page Navigation ── */
+function hideAllPages(){ document.querySelectorAll('.main > .pnl').forEach(function(p){p.classList.remove('vis')}); }
+function goPage(id, el){
+  hideAllPages();
+  var pg = document.getElementById('pg-'+id);
+  if(pg) pg.classList.add('vis');
+  document.querySelectorAll('.nav-item').forEach(function(n){n.classList.remove('active')});
+  if(el) el.classList.add('active');
+  else {
+    var map = {submissions:1, workbench:0, customers:2, brokers:3, reports:4};
+    var items = document.querySelectorAll('.nav-item');
+    if(map[id]!==undefined && items[map[id]]) items[map[id]].classList.add('active');
+  }
+}
+
+/* ── Wizard ── */
+var currentStep = 1;
+var totalSteps = 5;
+
+function goWizStep(n){
+  if(n < 1 || n > totalSteps) return;
+  currentStep = n;
+  for(var i=1;i<=totalSteps;i++){
+    var pnl = document.getElementById('wz-'+i);
+    if(pnl){ pnl.classList.remove('vis'); if(i===n) pnl.classList.add('vis'); }
+  }
+  // Update step indicators
+  var steps = document.querySelectorAll('.wz-step');
+  var connectors = document.querySelectorAll('.wz-connector');
+  steps.forEach(function(s,i){
+    s.classList.remove('active','done');
+    if(i+1 < n) s.classList.add('done');
+    else if(i+1 === n) s.classList.add('active');
+  });
+  connectors.forEach(function(c,i){
+    c.classList.remove('done');
+    if(i+1 < n) c.classList.add('done');
+  });
+  // Update buttons
+  document.getElementById('wz-back').style.visibility = n===1 ? 'hidden' : 'visible';
+  document.getElementById('wz-next').textContent = n===totalSteps ? 'SUBMIT' : 'NEXT';
+  // Populate review on step 5
+  if(n===5) populateReview();
+}
+
+function wizNext(){
+  if(currentStep === totalSteps){
+    submitSubmission();
+    return;
+  }
+  goWizStep(currentStep + 1);
+}
+function wizBack(){
+  goWizStep(currentStep - 1);
+}
+
+function startCreateSubmission(){
+  hideAllPages();
+  document.getElementById('pg-create').classList.add('vis');
+  currentStep = 1;
+  goWizStep(1);
+}
+function cancelCreate(){
+  goPage('submissions');
+}
+
+function populateReview(){
+  var cat = document.getElementById('cs-category').value;
+  document.getElementById('rv-cat').textContent = catLabels[cat] || '—';
+  document.getElementById('rv-type').textContent = document.getElementById('cs-type').value || '—';
+  document.getElementById('rv-lob').textContent = document.getElementById('cs-lob').value || '—';
+  document.getElementById('rv-product').textContent = document.getElementById('cs-product').value || '—';
+  document.getElementById('rv-name').textContent = document.getElementById('cs-name').value || '—';
+  document.getElementById('rv-priority').textContent = document.getElementById('cs-priority').value || '—';
+  document.getElementById('rv-eff').textContent = document.getElementById('cs-eff-date').value || '—';
+  document.getElementById('rv-tiv').textContent = document.getElementById('cs-tiv').value || '—';
+  document.getElementById('rv-state').textContent = document.getElementById('cs-state').value || '—';
+  document.getElementById('rv-cust').textContent = document.getElementById('cs-cust-name').value || '—';
+  document.getElementById('rv-contact').textContent = document.getElementById('cs-contact').value || '—';
+  document.getElementById('rv-broker').textContent = document.getElementById('cs-broker').value || '—';
+  document.getElementById('rv-docs').textContent = document.querySelectorAll('#doc-list .doc-row').length;
+}
+
+function submitSubmission(){
+  hideAllPages();
+  document.getElementById('pg-confirm').classList.add('vis');
+}
+
+function viewSubmission(id){
+  hideAllPages();
+  document.getElementById('pg-summary').classList.add('vis');
+  document.getElementById('sum-id').textContent = id;
+}
+
+function goSumTab(tab, el){
+  document.querySelectorAll('#pg-summary .content > .pnl').forEach(function(p){p.classList.remove('vis')});
+  var t = document.getElementById('sum-'+tab);
+  if(t) t.classList.add('vis');
+  document.querySelectorAll('#pg-summary .tab').forEach(function(t){t.classList.remove('active')});
+  if(el) el.classList.add('active');
+}
+
+function addDemoDoc(){
+  var names = ['Property_Inspection_Report.pdf','Financial_Statements_2025.pdf','Certificate_of_Insurance.pdf'];
+  var sizes = ['1.8 MB','3.2 MB','456 KB'];
+  var i = document.querySelectorAll('#doc-list .doc-row').length % names.length;
+  var html = '<div class="doc-row"><div class="doc-ico"><i class="fas fa-file-pdf"></i></div><div class="doc-info"><div class="doc-name">'+names[i]+'</div><div class="doc-meta">'+sizes[i]+' · Uploaded just now</div></div><div class="doc-actions"><i class="fas fa-eye"></i><i class="fas fa-trash-alt" onclick="this.closest(\'.doc-row\').remove()"></i></div></div>';
+  document.getElementById('doc-list').insertAdjacentHTML('beforeend', html);
+}
+</script>
+</body>
+</html>
