@@ -1,0 +1,9 @@
+# Nested git repos
+Aurora MCP/
+Aurora MCP copy/
+
+# OS files
+.DS_Store
+
+# Dependencies
+node_modules/
