@@ -307,12 +307,8 @@ code{background:#e8eaf6;padding:2px 6px;border-radius:3px;font-size:14px;color:#
 .ifc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px}
 .ifc-card{background:#fff;border:1px solid #e0e1e9;border-radius:6px;overflow:hidden;cursor:pointer;transition:box-shadow .12s}
 .ifc-card:hover{box-shadow:0 2px 12px rgba(0,0,0,.07)}
-.ifc-preview{background:#f5f6fa;border-bottom:1px solid #e0e1e9;padding:18px 16px;min-height:140px;display:flex;flex-direction:column;gap:6px}
-.ifc-preview .ifc-line{height:6px;background:#e0e1e9;border-radius:3px}
-.ifc-preview .ifc-line.short{width:60%}
-.ifc-preview .ifc-line.med{width:80%}
-.ifc-preview .ifc-block{height:28px;background:#e8eaf6;border-radius:4px;margin-top:4px}
-.ifc-preview .ifc-block.sm{height:18px;width:70%}
+.ifc-preview{background:#f5f6fa;border-bottom:1px solid #e0e1e9;padding:0;min-height:140px;display:flex;align-items:center;justify-content:center}
+.ifc-preview svg{width:100%;height:140px}
 .ifc-footer{padding:14px 16px;display:flex;align-items:center;gap:10px}
 .ifc-footer .ifc-badge{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff;flex-shrink:0}
 .ifc-badge.create{background:#2322F0}
@@ -362,6 +358,46 @@ code{background:#e8eaf6;padding:2px 6px;border-radius:3px;font-size:14px;color:#
 .tb-rc .tbrc-footer{padding:10px 14px 14px;border-top:1px solid #f0f1f5}
 .tb-rc .tbrc-footer .trc-name{font-size:15px;font-weight:600;color:#1a1a2e;padding-right:20px;word-wrap:break-word;overflow-wrap:break-word}
 .tb-rc .tbrc-footer .trc-date{font-size:12px;color:#888;margin-top:2px}
+
+/* ── INTERFACE DESIGNER ── */
+.ifd-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:400;background:#fff;flex-direction:column}
+.ifd-overlay.open{display:flex}
+.ifd-topbar{height:48px;background:#1a1a2e;display:flex;align-items:center;padding:0 16px;gap:12px;flex-shrink:0}
+.ifd-topbar .ifd-back{color:#fff;font-size:16px;cursor:pointer;padding:4px 8px;border-radius:4px}
+.ifd-topbar .ifd-back:hover{background:rgba(255,255,255,.1)}
+.ifd-topbar .ifd-title-ico{width:24px;height:24px;background:#2322F0;border-radius:5px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px}
+.ifd-topbar .ifd-title{color:#fff;font-size:15px;font-weight:600;flex:1}
+.ifd-topbar .ifd-actions{display:flex;align-items:center;gap:12px;margin-left:auto}
+.ifd-topbar .ifd-kbd{display:flex;align-items:center;gap:6px;color:rgba(255,255,255,.6);font-size:13px}
+.ifd-topbar .ifd-kbd .tgl{width:30px;height:16px}
+.ifd-topbar .ifd-undo{color:rgba(255,255,255,.5);font-size:14px;cursor:pointer;padding:4px}
+.ifd-topbar .ifd-save{background:#2322F0;color:#fff;border:none;padding:5px 16px;border-radius:4px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Manrope',sans-serif}
+.ifd-topbar .ifd-save:hover{background:#1b1bc0}
+.ifd-topbar .ifd-grid-ico{color:rgba(255,255,255,.5);font-size:16px;cursor:pointer;padding:4px}
+.ifd-topbar .ifd-logo{height:22px;margin-left:8px}
+.ifd-body{display:flex;flex:1;overflow:hidden}
+.ifd-sidebar{width:200px;border-right:1px solid #e0e1e9;background:#fff;display:flex;flex-direction:column;overflow-y:auto;flex-shrink:0}
+.ifd-sidebar .ifd-tabs{display:flex;border-bottom:1px solid #e0e1e9}
+.ifd-sidebar .ifd-tab{flex:1;text-align:center;padding:10px 0;font-size:13px;font-weight:600;color:#888;cursor:pointer;border-bottom:2px solid transparent}
+.ifd-sidebar .ifd-tab.active{color:#1a1a2e;border-bottom-color:#1a1a2e;background:#f5f6fa}
+.ifd-sidebar .ifd-group{padding:12px 14px 6px}
+.ifd-sidebar .ifd-group-hdr{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.ifd-sidebar .ifd-group-ico{width:20px;height:20px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff}
+.ifd-sidebar .ifd-group-ico.pink{background:#e91e63}
+.ifd-sidebar .ifd-group-ico.blue{background:#2322F0}
+.ifd-sidebar .ifd-group-name{font-size:14px;font-weight:600;color:#1a1a2e;flex:1}
+.ifd-sidebar .ifd-group-add{color:#2322F0;font-size:14px;cursor:pointer}
+.ifd-sidebar .ifd-field{display:flex;align-items:center;gap:8px;padding:7px 10px;border-left:3px solid #2322F0;margin-bottom:4px;font-size:13px;color:#333;background:#fff;border-radius:0 4px 4px 0}
+.ifd-sidebar .ifd-field .ifd-field-ico{font-size:12px;color:#555;width:16px;text-align:center}
+.ifd-sidebar .ifd-field.pink-border{border-left-color:#e91e63}
+.ifd-sidebar .ifd-note{padding:10px 14px;font-size:12px;color:#2322F0;display:flex;align-items:center;gap:6px;margin-top:auto}
+.ifd-sidebar .ifd-note i{font-size:11px}
+.ifd-canvas{flex:1;background:#f5f6fa;display:flex;align-items:center;justify-content:center;overflow:auto}
+.ifd-canvas-inner{text-align:center}
+.ifd-canvas-inner .ifd-form-header{width:160px;height:20px;background:#e0e1e9;border-radius:4px;border:1px solid #d0d1da;margin:0 auto 10px}
+.ifd-canvas-inner .ifd-form-dashed{width:160px;height:28px;border:2px dashed #b0b8e8;border-radius:4px;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;color:#7b8ad0;font-size:14px}
+.ifd-canvas-inner .ifd-canvas-text{font-size:14px;color:#888;margin-bottom:16px}
+.ifd-canvas-inner .ifd-add-btn{width:36px;height:36px;background:#e0e1e9;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#7b8ad0;font-size:16px;cursor:pointer;border:none}
 </style>
 
 <!-- ── GRADIENT BAR ── -->
@@ -439,7 +475,6 @@ code{background:#e8eaf6;padding:2px 6px;border-radius:3px;font-size:14px;color:#
     <div class="tab active" onclick="goTab('submissions','overview',this)"><i class="fas fa-th-large"></i> Overview</div>
     <div class="tab" onclick="goTab('submissions','data',this)"><i class="fas fa-database"></i> Data</div>
     <div class="tab" onclick="goTab('submissions','interfaces',this)"><i class="fas fa-desktop"></i> Interfaces</div>
-    <div class="tab" onclick="goTab('submissions','automation',this)"><i class="fas fa-robot"></i> Automation Rules</div>
   </div>
   <div class="content">
     <div id="submissions-overview" class="pnl vis">
@@ -485,72 +520,29 @@ code{background:#e8eaf6;padding:2px 6px;border-radius:3px;font-size:14px;color:#
     <!-- ── INTERFACES TAB (L1) ── -->
     <div id="submissions-interfaces" class="pnl">
       <div class="ifc-grid">
-        <div class="ifc-card">
-          <div class="ifc-preview"><div class="ifc-line"></div><div class="ifc-line short"></div><div class="ifc-line med"></div><div class="ifc-block"></div><div class="ifc-block sm"></div></div>
+        <div class="ifc-card" onclick="openInterfaceDesigner('Create','Intake Form')">
+          <div class="ifc-preview"><svg viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="45" y="15" width="100" height="110" rx="10" stroke="#b0b3c0" stroke-width="2.5" fill="none"/><rect x="58" y="28" width="74" height="14" rx="5" stroke="#b0b3c0" stroke-width="2" fill="#e0e1e9"/><rect x="58" y="55" width="74" height="18" rx="5" stroke="#b0b3c0" stroke-width="2" stroke-dasharray="6 4" fill="none"/><line x1="91" y1="59" x2="91" y2="69" stroke="#b0b3c0" stroke-width="2"/><line x1="86" y1="64" x2="96" y2="64" stroke="#b0b3c0" stroke-width="2"/><g transform="translate(130,105) rotate(-45)"><rect x="0" y="0" width="7" height="22" rx="1.5" stroke="#b0b3c0" stroke-width="2" fill="none"/><line x1="0" y1="17" x2="7" y2="17" stroke="#b0b3c0" stroke-width="1.5"/><polygon points="1.5,22 5.5,22 3.5,28" fill="#b0b3c0"/></g></svg></div>
           <div class="ifc-footer"><div class="ifc-badge create"><i class="fas fa-plus"></i></div><div class="ifc-info"><div class="ifc-type">Create</div><div class="ifc-name">Intake Form</div></div></div>
         </div>
-        <div class="ifc-card">
-          <div class="ifc-preview"><div class="ifc-line med"></div><div class="ifc-block"></div><div class="ifc-line short"></div><div class="ifc-line"></div></div>
+        <div class="ifc-card" onclick="openInterfaceDesigner('Edit','Edit Form')">
+          <div class="ifc-preview"><svg viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="45" y="15" width="100" height="110" rx="10" stroke="#b0b3c0" stroke-width="2.5" fill="none"/><rect x="58" y="28" width="74" height="14" rx="5" stroke="#b0b3c0" stroke-width="2" fill="#e0e1e9"/><rect x="58" y="55" width="74" height="18" rx="5" stroke="#b0b3c0" stroke-width="2" stroke-dasharray="6 4" fill="none"/><line x1="91" y1="59" x2="91" y2="69" stroke="#b0b3c0" stroke-width="2"/><line x1="86" y1="64" x2="96" y2="64" stroke="#b0b3c0" stroke-width="2"/><g transform="translate(130,105) rotate(-45)"><rect x="0" y="0" width="7" height="22" rx="1.5" stroke="#b0b3c0" stroke-width="2" fill="none"/><line x1="0" y1="17" x2="7" y2="17" stroke="#b0b3c0" stroke-width="1.5"/><polygon points="1.5,22 5.5,22 3.5,28" fill="#b0b3c0"/></g></svg></div>
           <div class="ifc-footer"><div class="ifc-badge edit"><i class="fas fa-pencil-alt"></i></div><div class="ifc-info"><div class="ifc-type">Edit</div><div class="ifc-name">Edit Form</div></div></div>
         </div>
-        <div class="ifc-card">
-          <div class="ifc-preview"><div class="ifc-line"></div><div class="ifc-line short"></div><div class="ifc-block"></div><div class="ifc-line med"></div></div>
+        <div class="ifc-card" onclick="openInterfaceDesigner('Display','Summary Page')">
+          <div class="ifc-preview"><svg viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="45" y="15" width="100" height="110" rx="10" stroke="#b0b3c0" stroke-width="2.5" fill="none"/><rect x="58" y="28" width="74" height="14" rx="5" stroke="#b0b3c0" stroke-width="2" fill="#e0e1e9"/><rect x="58" y="55" width="74" height="18" rx="5" stroke="#b0b3c0" stroke-width="2" stroke-dasharray="6 4" fill="none"/><line x1="91" y1="59" x2="91" y2="69" stroke="#b0b3c0" stroke-width="2"/><line x1="86" y1="64" x2="96" y2="64" stroke="#b0b3c0" stroke-width="2"/><g transform="translate(130,105) rotate(-45)"><rect x="0" y="0" width="7" height="22" rx="1.5" stroke="#b0b3c0" stroke-width="2" fill="none"/><line x1="0" y1="17" x2="7" y2="17" stroke="#b0b3c0" stroke-width="1.5"/><polygon points="1.5,22 5.5,22 3.5,28" fill="#b0b3c0"/></g></svg></div>
           <div class="ifc-footer"><div class="ifc-badge display"><i class="fas fa-eye"></i></div><div class="ifc-info"><div class="ifc-type">Display</div><div class="ifc-name">Summary Page</div></div></div>
         </div>
-        <div class="ifc-card">
-          <div class="ifc-preview"><div class="ifc-line med"></div><div class="ifc-line short"></div><div class="ifc-block"></div><div class="ifc-block sm"></div></div>
+        <div class="ifc-card" onclick="openInterfaceDesigner('Create','Portal Intake Form')">
+          <div class="ifc-preview"><svg viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="45" y="15" width="100" height="110" rx="10" stroke="#b0b3c0" stroke-width="2.5" fill="none"/><rect x="58" y="28" width="74" height="14" rx="5" stroke="#b0b3c0" stroke-width="2" fill="#e0e1e9"/><rect x="58" y="55" width="74" height="18" rx="5" stroke="#b0b3c0" stroke-width="2" stroke-dasharray="6 4" fill="none"/><line x1="91" y1="59" x2="91" y2="69" stroke="#b0b3c0" stroke-width="2"/><line x1="86" y1="64" x2="96" y2="64" stroke="#b0b3c0" stroke-width="2"/><g transform="translate(130,105) rotate(-45)"><rect x="0" y="0" width="7" height="22" rx="1.5" stroke="#b0b3c0" stroke-width="2" fill="none"/><line x1="0" y1="17" x2="7" y2="17" stroke="#b0b3c0" stroke-width="1.5"/><polygon points="1.5,22 5.5,22 3.5,28" fill="#b0b3c0"/></g></svg></div>
           <div class="ifc-footer"><div class="ifc-badge create"><i class="fas fa-plus"></i></div><div class="ifc-info"><div class="ifc-type">Create</div><div class="ifc-name">Portal Intake Form</div></div></div>
         </div>
-        <div class="ifc-card">
-          <div class="ifc-preview"><div class="ifc-line"></div><div class="ifc-line med"></div><div class="ifc-block"></div><div class="ifc-line short"></div><div class="ifc-block sm"></div></div>
+        <div class="ifc-card" onclick="openInterfaceDesigner('Create','Broker Submission Form')">
+          <div class="ifc-preview"><svg viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="45" y="15" width="100" height="110" rx="10" stroke="#b0b3c0" stroke-width="2.5" fill="none"/><rect x="58" y="28" width="74" height="14" rx="5" stroke="#b0b3c0" stroke-width="2" fill="#e0e1e9"/><rect x="58" y="55" width="74" height="18" rx="5" stroke="#b0b3c0" stroke-width="2" stroke-dasharray="6 4" fill="none"/><line x1="91" y1="59" x2="91" y2="69" stroke="#b0b3c0" stroke-width="2"/><line x1="86" y1="64" x2="96" y2="64" stroke="#b0b3c0" stroke-width="2"/><g transform="translate(130,105) rotate(-45)"><rect x="0" y="0" width="7" height="22" rx="1.5" stroke="#b0b3c0" stroke-width="2" fill="none"/><line x1="0" y1="17" x2="7" y2="17" stroke="#b0b3c0" stroke-width="1.5"/><polygon points="1.5,22 5.5,22 3.5,28" fill="#b0b3c0"/></g></svg></div>
           <div class="ifc-footer"><div class="ifc-badge create"><i class="fas fa-plus"></i></div><div class="ifc-info"><div class="ifc-type">Create</div><div class="ifc-name">Broker Submission Form</div></div></div>
         </div>
       </div>
     </div>
 
-    <!-- ── AUTOMATION RULES TAB (L1) ── -->
-    <div id="submissions-automation" class="pnl">
-      <div class="sec-hdr">
-        <div class="rules-info"><i class="fas fa-info-circle"></i> Rules are listed in the order of evaluation/execution.</div>
-        <button class="btn-create" onclick="alert('Create Rule')"><i class="fas fa-plus" style="font-size:11px"></i> CREATE RULE</button>
-      </div>
-      <div class="rules-section">
-        <div class="rules-section-hdr" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none';this.querySelector('.rs-chev').classList.toggle('fa-chevron-down');this.querySelector('.rs-chev').classList.toggle('fa-chevron-up')">
-          <div><span class="rs-title">All Submission Categories Rules</span><span class="rs-count">4 rules</span></div>
-          <i class="fas fa-chevron-up rs-chev"></i>
-        </div>
-        <div>
-          <div class="rule-row">
-            <div class="rr-num">1</div>
-            <div class="rr-arrows"><i class="fas fa-caret-up"></i><i class="fas fa-caret-down"></i></div>
-            <div class="rr-text">When <b>submission is created</b>, then <b>assign submission</b> to <b>Underwriting Team</b> with <b>Shared Queue</b> routing type</div>
-            <div class="rr-toggle">Off <div class="tgl" onclick="event.stopPropagation();this.classList.toggle('off')"><div class="dot"></div></div> On</div>
-            <div class="ec-menu-wrap" style="position:relative;top:auto;right:auto;display:inline-block"><i class="fas fa-ellipsis-v ec-menu" onclick="toggleEcMenu(event,this)"></i><div class="ec-dropdown"><div class="ec-dropdown-item"><i class="fas fa-pencil-alt"></i> Edit</div><div class="ec-dropdown-item danger"><i class="fas fa-trash-alt"></i> Delete</div></div></div>
-          </div>
-          <div class="rule-row">
-            <div class="rr-num">2</div>
-            <div class="rr-arrows"><i class="fas fa-caret-up"></i><i class="fas fa-caret-down"></i></div>
-            <div class="rr-text">When <b>submission is created</b>, then <b>send email</b> using <b>Submission Received</b> template to <b>Broker</b></div>
-            <div class="rr-toggle">Off <div class="tgl" onclick="event.stopPropagation();this.classList.toggle('off')"><div class="dot"></div></div> On</div>
-            <div class="ec-menu-wrap" style="position:relative;top:auto;right:auto;display:inline-block"><i class="fas fa-ellipsis-v ec-menu" onclick="toggleEcMenu(event,this)"></i><div class="ec-dropdown"><div class="ec-dropdown-item"><i class="fas fa-pencil-alt"></i> Edit</div><div class="ec-dropdown-item danger"><i class="fas fa-trash-alt"></i> Delete</div></div></div>
-          </div>
-          <div class="rule-row">
-            <div class="rr-num">3</div>
-            <div class="rr-arrows"><i class="fas fa-caret-up"></i><i class="fas fa-caret-down"></i></div>
-            <div class="rr-text">When <b>submission is updated</b>, if <b>Priority</b> is equal to <b>Rush</b>, then <b>assign submission</b> to <b>Senior Underwriters</b> with <b>Workload Balance</b> routing type</div>
-            <div class="rr-toggle">Off <div class="tgl" onclick="event.stopPropagation();this.classList.toggle('off')"><div class="dot"></div></div> On</div>
-            <div class="ec-menu-wrap" style="position:relative;top:auto;right:auto;display:inline-block"><i class="fas fa-ellipsis-v ec-menu" onclick="toggleEcMenu(event,this)"></i><div class="ec-dropdown"><div class="ec-dropdown-item"><i class="fas fa-pencil-alt"></i> Edit</div><div class="ec-dropdown-item danger"><i class="fas fa-trash-alt"></i> Delete</div></div></div>
-          </div>
-          <div class="rule-row">
-            <div class="rr-num">4</div>
-            <div class="rr-arrows"><i class="fas fa-caret-up"></i><i class="fas fa-caret-down"></i></div>
-            <div class="rr-text">When <b>SLA is breached</b>, then <b>send email</b> using <b>SLA Breach Alert</b> template to <b>Manager</b></div>
-            <div class="rr-toggle">Off <div class="tgl off" onclick="event.stopPropagation();this.classList.toggle('off')"><div class="dot"></div></div> On</div>
-            <div class="ec-menu-wrap" style="position:relative;top:auto;right:auto;display:inline-block"><i class="fas fa-ellipsis-v ec-menu" onclick="toggleEcMenu(event,this)"></i><div class="ec-dropdown"><div class="ec-dropdown-item"><i class="fas fa-pencil-alt"></i> Edit</div><div class="ec-dropdown-item danger"><i class="fas fa-trash-alt"></i> Delete</div></div></div>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 </div>
 
@@ -566,14 +558,18 @@ code{background:#e8eaf6;padding:2px 6px;border-radius:3px;font-size:14px;color:#
         <span id="cat-hdr-name">New Business</span>
         <i class="fas fa-pencil-alt" style="font-size:15px;color:#888;cursor:pointer;margin-left:4px"></i>
       </div>
-      <button class="btn-create" onclick="showCreateModal('Submission Type')">CREATE <i class="fas fa-caret-down" style="font-size:12px"></i></button>
+      <div style="position:relative;display:inline-block" id="create-dropdown-l2">
+        <button class="btn-create" onclick="toggleCreateMenu('l2')">CREATE <i class="fas fa-caret-down" style="font-size:12px"></i></button>
+        <div class="create-menu" id="create-menu-l2">
+          <div class="create-menu-item" onclick="showCreateModal('Submission Type');hideCreateMenu()"><i class="fas fa-file"></i> Submission Type</div>
+        </div>
+      </div>
     </div>
   </div>
   <div class="tabs">
     <div class="tab active" onclick="goL2Tab('overview',this)"><i class="fas fa-th-large"></i> Overview</div>
     <div class="tab" onclick="goL2Tab('data',this)"><i class="fas fa-database"></i> Data</div>
     <div class="tab" onclick="goL2Tab('interfaces',this)"><i class="fas fa-desktop"></i> Interfaces</div>
-    <div class="tab" onclick="goL2Tab('automation',this)"><i class="fas fa-robot"></i> Automation Rules</div>
   </div>
   <div class="content">
     <div id="l2-overview" class="pnl vis">
@@ -615,61 +611,25 @@ code{background:#e8eaf6;padding:2px 6px;border-radius:3px;font-size:14px;color:#
     <!-- ── INTERFACES TAB (L2) ── -->
     <div id="l2-interfaces" class="pnl">
       <div class="ifc-grid">
-        <div class="ifc-card">
-          <div class="ifc-preview"><div class="ifc-line"></div><div class="ifc-line short"></div><div class="ifc-line med"></div><div class="ifc-block"></div><div class="ifc-block sm"></div></div>
+        <div class="ifc-card" onclick="openInterfaceDesigner('Create','Intake Form')">
+          <div class="ifc-preview"><svg viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="45" y="15" width="100" height="110" rx="10" stroke="#b0b3c0" stroke-width="2.5" fill="none"/><rect x="58" y="28" width="74" height="14" rx="5" stroke="#b0b3c0" stroke-width="2" fill="#e0e1e9"/><rect x="58" y="55" width="74" height="18" rx="5" stroke="#b0b3c0" stroke-width="2" stroke-dasharray="6 4" fill="none"/><line x1="91" y1="59" x2="91" y2="69" stroke="#b0b3c0" stroke-width="2"/><line x1="86" y1="64" x2="96" y2="64" stroke="#b0b3c0" stroke-width="2"/><g transform="translate(130,105) rotate(-45)"><rect x="0" y="0" width="7" height="22" rx="1.5" stroke="#b0b3c0" stroke-width="2" fill="none"/><line x1="0" y1="17" x2="7" y2="17" stroke="#b0b3c0" stroke-width="1.5"/><polygon points="1.5,22 5.5,22 3.5,28" fill="#b0b3c0"/></g></svg></div>
           <div class="ifc-footer"><div class="ifc-badge create"><i class="fas fa-plus"></i></div><div class="ifc-info"><div class="ifc-type">Create</div><div class="ifc-name">Intake Form</div></div></div>
         </div>
-        <div class="ifc-card">
-          <div class="ifc-preview"><div class="ifc-line med"></div><div class="ifc-block"></div><div class="ifc-line short"></div><div class="ifc-line"></div></div>
+        <div class="ifc-card" onclick="openInterfaceDesigner('Edit','Edit Form')">
+          <div class="ifc-preview"><svg viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="45" y="15" width="100" height="110" rx="10" stroke="#b0b3c0" stroke-width="2.5" fill="none"/><rect x="58" y="28" width="74" height="14" rx="5" stroke="#b0b3c0" stroke-width="2" fill="#e0e1e9"/><rect x="58" y="55" width="74" height="18" rx="5" stroke="#b0b3c0" stroke-width="2" stroke-dasharray="6 4" fill="none"/><line x1="91" y1="59" x2="91" y2="69" stroke="#b0b3c0" stroke-width="2"/><line x1="86" y1="64" x2="96" y2="64" stroke="#b0b3c0" stroke-width="2"/><g transform="translate(130,105) rotate(-45)"><rect x="0" y="0" width="7" height="22" rx="1.5" stroke="#b0b3c0" stroke-width="2" fill="none"/><line x1="0" y1="17" x2="7" y2="17" stroke="#b0b3c0" stroke-width="1.5"/><polygon points="1.5,22 5.5,22 3.5,28" fill="#b0b3c0"/></g></svg></div>
           <div class="ifc-footer"><div class="ifc-badge edit"><i class="fas fa-pencil-alt"></i></div><div class="ifc-info"><div class="ifc-type">Edit</div><div class="ifc-name">Edit Form</div></div></div>
         </div>
-        <div class="ifc-card">
-          <div class="ifc-preview"><div class="ifc-line"></div><div class="ifc-line short"></div><div class="ifc-block"></div><div class="ifc-line med"></div></div>
+        <div class="ifc-card" onclick="openInterfaceDesigner('Display','Summary Page')">
+          <div class="ifc-preview"><svg viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="45" y="15" width="100" height="110" rx="10" stroke="#b0b3c0" stroke-width="2.5" fill="none"/><rect x="58" y="28" width="74" height="14" rx="5" stroke="#b0b3c0" stroke-width="2" fill="#e0e1e9"/><rect x="58" y="55" width="74" height="18" rx="5" stroke="#b0b3c0" stroke-width="2" stroke-dasharray="6 4" fill="none"/><line x1="91" y1="59" x2="91" y2="69" stroke="#b0b3c0" stroke-width="2"/><line x1="86" y1="64" x2="96" y2="64" stroke="#b0b3c0" stroke-width="2"/><g transform="translate(130,105) rotate(-45)"><rect x="0" y="0" width="7" height="22" rx="1.5" stroke="#b0b3c0" stroke-width="2" fill="none"/><line x1="0" y1="17" x2="7" y2="17" stroke="#b0b3c0" stroke-width="1.5"/><polygon points="1.5,22 5.5,22 3.5,28" fill="#b0b3c0"/></g></svg></div>
           <div class="ifc-footer"><div class="ifc-badge display"><i class="fas fa-eye"></i></div><div class="ifc-info"><div class="ifc-type">Display</div><div class="ifc-name">Summary Page</div></div></div>
         </div>
-        <div class="ifc-card">
-          <div class="ifc-preview"><div class="ifc-line med"></div><div class="ifc-line short"></div><div class="ifc-block"></div><div class="ifc-block sm"></div></div>
+        <div class="ifc-card" onclick="openInterfaceDesigner('Create','Portal Intake Form')">
+          <div class="ifc-preview"><svg viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="45" y="15" width="100" height="110" rx="10" stroke="#b0b3c0" stroke-width="2.5" fill="none"/><rect x="58" y="28" width="74" height="14" rx="5" stroke="#b0b3c0" stroke-width="2" fill="#e0e1e9"/><rect x="58" y="55" width="74" height="18" rx="5" stroke="#b0b3c0" stroke-width="2" stroke-dasharray="6 4" fill="none"/><line x1="91" y1="59" x2="91" y2="69" stroke="#b0b3c0" stroke-width="2"/><line x1="86" y1="64" x2="96" y2="64" stroke="#b0b3c0" stroke-width="2"/><g transform="translate(130,105) rotate(-45)"><rect x="0" y="0" width="7" height="22" rx="1.5" stroke="#b0b3c0" stroke-width="2" fill="none"/><line x1="0" y1="17" x2="7" y2="17" stroke="#b0b3c0" stroke-width="1.5"/><polygon points="1.5,22 5.5,22 3.5,28" fill="#b0b3c0"/></g></svg></div>
           <div class="ifc-footer"><div class="ifc-badge create"><i class="fas fa-plus"></i></div><div class="ifc-info"><div class="ifc-type">Create</div><div class="ifc-name">Portal Intake Form</div></div></div>
         </div>
       </div>
     </div>
 
-    <!-- ── AUTOMATION RULES TAB (L2) ── -->
-    <div id="l2-automation" class="pnl">
-      <div class="sec-hdr">
-        <div class="rules-info"><i class="fas fa-info-circle"></i> Rules are listed in the order of evaluation/execution.</div>
-        <button class="btn-create" onclick="alert('Create Rule')"><i class="fas fa-plus" style="font-size:11px"></i> CREATE RULE</button>
-      </div>
-      <div class="rules-section">
-        <div class="rules-section-hdr" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none';this.querySelector('.rs-chev').classList.toggle('fa-chevron-down');this.querySelector('.rs-chev').classList.toggle('fa-chevron-up')">
-          <div><span class="rs-title">All Submission Types Rules</span><span class="rs-count">3 rules</span></div>
-          <i class="fas fa-chevron-up rs-chev"></i>
-        </div>
-        <div>
-          <div class="rule-row">
-            <div class="rr-num">1</div>
-            <div class="rr-arrows"><i class="fas fa-caret-up"></i><i class="fas fa-caret-down"></i></div>
-            <div class="rr-text">When <b>submission is created</b>, then <b>assign submission</b> to <b>Category Underwriting Team</b> with <b>Shared Queue</b> routing type</div>
-            <div class="rr-toggle">Off <div class="tgl" onclick="event.stopPropagation();this.classList.toggle('off')"><div class="dot"></div></div> On</div>
-            <div class="ec-menu-wrap" style="position:relative;top:auto;right:auto;display:inline-block"><i class="fas fa-ellipsis-v ec-menu" onclick="toggleEcMenu(event,this)"></i><div class="ec-dropdown"><div class="ec-dropdown-item"><i class="fas fa-pencil-alt"></i> Edit</div><div class="ec-dropdown-item danger"><i class="fas fa-trash-alt"></i> Delete</div></div></div>
-          </div>
-          <div class="rule-row">
-            <div class="rr-num">2</div>
-            <div class="rr-arrows"><i class="fas fa-caret-up"></i><i class="fas fa-caret-down"></i></div>
-            <div class="rr-text">When <b>submission is created</b>, if <b>TIV</b> is greater than <b>$5,000,000</b>, then <b>assign submission</b> to <b>Senior Underwriters</b> with <b>Workload Balance</b> routing type</div>
-            <div class="rr-toggle">Off <div class="tgl" onclick="event.stopPropagation();this.classList.toggle('off')"><div class="dot"></div></div> On</div>
-            <div class="ec-menu-wrap" style="position:relative;top:auto;right:auto;display:inline-block"><i class="fas fa-ellipsis-v ec-menu" onclick="toggleEcMenu(event,this)"></i><div class="ec-dropdown"><div class="ec-dropdown-item"><i class="fas fa-pencil-alt"></i> Edit</div><div class="ec-dropdown-item danger"><i class="fas fa-trash-alt"></i> Delete</div></div></div>
-          </div>
-          <div class="rule-row">
-            <div class="rr-num">3</div>
-            <div class="rr-arrows"><i class="fas fa-caret-up"></i><i class="fas fa-caret-down"></i></div>
-            <div class="rr-text">When <b>submission is updated</b>, then <b>send email</b> using <b>Submission Received</b> template to <b>Broker</b></div>
-            <div class="rr-toggle">Off <div class="tgl" onclick="event.stopPropagation();this.classList.toggle('off')"><div class="dot"></div></div> On</div>
-            <div class="ec-menu-wrap" style="position:relative;top:auto;right:auto;display:inline-block"><i class="fas fa-ellipsis-v ec-menu" onclick="toggleEcMenu(event,this)"></i><div class="ec-dropdown"><div class="ec-dropdown-item"><i class="fas fa-pencil-alt"></i> Edit</div><div class="ec-dropdown-item danger"><i class="fas fa-trash-alt"></i> Delete</div></div></div>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 </div>
 
@@ -687,14 +647,12 @@ code{background:#e8eaf6;padding:2px 6px;border-radius:3px;font-size:14px;color:#
         <span class="bc-ico" id="type-hdr-ico" style="background:#2322F0"><i class="fas fa-building"></i></span>
         <span id="type-hdr-name">Commercial Property</span>
       </div>
-      <button class="btn-create">CREATE <i class="fas fa-caret-down" style="font-size:12px"></i></button>
     </div>
   </div>
   <div class="tabs">
     <div class="tab active" onclick="goL3Tab('overview',this)"><i class="fas fa-th-large"></i> Overview</div>
     <div class="tab" onclick="goL3Tab('data',this)"><i class="fas fa-database"></i> Data</div>
     <div class="tab" onclick="goL3Tab('interfaces',this)"><i class="fas fa-desktop"></i> Interfaces</div>
-    <div class="tab" onclick="goL3Tab('automation',this)"><i class="fas fa-robot"></i> Automation Rules</div>
     <div class="tab" onclick="goL3Tab('workflow',this)"><i class="fas fa-project-diagram"></i> Workflow</div>  </div>
   <div class="content">
     <div id="l3-overview" class="pnl vis">
@@ -730,51 +688,21 @@ code{background:#e8eaf6;padding:2px 6px;border-radius:3px;font-size:14px;color:#
     <!-- ── INTERFACES TAB (L3) ── -->
     <div id="l3-interfaces" class="pnl">
       <div class="ifc-grid">
-        <div class="ifc-card">
-          <div class="ifc-preview"><div class="ifc-line"></div><div class="ifc-line short"></div><div class="ifc-line med"></div><div class="ifc-block"></div><div class="ifc-block sm"></div></div>
+        <div class="ifc-card" onclick="openInterfaceDesigner('Create','Intake Form')">
+          <div class="ifc-preview"><svg viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="45" y="15" width="100" height="110" rx="10" stroke="#b0b3c0" stroke-width="2.5" fill="none"/><rect x="58" y="28" width="74" height="14" rx="5" stroke="#b0b3c0" stroke-width="2" fill="#e0e1e9"/><rect x="58" y="55" width="74" height="18" rx="5" stroke="#b0b3c0" stroke-width="2" stroke-dasharray="6 4" fill="none"/><line x1="91" y1="59" x2="91" y2="69" stroke="#b0b3c0" stroke-width="2"/><line x1="86" y1="64" x2="96" y2="64" stroke="#b0b3c0" stroke-width="2"/><g transform="translate(130,105) rotate(-45)"><rect x="0" y="0" width="7" height="22" rx="1.5" stroke="#b0b3c0" stroke-width="2" fill="none"/><line x1="0" y1="17" x2="7" y2="17" stroke="#b0b3c0" stroke-width="1.5"/><polygon points="1.5,22 5.5,22 3.5,28" fill="#b0b3c0"/></g></svg></div>
           <div class="ifc-footer"><div class="ifc-badge create"><i class="fas fa-plus"></i></div><div class="ifc-info"><div class="ifc-type">Create</div><div class="ifc-name">Intake Form</div></div></div>
         </div>
-        <div class="ifc-card">
-          <div class="ifc-preview"><div class="ifc-line med"></div><div class="ifc-block"></div><div class="ifc-line short"></div><div class="ifc-line"></div></div>
+        <div class="ifc-card" onclick="openInterfaceDesigner('Edit','Edit Form')">
+          <div class="ifc-preview"><svg viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="45" y="15" width="100" height="110" rx="10" stroke="#b0b3c0" stroke-width="2.5" fill="none"/><rect x="58" y="28" width="74" height="14" rx="5" stroke="#b0b3c0" stroke-width="2" fill="#e0e1e9"/><rect x="58" y="55" width="74" height="18" rx="5" stroke="#b0b3c0" stroke-width="2" stroke-dasharray="6 4" fill="none"/><line x1="91" y1="59" x2="91" y2="69" stroke="#b0b3c0" stroke-width="2"/><line x1="86" y1="64" x2="96" y2="64" stroke="#b0b3c0" stroke-width="2"/><g transform="translate(130,105) rotate(-45)"><rect x="0" y="0" width="7" height="22" rx="1.5" stroke="#b0b3c0" stroke-width="2" fill="none"/><line x1="0" y1="17" x2="7" y2="17" stroke="#b0b3c0" stroke-width="1.5"/><polygon points="1.5,22 5.5,22 3.5,28" fill="#b0b3c0"/></g></svg></div>
           <div class="ifc-footer"><div class="ifc-badge edit"><i class="fas fa-pencil-alt"></i></div><div class="ifc-info"><div class="ifc-type">Edit</div><div class="ifc-name">Edit Form</div></div></div>
         </div>
-        <div class="ifc-card">
-          <div class="ifc-preview"><div class="ifc-line"></div><div class="ifc-line short"></div><div class="ifc-block"></div><div class="ifc-line med"></div></div>
+        <div class="ifc-card" onclick="openInterfaceDesigner('Display','Summary Page')">
+          <div class="ifc-preview"><svg viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="45" y="15" width="100" height="110" rx="10" stroke="#b0b3c0" stroke-width="2.5" fill="none"/><rect x="58" y="28" width="74" height="14" rx="5" stroke="#b0b3c0" stroke-width="2" fill="#e0e1e9"/><rect x="58" y="55" width="74" height="18" rx="5" stroke="#b0b3c0" stroke-width="2" stroke-dasharray="6 4" fill="none"/><line x1="91" y1="59" x2="91" y2="69" stroke="#b0b3c0" stroke-width="2"/><line x1="86" y1="64" x2="96" y2="64" stroke="#b0b3c0" stroke-width="2"/><g transform="translate(130,105) rotate(-45)"><rect x="0" y="0" width="7" height="22" rx="1.5" stroke="#b0b3c0" stroke-width="2" fill="none"/><line x1="0" y1="17" x2="7" y2="17" stroke="#b0b3c0" stroke-width="1.5"/><polygon points="1.5,22 5.5,22 3.5,28" fill="#b0b3c0"/></g></svg></div>
           <div class="ifc-footer"><div class="ifc-badge display"><i class="fas fa-eye"></i></div><div class="ifc-info"><div class="ifc-type">Display</div><div class="ifc-name">Summary Page</div></div></div>
         </div>
       </div>
     </div>
 
-    <!-- ── AUTOMATION RULES TAB (L3) ── -->
-    <div id="l3-automation" class="pnl">
-      <div class="sec-hdr">
-        <div class="rules-info"><i class="fas fa-info-circle"></i> Rules are listed in the order of evaluation/execution.</div>
-        <button class="btn-create" onclick="alert('Create Rule')"><i class="fas fa-plus" style="font-size:11px"></i> CREATE RULE</button>
-      </div>
-      <div class="rules-section">
-        <div class="rules-section-hdr" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none';this.querySelector('.rs-chev').classList.toggle('fa-chevron-down');this.querySelector('.rs-chev').classList.toggle('fa-chevron-up')">
-          <div><span class="rs-title">Submission Type Rules</span><span class="rs-count">2 rules</span></div>
-          <i class="fas fa-chevron-up rs-chev"></i>
-        </div>
-        <div>
-          <div class="rule-row">
-            <div class="rr-num">1</div>
-            <div class="rr-arrows"><i class="fas fa-caret-up"></i><i class="fas fa-caret-down"></i></div>
-            <div class="rr-text">When <b>submission is created</b>, then <b>assign submission</b> to <b>Property Underwriting Team</b> with <b>Workload Balance</b> routing type</div>
-            <div class="rr-toggle">Off <div class="tgl" onclick="event.stopPropagation();this.classList.toggle('off')"><div class="dot"></div></div> On</div>
-            <div class="ec-menu-wrap" style="position:relative;top:auto;right:auto;display:inline-block"><i class="fas fa-ellipsis-v ec-menu" onclick="toggleEcMenu(event,this)"></i><div class="ec-dropdown"><div class="ec-dropdown-item"><i class="fas fa-pencil-alt"></i> Edit</div><div class="ec-dropdown-item danger"><i class="fas fa-trash-alt"></i> Delete</div></div></div>
-          </div>
-          <div class="rule-row">
-            <div class="rr-num">2</div>
-            <div class="rr-arrows"><i class="fas fa-caret-up"></i><i class="fas fa-caret-down"></i></div>
-            <div class="rr-text">When <b>submission is created</b>, if <b>TIV</b> is greater than <b>$10,000,000</b>, then <b>send email</b> using <b>High TIV Alert</b> template to <b>Manager</b></div>
-            <div class="rr-toggle">Off <div class="tgl" onclick="event.stopPropagation();this.classList.toggle('off')"><div class="dot"></div></div> On</div>
-            <div class="ec-menu-wrap" style="position:relative;top:auto;right:auto;display:inline-block"><i class="fas fa-ellipsis-v ec-menu" onclick="toggleEcMenu(event,this)"></i><div class="ec-dropdown"><div class="ec-dropdown-item"><i class="fas fa-pencil-alt"></i> Edit</div><div class="ec-dropdown-item danger"><i class="fas fa-trash-alt"></i> Delete</div></div></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
     <!-- ── WORKFLOW TAB (L3) ── -->
     <div id="l3-workflow" class="pnl">
       <div style="display:flex;gap:0;min-height:500px">
@@ -908,6 +836,7 @@ code{background:#e8eaf6;padding:2px 6px;border-radius:3px;font-size:14px;color:#
         </div>
       </div>
     </div></div>
+</div>
 
 <!-- ===== TASKING ===== -->
 <div id="sec-tasking" class="pnl">
@@ -2564,7 +2493,7 @@ function hideCreateMenu(){
   document.querySelectorAll('.create-menu').forEach(function(m){m.classList.remove('open')});
 }
 document.addEventListener('click', function(e){
-  if(!e.target.closest('#create-dropdown-l1') && !e.target.closest('.create-menu')){
+  if(!e.target.closest('#create-dropdown-l1') && !e.target.closest('#create-dropdown-l2') && !e.target.closest('.create-menu')){
     hideCreateMenu();
   }
 });
@@ -3614,6 +3543,69 @@ function addDataFields(){
   if(!added){alert('Please enter at least one field name and type.');return;}
   closeAddDataFieldsModal();
 }
+</script>
+
+<!-- ── INTERFACE DESIGNER OVERLAY ── -->
+<div class="ifd-overlay" id="ifd-overlay">
+  <div class="ifd-topbar">
+    <div class="ifd-back" onclick="closeInterfaceDesigner()"><i class="fas fa-chevron-left"></i></div>
+    <div class="ifd-title-ico"><i class="fas fa-desktop"></i></div>
+    <div class="ifd-title" id="ifd-title">Edit Form: New Category</div>
+    <div class="ifd-actions">
+      <div class="ifd-kbd"><span>Keyboard mode</span><div class="tgl off" onclick="this.classList.toggle('off')"><div class="dot"></div></div></div>
+      <i class="fas fa-undo ifd-undo"></i>
+      <i class="fas fa-redo ifd-undo"></i>
+      <button class="ifd-save">SAVE</button>
+      <i class="fas fa-th ifd-grid-ico"></i>
+      <svg class="ifd-logo" viewBox="0 0 90 22" fill="none" xmlns="http://www.w3.org/2000/svg"><text x="0" y="18" font-family="'Manrope',sans-serif" font-size="20" font-weight="700" fill="#fff" letter-spacing="1">appian</text></svg>
+    </div>
+  </div>
+  <div class="ifd-body">
+    <div class="ifd-sidebar">
+      <div class="ifd-tabs">
+        <div class="ifd-tab active">Data</div>
+        <div class="ifd-tab">Layout</div>
+      </div>
+      <div class="ifd-group">
+        <div class="ifd-group-hdr">
+          <div class="ifd-group-ico pink"><i class="fas fa-cube"></i></div>
+          <div class="ifd-group-name" id="ifd-group1-name">New Category</div>
+          <i class="fas fa-plus ifd-group-add"></i>
+        </div>
+        <div class="ifd-field pink-border"><span class="ifd-field-ico"><b>A</b></span> cost</div>
+      </div>
+      <div class="ifd-group">
+        <div class="ifd-group-hdr">
+          <div class="ifd-group-ico blue"><i class="fas fa-folder"></i></div>
+          <div class="ifd-group-name">Case</div>
+          <i class="fas fa-plus ifd-group-add"></i>
+        </div>
+        <div class="ifd-field"><span class="ifd-field-ico"><i class="far fa-square"></i></span> Case Type</div>
+        <div class="ifd-field"><span class="ifd-field-ico"><b>A</b></span> Title</div>
+        <div class="ifd-field"><span class="ifd-field-ico"><b>A</b></span> Description</div>
+      </div>
+      <div class="ifd-note"><i class="fas fa-info-circle"></i> Some data fields may not be available</div>
+    </div>
+    <div class="ifd-canvas">
+      <div class="ifd-canvas-inner">
+        <div class="ifd-form-header"></div>
+        <div class="ifd-form-dashed">+</div>
+        <div class="ifd-canvas-text">Add a section to begin designing</div>
+        <button class="ifd-add-btn"><i class="fas fa-plus"></i></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function openInterfaceDesigner(type, name){
+  document.getElementById('ifd-title').textContent = (type||'Edit') + ' Form: ' + (name||'New Category');
+  document.getElementById('ifd-overlay').classList.add('open');
+}
+function closeInterfaceDesigner(){
+  document.getElementById('ifd-overlay').classList.remove('open');
+}
+/* Wire up all interface cards - handled via inline onclick below */
 </script>
 </body>
 </html>
