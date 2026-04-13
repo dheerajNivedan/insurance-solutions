@@ -2066,9 +2066,10 @@ function navToType(catKey, idx, el){
   document.getElementById('type-hdr-cat-ico').innerHTML = '<i class="fas '+cat.icon+'"></i>';
   document.getElementById('type-hdr-name').textContent = t.name;
   document.getElementById('type-hdr-ico').innerHTML = '<i class="fas '+t.icon+'"></i>';
-  document.getElementById('td-name').value = t.name;
+  var tdName = document.getElementById('td-name');
+  if(tdName) tdName.value = t.name;
   var lobSel = document.getElementById('td-lob');
-  for(var i=0;i<lobSel.options.length;i++){if(lobSel.options[i].text===t.lob){lobSel.selectedIndex=i;break;}}
+  if(lobSel){for(var i=0;i<lobSel.options.length;i++){if(lobSel.options[i].text===t.lob){lobSel.selectedIndex=i;break;}}}
   /* Sidebar: open groups, clear all highlights, highlight ONLY the clicked subsub */
   var subNav=document.getElementById('sub-nav');
   if(subNav) subNav.classList.add('open');
@@ -2164,9 +2165,10 @@ function drillToType(catKey, idx){
   document.getElementById('type-hdr-cat-ico').innerHTML = '<i class="fas '+cat.icon+'"></i>';
   document.getElementById('type-hdr-name').textContent = t.name;
   document.getElementById('type-hdr-ico').innerHTML = '<i class="fas '+t.icon+'"></i>';
-  document.getElementById('td-name').value = t.name;
+  var tdName2 = document.getElementById('td-name');
+  if(tdName2) tdName2.value = t.name;
   var lobSel = document.getElementById('td-lob');
-  for(var i=0;i<lobSel.options.length;i++){if(lobSel.options[i].text===t.lob){lobSel.selectedIndex=i;break;}}
+  if(lobSel){for(var i=0;i<lobSel.options.length;i++){if(lobSel.options[i].text===t.lob){lobSel.selectedIndex=i;break;}}}
   /* Sidebar: clear ALL highlights */
   document.querySelectorAll('.nav-item,.nav-sub,.nav-subsub').forEach(function(n){n.classList.remove('active');n.style.background='';n.style.borderLeftColor='transparent'});
   /* Open sub-nav */
