@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Connected Underwriting - Workspace</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f4f5f7; color: #1a1a2e; font-size: 14px; }
+
+  /* ── Top Nav ── */
+  .top-nav { display: flex; align-items: center; background: #fff; border-bottom: 1px solid #e0e0e0; padding: 0 24px; height: 48px; }
+  .nav-logo { font-weight: 700; font-size: 18px; color: #2b328a; margin-right: 32px; letter-spacing: -0.5px; }
+  .nav-links { display: flex; gap: 0; }
+  .nav-links a { text-decoration: none; color: #555; font-size: 12px; font-weight: 600; text-transform: uppercase; padding: 14px 16px; letter-spacing: 0.5px; border-bottom: 3px solid transparent; transition: all 0.15s; }
+  .nav-links a.active { color: #2b328a; border-bottom-color: #2b328a; }
+  .nav-links a:hover { color: #2b328a; }
+  .nav-right { margin-left: auto; display: flex; align-items: center; gap: 16px; }
+  .site-selector { font-size: 12px; color: #555; cursor: pointer; }
+  .avatar { width: 32px; height: 32px; border-radius: 50%; background: #2b328a; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; }
+
+  /* ── Main Layout ── */
+  .main-layout { display: flex; max-width: 1400px; margin: 0 auto; padding: 24px; gap: 24px; }
+  .content-area { flex: 1; min-width: 0; }
+  .sidebar { width: 320px; flex-shrink: 0; }
+
+  /* ── Welcome Header ── */
+  .welcome-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+  .welcome-header h1 { font-size: 22px; font-weight: 600; color: #1a1a2e; }
+  .btn-primary { background: #2b328a; color: #fff; border: none; padding: 10px 20px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.15s; }
+  .btn-primary:hover { background: #1e2470; }
+
+  /* ── Tabs ── */
+  .tabs { display: flex; border-bottom: 2px solid #e0e0e0; margin-bottom: 16px; }
+  .tab { padding: 10px 24px; font-size: 14px; font-weight: 500; color: #777; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px; transition: all 0.15s; }
+  .tab.active { color: #2b328a; border-bottom-color: #2b328a; font-weight: 600; }
+  .tab:hover { color: #2b328a; }
+
+  /* ── View Toggle + Filter ── */
+  .toolbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .view-toggle { display: flex; border: 1px solid #d0d0d0; border-radius: 6px; overflow: hidden; }
+  .view-btn { padding: 7px 16px; font-size: 12px; font-weight: 500; background: #fff; border: none; cursor: pointer; color: #555; display: flex; align-items: center; gap: 6px; border-right: 1px solid #d0d0d0; transition: all 0.15s; }
+  .view-btn:last-child { border-right: none; }
+  .view-btn.active { background: #2b328a; color: #fff; }
+  .view-btn:hover:not(.active) { background: #f0f0f5; }
+  .filter-btn { width: 36px; height: 36px; border: 1px solid #d0d0d0; border-radius: 6px; background: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; color: #2b328a; transition: background 0.15s; }
+  .filter-btn:hover { background: #f0f0f5; }
+
+  /* ── Submission Cards Grid ── */
+  .cards-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .submission-card { background: #fff; border-radius: 10px; padding: 18px; border: 1px solid #e8e8ee; transition: box-shadow 0.2s; cursor: pointer; position: relative; }
+  .submission-card:hover { box-shadow: 0 4px 16px rgba(43,50,138,0.1); }
+  .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
+  .card-id-title { font-size: 14px; font-weight: 600; color: #1a1a2e; }
+  .card-type { font-size: 12px; color: #888; margin-top: 2px; display: flex; align-items: center; gap: 4px; }
+  .card-type::before { content: '○'; font-size: 8px; }
+  .status-badge { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 4px; white-space: nowrap; }
+  .status-in-review { background: #eef0ff; color: #2b328a; }
+  .status-ready { background: #e8f5e9; color: #2e7d32; }
+  .status-hold { background: #fff3e0; color: #e65100; }
+  .status-processing { background: #e3f2fd; color: #1565c0; }
+  .status-missing { background: #fce4ec; color: #c62828; }
+  .status-ready-quote { background: #f3e5f5; color: #7b1fa2; }
+  .progress-bar { height: 4px; background: #e8e8ee; border-radius: 2px; margin: 14px 0 12px; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 2px; transition: width 0.3s; }
+  .progress-fill.blue { background: #2b328a; }
+  .progress-fill.green { background: #2e7d32; }
+  .progress-fill.orange { background: #e65100; }
+  .progress-fill.purple { background: #7b1fa2; }
+  .card-footer { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: #888; }
+  .card-footer-item { display: flex; align-items: center; gap: 4px; }
+  .card-checkbox { width: 18px; height: 18px; border: 2px solid #d0d0d0; border-radius: 4px; flex-shrink: 0; cursor: pointer; }
+
+  /* ── Sidebar ── */
+  .sidebar-section { background: #fff; border-radius: 10px; border: 1px solid #e8e8ee; padding: 18px; margin-bottom: 16px; }
+  .sidebar-tabs { display: flex; margin-bottom: 14px; }
+  .sidebar-tab { padding: 6px 16px; font-size: 13px; font-weight: 500; color: #777; cursor: pointer; border-bottom: 2px solid transparent; }
+  .sidebar-tab.active { color: #2b328a; border-bottom-color: #2b328a; font-weight: 600; }
+  .sidebar-heading { font-size: 13px; font-weight: 600; color: #555; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; }
+  .sidebar-heading select { font-size: 12px; border: 1px solid #d0d0d0; border-radius: 4px; padding: 4px 8px; color: #555; }
+
+  /* ── Pie Chart (CSS only) ── */
+  .pie-container { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
+  .pie-chart { width: 120px; height: 120px; border-radius: 50%; background: conic-gradient(#c62828 0deg 72deg, #e65100 72deg 144deg, #2b328a 144deg 288deg, #2e7d32 288deg 360deg); position: relative; flex-shrink: 0; }
+  .pie-chart::after { content: ''; position: absolute; top: 30%; left: 30%; width: 40%; height: 40%; background: #fff; border-radius: 50%; }
+  .pie-legend { display: flex; flex-direction: column; gap: 6px; }
+  .legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #555; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+  /* ── Task Cards ── */
+  .todo-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #eee; }
+  .todo-header h3 { font-size: 14px; font-weight: 600; color: #1a1a2e; }
+  .task-card { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid #f0f0f5; }
+  .task-card:last-child { border-bottom: none; }
+  .task-icon { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+  .task-icon.upload { background: #e3f2fd; color: #1565c0; }
+  .task-icon.confirm { background: #f3e5f5; color: #7b1fa2; }
+  .task-icon.review { background: #fff3e0; color: #e65100; }
+  .task-icon.sanctions { background: #fce4ec; color: #c62828; }
+  .task-icon.referral { background: #e8f5e9; color: #2e7d32; }
+  .task-info { flex: 1; min-width: 0; }
+  .task-sub { font-size: 11px; color: #999; }
+  .task-title { font-size: 13px; font-weight: 600; color: #1a1a2e; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .task-due { font-size: 11px; color: #888; margin-top: 2px; }
+  .task-status { font-size: 11px; font-weight: 600; color: #888; white-space: nowrap; }
+  .task-status.open { color: #2b328a; }
+  .task-status.complete { color: #2e7d32; }
+
+  /* ── Alert Sidebar ── */
+  .alert-card { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid #f0f0f5; }
+  .alert-card:last-child { border-bottom: none; }
+  .alert-icon { width: 32px; height: 32px; border-radius: 6px; background: #eef0ff; color: #2b328a; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+  .alert-info { flex: 1; }
+  .alert-title { font-size: 13px; font-weight: 600; color: #c62828; }
+  .alert-date { font-size: 11px; color: #999; }
+  .alert-dismiss { background: none; border: none; color: #c62828; font-size: 16px; cursor: pointer; font-weight: 700; padding: 0 4px; }
+
+  /* ── Scrollable ── */
+  .scrollable { max-height: 340px; overflow-y: auto; }
+  .scrollable::-webkit-scrollbar { width: 4px; }
+  .scrollable::-webkit-scrollbar-thumb { background: #d0d0d0; border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<!-- ═══ TOP NAV ═══ -->
+<nav class="top-nav">
+  <div class="nav-logo">appian</div>
+  <div class="nav-links">
+    <a href="#" class="active">WORKSPACE</a>
+    <a href="#">SUBMISSIONS</a>
+    <a href="#">PARTIES</a>
+    <a href="#">MESSAGES</a>
+    <a href="#">REPORTS</a>
+    <a href="#" style="position:relative;">SMART SEARCH ▾</a>
+  </div>
+  <div class="nav-right">
+    <span class="site-selector">Connected Underwriting ▾</span>
+    <div class="avatar">AU</div>
+  </div>
+</nav>
+
+<!-- ═══ MAIN LAYOUT ═══ -->
+<div class="main-layout">
+
+  <!-- ── Content Area ── -->
+  <div class="content-area">
+
+    <!-- Welcome Header -->
+    <div class="welcome-header">
+      <h1>Welcome to Connected Underwriting, Anna!</h1>
+      <button class="btn-primary">+ NEW SUBMISSION</button>
+    </div>
+
+    <!-- My Submissions / Shared Queue Tabs -->
+    <div class="tabs">
+      <div class="tab active">My Submissions</div>
+      <div class="tab">Shared Queue</div>
+    </div>
+
+    <!-- View Toggle + Filter -->
+    <div class="toolbar">
+      <div class="view-toggle">
+        <button class="view-btn active">☷ Cards</button>
+        <button class="view-btn">📅 Calendar</button>
+        <button class="view-btn">☰ List</button>
+      </div>
+      <button class="filter-btn" title="Filter">⚙</button>
+    </div>
+
+    <!-- Submission Cards -->
+    <div class="cards-grid">
+
+      <!-- Card 1 -->
+      <div class="submission-card">
+        <div class="card-header">
+          <div>
+            <div class="card-id-title">SUB-10482 - Acme Corp Property Renewal</div>
+            <div class="card-type">Property &gt; Commercial Package</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span class="status-badge status-in-review">In Review</span>
+            <div class="card-checkbox"></div>
+          </div>
+        </div>
+        <div class="progress-bar"><div class="progress-fill blue" style="width:65%"></div></div>
+        <div class="card-footer">
+          <div class="card-footer-item">📅 Due in 3 days</div>
+          <div class="card-footer-item">👤 Anna Underwriter</div>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="submission-card">
+        <div class="card-header">
+          <div>
+            <div class="card-id-title">SUB-10479 - TechStart Inc D&O Coverage</div>
+            <div class="card-type">Management Liability &gt; New Business</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span class="status-badge status-ready-quote">Ready to Quote</span>
+            <div class="card-checkbox"></div>
+          </div>
+        </div>
+        <div class="progress-bar"><div class="progress-fill purple" style="width:90%"></div></div>
+        <div class="card-footer">
+          <div class="card-footer-item">📅 Due in 1 day</div>
+          <div class="card-footer-item">👤 Anna Underwriter</div>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="submission-card">
+        <div class="card-header">
+          <div>
+            <div class="card-id-title">SUB-10475 - Global Logistics Auto Fleet</div>
+            <div class="card-type">Auto &gt; Commercial Package</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span class="status-badge status-missing">Missing Info</span>
+            <div class="card-checkbox"></div>
+          </div>
+        </div>
+        <div class="progress-bar"><div class="progress-fill orange" style="width:30%"></div></div>
+        <div class="card-footer">
+          <div class="card-footer-item">📅 Due in 7 days</div>
+          <div class="card-footer-item">👤 Anna Underwriter</div>
+        </div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="submission-card">
+        <div class="card-header">
+          <div>
+            <div class="card-id-title">SUB-10471 - Riverside Hotels Property</div>
+            <div class="card-type">Property &gt; Renewal</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span class="status-badge status-hold">On Hold</span>
+            <div class="card-checkbox"></div>
+          </div>
+        </div>
+        <div class="progress-bar"><div class="progress-fill orange" style="width:45%"></div></div>
+        <div class="card-footer">
+          <div class="card-footer-item">📅 Due in 14 days</div>
+          <div class="card-footer-item">👤 Anna Underwriter</div>
+        </div>
+      </div>
+
+      <!-- Card 5 -->
+      <div class="submission-card">
+        <div class="card-header">
+          <div>
+            <div class="card-id-title">SUB-10468 - Summit Construction GL</div>
+            <div class="card-type">General Liability &gt; New Business</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span class="status-badge status-ready">Ready</span>
+            <div class="card-checkbox"></div>
+          </div>
+        </div>
+        <div class="progress-bar"><div class="progress-fill green" style="width:15%"></div></div>
+        <div class="card-footer">
+          <div class="card-footer-item">📅 Due in 10 days</div>
+          <div class="card-footer-item">👤 Anna Underwriter</div>
+        </div>
+      </div>
+
+      <!-- Card 6 -->
+      <div class="submission-card">
+        <div class="card-header">
+          <div>
+            <div class="card-id-title">SUB-10465 - Pacific Retail Workers Comp</div>
+            <div class="card-type">Workers Comp &gt; Renewal</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span class="status-badge status-processing">Processing</span>
+            <div class="card-checkbox"></div>
+          </div>
+        </div>
+        <div class="progress-bar"><div class="progress-fill blue" style="width:50%"></div></div>
+        <div class="card-footer">
+          <div class="card-footer-item">📅 Due in 20 days</div>
+          <div class="card-footer-item">👤 Anna Underwriter</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── Right Sidebar ── -->
+  <div class="sidebar">
+
+    <!-- My Tasks Section -->
+    <div class="sidebar-section">
+      <div class="sidebar-tabs">
+        <div class="sidebar-tab active">My Tasks</div>
+        <div class="sidebar-tab">Shared Queue</div>
+      </div>
+
+      <!-- Status Pie -->
+      <div class="sidebar-heading">Status <select><option>All</option></select></div>
+      <div class="pie-container">
+        <div class="pie-chart"></div>
+        <div class="pie-legend">
+          <div class="legend-item"><div class="legend-dot" style="background:#c62828"></div> Overdue (2)</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#e65100"></div> Due today (2)</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#2b328a"></div> Due this week (4)</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#2e7d32"></div> Due later (2)</div>
+        </div>
+      </div>
+
+      <!-- To-do List -->
+      <div class="todo-header">
+        <h3>To-do</h3>
+        <select style="font-size:12px;border:1px solid #d0d0d0;border-radius:4px;padding:3px 6px;"><option>All Tasks</option></select>
+      </div>
+      <div class="scrollable">
+
+        <div class="task-card">
+          <div class="task-icon upload">📄</div>
+          <div class="task-info">
+            <div class="task-sub">SUB-10482 · Upload Document</div>
+            <div class="task-title">Upload loss runs for Acme Corp</div>
+            <div class="task-due">📅 Due 2 days ago</div>
+          </div>
+          <div class="task-status open">OPEN</div>
+        </div>
+
+        <div class="task-card">
+          <div class="task-icon sanctions">🔍</div>
+          <div class="task-info">
+            <div class="task-sub">SUB-10479 · Sanctions Check</div>
+            <div class="task-title">Complete sanctions review for TechStart</div>
+            <div class="task-due">📅 Due today</div>
+          </div>
+          <div class="task-status open">OPEN</div>
+        </div>
+
+        <div class="task-card">
+          <div class="task-icon confirm">✓</div>
+          <div class="task-info">
+            <div class="task-sub">SUB-10475 · Confirmation</div>
+            <div class="task-title">Confirm broker details for Global Logistics</div>
+            <div class="task-due">📅 Due in 3 days</div>
+          </div>
+          <div class="task-status open">OPEN</div>
+        </div>
+
+        <div class="task-card">
+          <div class="task-icon referral">↗</div>
+          <div class="task-info">
+            <div class="task-sub">SUB-10482 · Referral</div>
+            <div class="task-title">Manager referral — TIV exceeds authority</div>
+            <div class="task-due">📅 Due in 5 days</div>
+          </div>
+          <div class="task-status open">OPEN</div>
+        </div>
+
+        <div class="task-card">
+          <div class="task-icon upload">📄</div>
+          <div class="task-info">
+            <div class="task-sub">SUB-10468 · Upload Document</div>
+            <div class="task-title">Upload ACORD 125 for Summit Construction</div>
+            <div class="task-due">📅 Due in 5 days</div>
+          </div>
+          <div class="task-status complete">COMPLETE</div>
+        </div>
+
+        <div class="task-card">
+          <div class="task-icon review">📋</div>
+          <div class="task-info">
+            <div class="task-sub">SUB-10471 · Document Review</div>
+            <div class="task-title">Review extracted ACORD 140 data</div>
+            <div class="task-due">📅 Due in 8 days</div>
+          </div>
+          <div class="task-status complete">COMPLETE</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Open Alerts Section -->
+    <div class="sidebar-section">
+      <div class="todo-header">
+        <h3>Open Alerts</h3>
+        <span style="font-size:11px;color:#999;">5 of 12</span>
+      </div>
+      <div class="scrollable" style="max-height:220px;">
+
+        <div class="alert-card">
+          <div class="alert-icon">📩</div>
+          <div class="alert-info">
+            <div class="alert-title">New document received</div>
+            <div class="alert-date">SUB-10482 · 2 hours ago</div>
+          </div>
+          <button class="alert-dismiss">✕</button>
+        </div>
+
+        <div class="alert-card">
+          <div class="alert-icon">⚠</div>
+          <div class="alert-info">
+            <div class="alert-title">Duplicate Submission Detected</div>
+            <div class="alert-date">SUB-10475 · 4/3/2026</div>
+          </div>
+          <button class="alert-dismiss">✕</button>
+        </div>
+
+        <div class="alert-card">
+          <div class="alert-icon">📩</div>
+          <div class="alert-info">
+            <div class="alert-title">Missing TIV and Proposed Dates</div>
+            <div class="alert-date">SUB-10471 · 4/3/2026</div>
+          </div>
+          <button class="alert-dismiss">✕</button>
+        </div>
+
+        <div class="alert-card">
+          <div class="alert-icon">📩</div>
+          <div class="alert-info">
+            <div class="alert-title">New broker message received</div>
+            <div class="alert-date">SUB-10479 · 4/2/2026</div>
+          </div>
+          <button class="alert-dismiss">✕</button>
+        </div>
+
+        <div class="alert-card">
+          <div class="alert-icon">⚠</div>
+          <div class="alert-info">
+            <div class="alert-title">Sanctions match found</div>
+            <div class="alert-date">SUB-10468 · 4/1/2026</div>
+          </div>
+          <button class="alert-dismiss">✕</button>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══ Interactivity ═══ -->
+<script>
+  // Tab switching
+  document.querySelectorAll('.tabs').forEach(tabGroup => {
+    tabGroup.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabGroup.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+      });
+    });
+  });
+
+  // Sidebar tab switching
+  document.querySelectorAll('.sidebar-tabs').forEach(tabGroup => {
+    tabGroup.querySelectorAll('.sidebar-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabGroup.querySelectorAll('.sidebar-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+      });
+    });
+  });
+
+  // View toggle
+  document.querySelectorAll('.view-toggle').forEach(group => {
+    group.querySelectorAll('.view-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        group.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+  });
+
+  // Nav links
+  document.querySelectorAll('.nav-links a').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      document.querySelectorAll('.nav-links a').forEach(l => l.classList.remove('active'));
+      link.classList.add('active');
+    });
+  });
+
+  // Card hover checkbox
+  document.querySelectorAll('.card-checkbox').forEach(cb => {
+    cb.addEventListener('click', (e) => {
+      e.stopPropagation();
+      cb.style.background = cb.style.background ? '' : '#2b328a';
+      cb.style.borderColor = cb.style.borderColor === 'rgb(43, 50, 138)' ? '' : '#2b328a';
+    });
+  });
+
+  // Alert dismiss
+  document.querySelectorAll('.alert-dismiss').forEach(btn => {
+    btn.addEventListener('click', () => {
+      btn.closest('.alert-card').style.display = 'none';
+    });
+  });
+</script>
+
+</body>
+</html>
