@@ -37,7 +37,7 @@ body{font-family:'Manrope',sans-serif;background:#FAFAFC;color:#222;font-size:16
 .nav-sub.active{background:rgba(60,90,255,.3);color:#fff;font-weight:600;border-left-color:#5b8aff}
 .nav-sub .chev{margin-left:auto;font-size:11px;opacity:.5;transition:transform .15s}.nav-sub .chev.open{transform:rotate(90deg)}
 .nav-sub i.sub-ico{font-size:12px;width:16px;text-align:center}
-/* sub-sub items (submission types under a category) */
+/* sub-sub items (products under a line of business) */
 .nav-subsub{padding:10px 20px 10px 72px;color:rgba(255,255,255,.9);cursor:pointer;font-size:13px;display:flex;align-items:center;gap:9px;border-left:3px solid transparent;transition:all .12s}
 .nav-subsub:hover{color:#fff;background:rgba(255,255,255,.04)}
 .nav-subsub.active{color:#fff!important;font-weight:600!important;background:rgba(60,90,255,.3)!important;border-left-color:#5b8aff!important}
@@ -445,7 +445,7 @@ code{background:#e8eaf6;padding:2px 6px;border-radius:3px;font-size:14px;color:#
         <div class="nav-subsub" onclick="event.stopPropagation();navToType('commercial-property',4,this)"><i class="far fa-file"></i>Ordinance or Law Coverage</div>
       </div>
     </div>
-    <div class="nav-item" onclick="goSection('lobconfig',this)"><i class="fas fa-sitemap nav-ico"></i>LOB Configuration</div>    <div class="nav-item" onclick="goSection('tasking',this)"><i class="fas fa-tasks nav-ico"></i>Tasking</div>
+    <div class="nav-item" onclick="goSection('tasking',this)"><i class="fas fa-tasks nav-ico"></i>Tasking</div>
     <div class="nav-item" onclick="goSection('alerts',this)"><i class="fas fa-bell nav-ico"></i>Alerts</div>
     <div class="nav-item" onclick="goSection('scoring',this)"><i class="fas fa-chart-bar nav-ico"></i>Scoring Rules</div>
     <div class="nav-item" onclick="goSection('questionnaire',this)"><i class="fas fa-clipboard-list nav-ico"></i>Questionnaire</div>
@@ -465,8 +465,8 @@ code{background:#e8eaf6;padding:2px 6px;border-radius:3px;font-size:14px;color:#
       <div style="position:relative;display:inline-block" id="create-dropdown-l1">
         <button class="btn-create" onclick="toggleCreateMenu('l1')">CREATE <i class="fas fa-caret-down" style="font-size:12px"></i></button>
         <div class="create-menu" id="create-menu-l1">
-          <div class="create-menu-item" onclick="showCreateModal('Submission Type');hideCreateMenu()"><i class="fas fa-file"></i> Submission Type</div>
-          <div class="create-menu-item" onclick="showCreateModal('Submission Category');hideCreateMenu()"><i class="fas fa-folder"></i> Submission Category</div>
+          <div class="create-menu-item" onclick="showCreateModal('Line of Business');hideCreateMenu()"><i class="fas fa-folder"></i> Line of Business</div>
+          <div class="create-menu-item" onclick="showCreateModal('Product');hideCreateMenu()"><i class="fas fa-file"></i> Product</div>
         </div>
       </div>
     </div>
@@ -479,15 +479,15 @@ code{background:#e8eaf6;padding:2px 6px;border-radius:3px;font-size:14px;color:#
   <div class="content">
     <div id="submissions-overview" class="pnl vis">
       <div class="sec-hdr">
-        <div class="sec-label">Submission Categories</div>
+        <div class="sec-label">Lines of Business</div>
       </div>
       <div class="cat-cards">
-        <div class="cat-card" onclick="navToCat('mgmt-liability')" style="cursor:pointer"><div class="cc-row"><div class="cc-ico blue"><i class="fas fa-user-tie"></i></div><div><div class="cc-name">Management Liability</div><div style="margin-top:4px"><span class="cc-tag">3 Submission Types</span></div></div></div></div>
-        <div class="cat-card bar-purple" onclick="navToCat('commercial-auto')" style="cursor:pointer"><div class="cc-row"><div class="cc-ico purple"><i class="fas fa-car"></i></div><div><div class="cc-name">Commercial Auto</div><div style="margin-top:4px"><span class="cc-tag">14 Submission Types</span></div></div></div></div>
-        <div class="cat-card bar-green" onclick="navToCat('commercial-property')" style="cursor:pointer"><div class="cc-row"><div class="cc-ico green"><i class="fas fa-box-open"></i></div><div><div class="cc-name">Commercial Property</div><div style="margin-top:4px"><span class="cc-tag">5 Submission Types</span></div></div></div></div>      </div>
+        <div class="cat-card" onclick="navToCat('mgmt-liability')" style="cursor:pointer"><div class="cc-row"><div class="cc-ico blue"><i class="fas fa-user-tie"></i></div><div><div class="cc-name">Management Liability</div><div style="margin-top:4px"><span class="cc-tag">3 Products</span></div></div></div></div>
+        <div class="cat-card bar-purple" onclick="navToCat('commercial-auto')" style="cursor:pointer"><div class="cc-row"><div class="cc-ico purple"><i class="fas fa-car"></i></div><div><div class="cc-name">Commercial Auto</div><div style="margin-top:4px"><span class="cc-tag">14 Products</span></div></div></div></div>
+        <div class="cat-card bar-green" onclick="navToCat('commercial-property')" style="cursor:pointer"><div class="cc-row"><div class="cc-ico green"><i class="fas fa-box-open"></i></div><div><div class="cc-name">Commercial Property</div><div style="margin-top:4px"><span class="cc-tag">5 Products</span></div></div></div></div>      </div>
       <div class="sec-label">Control Panel Tips</div>
       <div class="tips-row">
-        <div class="tip-card"><div class="tip-ico"><i class="fas fa-layer-group"></i></div><div class="tip-t">Organize Submissions</div><div class="tip-d">Group submission types into categories to streamline intake and route to the right teams.</div></div>
+        <div class="tip-card"><div class="tip-ico"><i class="fas fa-layer-group"></i></div><div class="tip-t">Organize Submissions</div><div class="tip-d">Group products into lines of business to streamline intake and route to the right teams.</div></div>
         <div class="tip-card"><div class="tip-ico"><i class="fas fa-magic"></i></div><div class="tip-t">Accelerate with AI</div><div class="tip-d">Enable auto-extraction and classification to speed up submission processing with Appian AI.</div></div>
         <div class="tip-card"><div class="tip-ico"><i class="fas fa-book-open"></i></div><div class="tip-t">Learn More</div><div class="tip-d">Get help configuring settings in <a href="#">detailed documentation</a>.</div></div>
       </div>
@@ -501,7 +501,7 @@ code{background:#e8eaf6;padding:2px 6px;border-radius:3px;font-size:14px;color:#
         <table>
           <thead><tr><th style="width:45%">Field Name</th><th>Field Type</th><th style="width:80px"></th></tr></thead>
           <tbody>
-            <tr><td>Submission Category</td><td><i class="fas fa-list ft-ico"></i> Choice List</td><td style="text-align:right"><i class="fas fa-pencil-alt act-ico" onclick="editDataField(this)"></i> <i class="fas fa-trash-alt del-ico" onclick="deleteDataField(this)"></i></td></tr>
+            <tr><td>Line of Business</td><td><i class="fas fa-list ft-ico"></i> Choice List</td><td style="text-align:right"><i class="fas fa-pencil-alt act-ico" onclick="editDataField(this)"></i> <i class="fas fa-trash-alt del-ico" onclick="deleteDataField(this)"></i></td></tr>
             <tr><td>Line of Business</td><td><i class="fas fa-list ft-ico"></i> Choice List</td><td style="text-align:right"><i class="fas fa-pencil-alt act-ico" onclick="editDataField(this)"></i> <i class="fas fa-trash-alt del-ico" onclick="deleteDataField(this)"></i></td></tr>
             <tr><td>Customer Name</td><td><i class="fas fa-font ft-ico"></i> Short Text</td><td style="text-align:right"><i class="fas fa-pencil-alt act-ico" onclick="editDataField(this)"></i> <i class="fas fa-trash-alt del-ico" onclick="deleteDataField(this)"></i></td></tr>
             <tr><td>Broker Name</td><td><i class="fas fa-font ft-ico"></i> Short Text</td><td style="text-align:right"><i class="fas fa-pencil-alt act-ico" onclick="editDataField(this)"></i> <i class="fas fa-trash-alt del-ico" onclick="deleteDataField(this)"></i></td></tr>
@@ -561,7 +561,7 @@ code{background:#e8eaf6;padding:2px 6px;border-radius:3px;font-size:14px;color:#
       <div style="position:relative;display:inline-block" id="create-dropdown-l2">
         <button class="btn-create" onclick="toggleCreateMenu('l2')">CREATE <i class="fas fa-caret-down" style="font-size:12px"></i></button>
         <div class="create-menu" id="create-menu-l2">
-          <div class="create-menu-item" onclick="showCreateModal('Submission Type');hideCreateMenu()"><i class="fas fa-file"></i> Submission Type</div>
+          <div class="create-menu-item" onclick="showCreateModal('Product');hideCreateMenu()"><i class="fas fa-file"></i> Product</div>
         </div>
       </div>
     </div>
@@ -574,7 +574,7 @@ code{background:#e8eaf6;padding:2px 6px;border-radius:3px;font-size:14px;color:#
   <div class="content">
     <div id="l2-overview" class="pnl vis">
     <div class="sec-hdr">
-      <div class="sec-label">All Submission Types</div>
+      <div class="sec-label">All Products</div>
       <div class="toggle-row"><div class="tgl" onclick="this.classList.toggle('off');toggleHideInactive(this,'#cat-types-container','cards')"><div class="dot"></div></div><span class="tgl-label">Hide Inactive</span></div>
     </div>
     <div id="cat-types-container" class="cat-cards">
@@ -592,8 +592,8 @@ code{background:#e8eaf6;padding:2px 6px;border-radius:3px;font-size:14px;color:#
     <div id="l2-data" class="pnl">
       <div class="data-section">
         <div class="data-section-hdr">
-          <div class="ds-title">Submission Category</div>
-          <button class="btn-create" onclick="showAddDataFieldsModal('Submission Category')"><i class="fas fa-plus" style="font-size:11px"></i> ADD DATA FIELDS</button>
+          <div class="ds-title">Line of Business</div>
+          <button class="btn-create" onclick="showAddDataFieldsModal('Line of Business')"><i class="fas fa-plus" style="font-size:11px"></i> ADD DATA FIELDS</button>
         </div>
         <table>
           <thead><tr><th style="width:45%">Field Name</th><th>Field Type</th><th style="width:80px"></th></tr></thead>
@@ -658,7 +658,7 @@ code{background:#e8eaf6;padding:2px 6px;border-radius:3px;font-size:14px;color:#
     <div id="l3-overview" class="pnl vis">
       <div class="sec-label">Control Panel Tips</div>
       <div class="tips-row">
-        <div class="tip-card"><div class="tip-ico"><i class="fas fa-layer-group"></i></div><div class="tip-t">Organize Submissions</div><div class="tip-d">Group submission types into categories to streamline intake and route to the right teams.</div></div>
+        <div class="tip-card"><div class="tip-ico"><i class="fas fa-layer-group"></i></div><div class="tip-t">Organize Submissions</div><div class="tip-d">Group products into lines of business to streamline intake and route to the right teams.</div></div>
         <div class="tip-card"><div class="tip-ico"><i class="fas fa-magic"></i></div><div class="tip-t">Accelerate with AI</div><div class="tip-d">Enable auto-extraction and classification to speed up submission processing with Appian AI.</div></div>
         <div class="tip-card"><div class="tip-ico"><i class="fas fa-book-open"></i></div><div class="tip-t">Learn More</div><div class="tip-d">Get help configuring settings in <a href="#">detailed documentation</a>.</div></div>
       </div>
@@ -668,8 +668,8 @@ code{background:#e8eaf6;padding:2px 6px;border-radius:3px;font-size:14px;color:#
     <div id="l3-data" class="pnl">
       <div class="data-section">
         <div class="data-section-hdr">
-          <div class="ds-title">Submission Type</div>
-          <button class="btn-create" onclick="showAddDataFieldsModal('Submission Type')"><i class="fas fa-plus" style="font-size:11px"></i> ADD DATA FIELDS</button>
+          <div class="ds-title">Product</div>
+          <button class="btn-create" onclick="showAddDataFieldsModal('Product')"><i class="fas fa-plus" style="font-size:11px"></i> ADD DATA FIELDS</button>
         </div>
         <table>
           <thead><tr><th style="width:45%">Field Name</th><th>Field Type</th><th style="width:80px"></th></tr></thead>
@@ -1277,51 +1277,11 @@ code{background:#e8eaf6;padding:2px 6px;border-radius:3px;font-size:14px;color:#
 
 <!-- ===== POLICY SETUP ===== -->
 
-<!-- ===== LOB CONFIGURATION ===== -->
-<!-- ===== LOB CONFIGURATION ===== -->
-<div id="sec-lobconfig" class="pnl">
-  <div class="pg-hdr">
-    <div class="pg-hdr-top">
-      <div class="pg-title"><span class="pg-ico"><i class="fas fa-sitemap"></i></span>LOB Configuration</div>
-      <button class="btn-create" onclick="showLobConfigModal()">CREATE LINE OF BUSINESS</button>
-    </div>
-  </div>
-  <div class="content">
-    <div class="sec-hdr">
-      <div class="sec-label">All Lines of Business</div>
-      <div class="toggle-row"><div class="tgl" onclick="this.classList.toggle('off');toggleLobConfigInactive(this)"><div class="dot"></div></div><span class="tgl-label">Hide Inactive</span></div>
-    </div>
-    <div class="dtable" id="lobconfig-grid">
-      <div class="tbar-inner">
-        <div class="sbox"><i class="fas fa-search"></i><input type="text" placeholder="Search"></div>
-        <button class="btn-search">SEARCH</button>
-        <div class="filter-group"><span>LINE OF BUSINESS</span><select><option>Any</option><option>Automobile</option><option>Workers' Compensation</option><option>Life</option><option>Home Owners</option></select></div>
-        <div class="filter-group"><span>STATUS</span><select><option>Any</option><option>Active</option><option>Inactive</option></select></div>
-        <div class="filter-group"><span>PRODUCT</span><select><option>Any</option><option>Personal Auto Standard</option><option>Commercial Auto Fleet</option><option>Workers' Comp Standard</option><option>Term Life Basic</option><option>Whole Life Premium</option><option>Homeowners Standard</option><option>Homeowners Premium</option></select></div>
-        <div class="filter-group"><span>SUBMISSION TYPE</span><select><option>Any</option><option>Commercial Auto</option><option>Auto Renewal</option><option>Coverage Change</option><option>Indication Request</option><option>Commercial Property</option><option>Property Renewal</option></select></div>
-      </div>
-      <table>
-      <thead><tr><th>Line of Business</th><th>Status</th><th>Product</th><th>Submission Type</th><th style="width:50px"></th></tr></thead>
-      <tbody>
-        <tr><td>Automobile</td><td><span class="status-badge active">Active</span></td><td><div>Personal Auto Standard</div><div style="font-size:12px;color:#888;margin-top:2px">Commercial</div></td><td title="Commercial Auto, Auto Renewal, General Liability, D&amp;O, Commercial Property">Commercial Auto, Auto Renewal <span style="color:#888;font-size:13px">+ 3 others</span></td><td><i class="fas fa-pencil-alt" style="color:#2322F0;cursor:pointer" onclick="editLobConfig(this)"></i></td></tr>
-        <tr><td>Automobile</td><td><span class="status-badge active">Active</span></td><td><div>Commercial Auto Fleet</div><div style="font-size:12px;color:#888;margin-top:2px">Commercial</div></td><td title="Auto Renewal, Commercial Auto">Auto Renewal, Commercial Auto</td><td><i class="fas fa-pencil-alt" style="color:#2322F0;cursor:pointer" onclick="editLobConfig(this)"></i></td></tr>
-        <tr><td>Workers' Compensation</td><td><span class="status-badge active">Active</span></td><td><div>Workers' Comp Standard</div><div style="font-size:12px;color:#888;margin-top:2px">Property</div></td><td title="Coverage Change, Named Insured Change, Commercial Property">Coverage Change, Named Insured Change <span style="color:#888;font-size:13px">+ 1 other</span></td><td><i class="fas fa-pencil-alt" style="color:#2322F0;cursor:pointer" onclick="editLobConfig(this)"></i></td></tr>
-        <tr><td>Life</td><td><span class="status-badge active">Active</span></td><td><div>Term Life Basic</div><div style="font-size:12px;color:#888;margin-top:2px">Medical</div></td><td title="Indication Request, Budgetary Quote, D&amp;O, General Liability">Indication Request, Budgetary Quote <span style="color:#888;font-size:13px">+ 2 others</span></td><td><i class="fas fa-pencil-alt" style="color:#2322F0;cursor:pointer" onclick="editLobConfig(this)"></i></td></tr>
-        <tr><td>Life</td><td><span class="status-badge active">Active</span></td><td><div>Whole Life Premium</div><div style="font-size:12px;color:#888;margin-top:2px">Medical</div></td><td>Indication Request</td><td><i class="fas fa-pencil-alt" style="color:#2322F0;cursor:pointer" onclick="editLobConfig(this)"></i></td></tr>
-        <tr><td>Home Owners</td><td><span class="status-badge active">Active</span></td><td><div>Homeowners Standard</div><div style="font-size:12px;color:#888;margin-top:2px">Property</div></td><td title="Commercial Property, Property Renewal, Coverage Change">Commercial Property, Property Renewal <span style="color:#888;font-size:13px">+ 1 other</span></td><td><i class="fas fa-pencil-alt" style="color:#2322F0;cursor:pointer" onclick="editLobConfig(this)"></i></td></tr>
-        <tr><td>Home Owners</td><td><span class="status-badge inactive">Inactive</span></td><td><div>Homeowners Premium</div><div style="font-size:12px;color:#888;margin-top:2px">Property</div></td><td>Property Renewal</td><td><i class="fas fa-pencil-alt" style="color:#2322F0;cursor:pointer" onclick="editLobConfig(this)"></i></td></tr>
-      </tbody>
-      </table>
-      <div class="pgn"><span>7 Records</span></div>
-    </div>
-  </div>
-</div>
-
 
 <!-- ── CREATE MODAL ── -->
 <div class="modal-overlay" id="create-modal" onclick="if(event.target===this)closeModal()">
   <div class="modal">
-    <div class="modal-hdr"><div class="m-ico"><i class="fas fa-inbox"></i></div><h2 id="modal-title">Create Submission Type</h2><div class="modal-req">Required fields are marked with an asterisk (*)</div></div>
+    <div class="modal-hdr"><div class="m-ico"><i class="fas fa-inbox"></i></div><h2 id="modal-title">Create Product</h2><div class="modal-req">Required fields are marked with an asterisk (*)</div></div>
     <div class="modal-body">
       <div class="ff"><label>Name <span class="req">*</span></label><input type="text" id="modal-name" placeholder=""></div>
       <div class="ff"><label>Web Address Identifier <span class="req">*</span></label><input type="text" id="modal-web" placeholder=""></div>
@@ -1694,7 +1654,7 @@ code{background:#e8eaf6;padding:2px 6px;border-radius:3px;font-size:14px;color:#
         <label style="display:flex;align-items:center;gap:6px;font-size:14px;font-weight:400;color:#333;cursor:pointer"><input type="radio" name="rule-match" value="any" style="width:16px;height:16px"> Match Any Conditions</label>
       </div>
       <div style="border-top:1px solid #e0e1e9;padding-top:14px">
-        <div class="ff"><label>Field <span class="req">*</span></label><select id="rule-field"><option value="">Select a field</option><option>Line of Business</option><option>Submission Type</option><option>Priority</option><option>Customer State</option><option>TIV</option><option>Channel</option></select></div>
+        <div class="ff"><label>Field <span class="req">*</span></label><select id="rule-field"><option value="">Select a field</option><option>Line of Business</option><option>Product</option><option>Priority</option><option>Customer State</option><option>TIV</option><option>Channel</option></select></div>
       </div>
       <div style="margin-top:12px;display:flex;flex-direction:column;gap:8px">
         <a href="#" onclick="event.preventDefault()" style="color:#2322F0;font-size:13px;font-weight:600;text-decoration:none;display:flex;align-items:center;gap:6px"><i class="fas fa-plus-circle" style="font-size:13px"></i> ADD CONDITION</a>
@@ -1763,9 +1723,9 @@ code{background:#e8eaf6;padding:2px 6px;border-radius:3px;font-size:14px;color:#
     </div>
     <div class="modal-body" style="padding:20px 32px 28px">
       <div class="ff"><label>Line of Business Name <span class="req">*</span></label><input type="text" id="lob-name" placeholder=""></div>
-      <div class="ff" style="position:relative"><label>Submission Types <span class="req">*</span></label>
+      <div class="ff" style="position:relative"><label>Products <span class="req">*</span></label>
         <div id="lob-subtype-wrap" style="border:1px solid #d0d1da;border-radius:4px;padding:8px 10px;min-height:38px;cursor:pointer;position:relative" onclick="document.getElementById('lob-subtype-dd').classList.toggle('open')">
-          <div id="lob-subtype-tags" style="display:flex;flex-wrap:wrap;gap:4px"><span style="color:#999;font-size:13px">Select submission types…</span></div>
+          <div id="lob-subtype-tags" style="display:flex;flex-wrap:wrap;gap:4px"><span style="color:#999;font-size:13px">Select products…</span></div>
           <i class="fas fa-chevron-down" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);color:#999;font-size:11px"></i>
         </div>
         <div id="lob-subtype-dd" style="display:none;position:absolute;z-index:10;background:#fff;border:1px solid #d0d1da;border-radius:4px;box-shadow:0 4px 16px rgba(0,0,0,.1);max-height:220px;overflow-y:auto;width:100%;margin-top:2px">
@@ -2106,7 +2066,7 @@ function drillToType(catKey, idx){
   /* Open the category group */
   var sg=document.getElementById('sg-'+catKey);
   if(sg){sg.classList.add('open');var ns=document.querySelector('.nav-sub[data-cat="'+catKey+'"]');if(ns){var ch=ns.querySelector('.chev i');if(ch)ch.className='fas fa-chevron-down';}}
-  /* Highlight ONLY the submission type */
+  /* Highlight ONLY the product */
   var subsubs=document.querySelectorAll('#sg-'+catKey+' .nav-subsub');
   if(subsubs[idx]){subsubs[idx].classList.add('active');subsubs[idx].style.background='rgba(60,90,255,.3)';subsubs[idx].style.borderLeftColor='#5b8aff';subsubs[idx].style.color='#fff';}
 }
@@ -2474,7 +2434,7 @@ function closeScoringModal(){
 }
 function showCreateModal(type){
   initColorGrid();
-  document.getElementById('modal-title').textContent = 'Create ' + (type || 'Submission Type');
+  document.getElementById('modal-title').textContent = 'Create ' + (type || 'Product');
   document.getElementById('modal-name').value = '';
   document.getElementById('modal-web').value = '';
   document.getElementById('modal-desc').value = '';
@@ -2504,12 +2464,12 @@ function fmtNow(){
   var d=new Date();return m[d.getMonth()]+' '+d.getDate()+', '+d.getFullYear();
 }
 
-/* ── Create Submission Type / Category ── */
+/* ── Create Product / Line of Business ── */
 function createSubmissionType(){
   var name=document.getElementById('modal-name').value.trim();
   if(!name){alert('Please enter a name.');return;}
   var title=document.getElementById('modal-title').textContent;
-  var isCategory=title.indexOf('Category')>-1;
+  var isCategory=title.indexOf('Line of Business')>-1;
   var colors=['blue','purple','green','orange','red'];
   var icons=['fa-briefcase','fa-folder','fa-file','fa-building','fa-shield-alt'];
   var ci=Math.floor(Math.random()*colors.length);
@@ -2517,7 +2477,7 @@ function createSubmissionType(){
   card.className='cat-card bar-'+colors[ci].replace('blue','');
   if(colors[ci]==='blue') card.className='cat-card';
   card.style.cursor='pointer';
-  card.innerHTML='<div class="cc-row"><div class="cc-ico '+colors[ci]+'"><i class="fas '+icons[ci]+'"></i></div><div><div class="cc-name">'+name+'</div><div class="cc-tags"><span class="cc-tag">'+(isCategory?'0 Submission Types':'New')+'</span></div></div></div>';
+  card.innerHTML='<div class="cc-row"><div class="cc-ico '+colors[ci]+'"><i class="fas '+icons[ci]+'"></i></div><div><div class="cc-name">'+name+'</div><div class="cc-tags"><span class="cc-tag">'+(isCategory?'0 Products':'New')+'</span></div></div></div>';
   document.querySelector('#submissions-overview .cat-cards').appendChild(card);
   closeModal();
 }
@@ -3140,115 +3100,6 @@ function showCostCatModal(){
   document.getElementById('costcat-modal').classList.add('open');
 }
 
-/* ── LOB Configuration ── */
-function toggleLobConfigInactive(tgl){
-  var hide=!tgl.classList.contains('off');
-  document.querySelectorAll('#lobconfig-grid tbody tr').forEach(function(row){
-    var statusBadge=row.querySelector('.status-badge');
-    if(!statusBadge) return;
-    var isInactive=statusBadge.textContent.trim()==='Inactive';
-    if(hide&&isInactive){ row.style.display='none'; } else { row.style.display=''; }
-  });
-}
-var editLobConfigRow=null;
-function getSelectedSubtypes(){
-  var vals=[];
-  document.querySelectorAll('#lob-subtype-dd .lob-st-opt input:checked').forEach(function(cb){
-    vals.push(cb.parentElement.getAttribute('data-val'));
-  });
-  return vals;
-}
-function updateLobSubtypeTags(){
-  var vals=getSelectedSubtypes();
-  var container=document.getElementById('lob-subtype-tags');
-  if(vals.length===0){
-    container.innerHTML='<span style="color:#999;font-size:13px">Select submission types…</span>';
-  } else {
-    container.innerHTML=vals.map(function(v){return '<span class="badge-ref" style="font-size:12px">'+v+'</span>';}).join(' ');
-  }
-}
-function setSubtypeCheckboxes(vals){
-  document.querySelectorAll('#lob-subtype-dd .lob-st-opt input').forEach(function(cb){
-    var label=cb.parentElement.getAttribute('data-val');
-    cb.checked=vals.indexOf(label)>-1;
-  });
-  updateLobSubtypeTags();
-}
-function editLobConfig(el){
-  editLobConfigRow=el.closest('tr');
-  var cells=editLobConfigRow.cells;
-  document.getElementById('lob-modal-title').textContent='Edit Line of Business';
-  document.getElementById('lob-modal-btn').textContent='EDIT';
-  document.getElementById('lob-modal-btn').setAttribute('onclick','saveLobConfig()');
-  document.getElementById('lob-name').value=cells[0].textContent.trim();
-  /* Product: first div text inside cell 2 */
-  var prodDiv=cells[2].querySelector('div');
-  var prodVal=prodDiv?prodDiv.textContent.trim():cells[2].textContent.trim();
-  var prodSel=document.getElementById('lob-product');
-  for(var i=0;i<prodSel.options.length;i++){if(prodSel.options[i].text===prodVal){prodSel.selectedIndex=i;break;}}
-  /* Product Segment: second div text inside cell 2 */
-  var segDiv=cells[2].querySelectorAll('div')[1];
-  var segVal=segDiv?segDiv.textContent.trim():'';
-  var segSel=document.getElementById('lob-segment');
-  for(var i=0;i<segSel.options.length;i++){if(segSel.options[i].text===segVal){segSel.selectedIndex=i;break;}}
-  document.getElementById('lob-status').value=cells[1].textContent.trim();
-  setSubtypeCheckboxes([cells[3].textContent.trim()]);
-  document.getElementById('lob-desc').value='';
-  document.getElementById('lob-desc-char').textContent='0';
-  document.getElementById('lob-modal').classList.add('open');
-}
-function fmtSubtypes(arr){
-  if(!arr||!arr.length) return '—';
-  if(arr.length<=2) return arr.join(', ');
-  var rest=arr.length-2;
-  return arr[0]+', '+arr[1]+' <span style="color:#888;font-size:13px">+ '+rest+' other'+(rest>1?'s':'')+'</span>';
-}
-function saveLobConfig(){
-  var name=document.getElementById('lob-name').value.trim();
-  if(!name){alert('Please enter a Line of Business name.');return;}
-  var status=document.getElementById('lob-status').value;
-  var product=document.getElementById('lob-product').value;
-  var segment=document.getElementById('lob-segment').value;
-  var subtypes=getSelectedSubtypes();
-  var subtypeDisplay=fmtSubtypes(subtypes);
-  if(editLobConfigRow){
-    editLobConfigRow.cells[0].textContent=name;
-    editLobConfigRow.cells[1].innerHTML='<span class="status-badge '+(status==='Active'?'active':'inactive')+'">'+status+'</span>';
-    editLobConfigRow.cells[2].innerHTML='<div>'+product+'</div>'+(segment?'<div style="font-size:12px;color:#888;margin-top:2px">'+segment+'</div>':'');
-    editLobConfigRow.cells[3].innerHTML=subtypeDisplay;
-    editLobConfigRow.cells[3].setAttribute('title',subtypes.join(', '));
-  }
-  closeLobModal();
-  editLobConfigRow=null;
-}
-function showLobConfigModal(){
-  editLobConfigRow=null;
-  document.getElementById('lob-modal-title').textContent='Create Line of Business';
-  document.getElementById('lob-modal-btn').textContent='CREATE';
-  document.getElementById('lob-modal-btn').setAttribute('onclick','createLobConfig()');
-  document.getElementById('lob-name').value='';
-  document.getElementById('lob-product').selectedIndex=0;
-  document.getElementById('lob-segment').selectedIndex=0;
-  document.getElementById('lob-status').selectedIndex=0;
-  setSubtypeCheckboxes([]);
-  document.getElementById('lob-desc').value='';
-  document.getElementById('lob-desc-char').textContent='0';
-  document.getElementById('lob-modal').classList.add('open');
-}
-function createLobConfig(){
-  var name=document.getElementById('lob-name').value.trim();
-  if(!name){alert('Please enter a Line of Business name.');return;}
-  var status=document.getElementById('lob-status').value;
-  var product=document.getElementById('lob-product').value;
-  var segment=document.getElementById('lob-segment').value;
-  var subtypes=getSelectedSubtypes();
-  var subtypeDisplay=fmtSubtypes(subtypes);
-  var tbody=document.querySelector('#lobconfig-grid tbody');
-  var tr=document.createElement('tr');
-  tr.innerHTML='<td>'+name+'</td><td><span class="status-badge '+(status==='Active'?'active':'inactive')+'">'+status+'</span></td><td><div>'+product+'</div>'+(segment?'<div style="font-size:12px;color:#888;margin-top:2px">'+segment+'</div>':'')+'</td><td title="'+subtypes.join(', ')+'">'+subtypeDisplay+'</td><td><i class="fas fa-pencil-alt" style="color:#2322F0;cursor:pointer" onclick="editLobConfig(this)"></i></td>';
-  tbody.appendChild(tr);
-  closeLobModal();
-}
 /* ── Hide Inactive Toggle ── */
 function toggleHideInactive(tgl, containerSel, mode){
   var hide=!tgl.classList.contains('off'); /* on = hide inactive */
@@ -3369,7 +3220,7 @@ function initGridFilters(){
 
 document.addEventListener('DOMContentLoaded', function(){
   initGridFilters();
-  /* Close submission type dropdown when clicking outside */
+  /* Close product dropdown when clicking outside */
   document.addEventListener("click",function(e){
     var dd=document.getElementById("lob-subtype-dd");
     var wrap=document.getElementById("lob-subtype-wrap");
@@ -3400,11 +3251,11 @@ document.addEventListener('DOMContentLoaded', function(){
 
   // Restore section from URL hash on page load
   var hash = location.hash.replace('#','');
-  var validSections = ['submissions','tasking','alerts','scoring','questionnaire','security','assignment','lobconfig'];
+  var validSections = ['submissions','tasking','alerts','scoring','questionnaire','security','assignment'];
   if(hash && validSections.indexOf(hash) >= 0){
     // Find the matching nav item
     var navItems = document.querySelectorAll('.nav-item');
-    var sectionMap = {submissions:0, lobconfig:1, tasking:2, alerts:3, scoring:4, questionnaire:5, security:6, assignment:7};
+    var sectionMap = {submissions:0, tasking:1, alerts:2, scoring:3, questionnaire:4, security:5, assignment:6};
     var idx = sectionMap[hash];
     if(idx !== undefined && navItems[idx]){
       goSection(hash, navItems[idx]);
