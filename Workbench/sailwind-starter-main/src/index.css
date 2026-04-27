@@ -119,22 +119,179 @@
   }
 }
 
-/* Custom dialog size override for Create Submission modal */
-[data-radix-dialog-content].w-\[95vw\] {
-  width: 70vh !important;
-  max-width: 90vw !important;
+/* ── Create Submission Modal Overrides ── */
+
+/* Dialog sizing and base */
+[data-radix-dialog-content].w-\[95vw\],
+[data-radix-dialog-content],
+div[role="dialog"] {
+  width: 70vw !important;
+  min-width: 70vw !important;
+  max-width: 70vw !important;
   height: 70vh !important;
   min-height: 70vh !important;
-  max-height: 90vh !important;
+  max-height: 70vh !important;
+  overflow: hidden !important;
+  padding: 0 !important;
 }
 
-[data-radix-dialog-content] {
-  background-color: #fafafc !important;
+[data-radix-dialog-content],
+div[role="dialog"] {
+  background-color: #ffffff !important;
   padding: 0 !important;
   overflow: hidden !important;
 }
 
 /* Hide the empty dialog header/title area */
-[data-radix-dialog-content] > div:first-child {
+[data-radix-dialog-content] > .mb-4,
+div[role="dialog"] > .mb-4 {
   display: none !important;
+}
+
+/* The Radix children wrapper div — must constrain to dialog height */
+[data-radix-dialog-content] > div:not(.mb-4),
+div[role="dialog"] > div:not(.mb-4) {
+  height: 70vh !important;
+  max-height: 70vh !important;
+  overflow: hidden !important;
+}
+
+/* Z-index layering */
+[data-radix-dialog-overlay] { z-index: 9998 !important; }
+[data-radix-dialog-content] { z-index: 9999 !important; }
+[data-state="open"].fixed.inset-0 { z-index: 9998 !important; }
+div[role="dialog"] { z-index: 9999 !important; }
+
+/* ── Field sizing ── */
+div[role="dialog"] input[type="text"],
+div[role="dialog"] select {
+  width: 100% !important;
+  font-size: 14px !important;
+  padding: 6px 10px !important;
+  border: 1px solid #d1d5db !important;
+  border-radius: 4px !important;
+}
+
+/* Match dropdown button size to text inputs */
+div[role="dialog"] button[aria-haspopup="listbox"] {
+  font-size: 14px !important;
+  padding: 6px 10px !important;
+}
+
+div[role="dialog"] button[aria-haspopup="listbox"] span {
+  font-size: 14px !important;
+}
+
+div[role="dialog"] select {
+  height: auto !important;
+  min-height: 0 !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  font-size: 13px !important;
+  padding: 6px 10px !important;
+  line-height: 1.4 !important;
+  box-sizing: border-box !important;
+}
+
+div[role="dialog"] textarea {
+  font-size: 14px !important;
+}
+
+/* ── Labels ── */
+div[role="dialog"] label {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: #111827 !important;
+}
+
+/* ── Spacing between fields ── */
+div[role="dialog"] .space-y-4 > * + * {
+  margin-top: 0.625rem !important;
+}
+
+/* ── Section box spacing ── */
+div[role="dialog"] .mb-8 {
+  margin-bottom: 1.5rem !important;
+}
+
+/* ── Radio buttons ── */
+div[role="dialog"] [role="radiogroup"] label {
+  font-size: 14px !important;
+  font-weight: 400 !important;
+}
+
+/* ── Grid row spacing ── */
+div[role="dialog"] .grid.gap-4 {
+  gap: 1rem !important;
+}
+
+/* Smaller dropdown option text */
+div[role="dialog"] [role="listbox"] button {
+  font-size: 14px !important;
+}
+
+/* Reduce bottom margin on fields inside modal boxes */
+div[role="dialog"] .space-y-4 .mb-4,
+div[role="dialog"] .space-y-4 .mb-2 {
+  margin-bottom: 0.25rem !important;
+}
+
+/* Required asterisk in accent blue */
+div[role="dialog"] label span.text-red-700,
+div[role="dialog"] label span.text-red-500 {
+  color: #2322F0 !important;
+}
+
+/* Selected radio buttons in accent blue */
+div[role="dialog"] input[type="radio"]:checked {
+  accent-color: #2322F0 !important;
+}
+
+/* Constrain dropdown panels inside modal — allow overflow from boxes */
+div[role="dialog"] .relative > .absolute.z-50 {
+  max-height: 200px !important;
+  z-index: 9999 !important;
+}
+
+div[role="dialog"] .relative > .absolute.z-50 .overflow-y-auto {
+  max-height: 160px !important;
+}
+
+/* Allow dropdowns to overflow outside card boxes */
+div[role="dialog"] [class*="CardLayout"],
+div[role="dialog"] [class*="card"],
+div[role="dialog"] .rounded-sm,
+div[role="dialog"] .border.border-gray-200,
+div[role="dialog"] .space-y-4,
+div[role="dialog"] .grid {
+  overflow: visible !important;
+}
+
+/* Keep only the main scrollable content area as overflow-y-auto */
+div[role="dialog"] .overflow-y-auto {
+  overflow-x: visible !important;
+}
+
+/* Fix dropdown search input styling */
+div[role="dialog"] .relative > .absolute.z-50 input[type="text"] {
+  max-width: 100% !important;
+  font-size: 13px !important;
+  padding: 4px 8px 4px 28px !important;
+  border: 1px solid #d1d5db !important;
+  border-radius: 4px !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+div[role="dialog"] .relative > .absolute.z-50 input[type="text"]:focus {
+  border-color: #2322F0 !important;
+  ring: none !important;
+  box-shadow: 0 0 0 1px #2322F0 !important;
+}
+
+/* Submission summary light gray labels → #6C6C75 */
+.submission-summary-content .text-gray-400 {
+  color: #6C6C75 !important;
 }
