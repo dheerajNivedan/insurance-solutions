@@ -346,14 +346,6 @@ function CreateSubmissionWizard({ open, onClose, onCreate }: { open: boolean; on
                       />
                       <div />
                     </div>
-                    <div>
-                    <TextField
-                      label="Title"
-                      value={title}
-                      saveInto={(v) => setTitle(v)}
-                      required={true}
-                    />
-                    </div>
                     <div className="grid grid-cols-2 gap-4">
                       <DropdownField
                         label="Products"
@@ -411,6 +403,15 @@ function CreateSubmissionWizard({ open, onClose, onCreate }: { open: boolean; on
                       required={true}
                     />
                       <div />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                    <TextField
+                      label="Title"
+                      value={title}
+                      saveInto={(v) => setTitle(v)}
+                      required={true}
+                    />
+                    <div />
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                     <div>
@@ -1253,20 +1254,30 @@ function ExceptionsView() {
   return (
     <div>
       <p className="text-[15px] font-bold text-gray-900 mb-4">Exception Queue</p>
-      <CardLayout padding="STANDARD" showShadow={true}>
-        {/* Sub-tabs */}
-        <div className="flex border-b border-gray-200 mb-4">
-          {([
-            { key: 'message' as const, label: 'Message' },
-            { key: 'classification' as const, label: 'Classification' },
-            { key: 'reconciliation' as const, label: 'Reconciliation' },
-          ]).map(t => (
-            <button key={t.key} onClick={() => setExceptionTab(t.key)}
-              className={`px-4 pb-2 text-[13px] font-semibold border-b-[3px] -mb-[1px] transition-colors ${exceptionTab === t.key ? 'text-gray-900 font-bold border-[#2322F0]' : 'text-gray-400 border-transparent hover:text-gray-600'}`}>
-              {t.label}
-            </button>
-          ))}
+      <div className="flex gap-0 min-h-[calc(100vh-250px)]">
+        {/* Side Nav */}
+        <div className="w-52 flex-shrink-0 bg-white">
+          <CardLayout padding="NONE" showShadow={false} showBorder={false} shape="SQUARED">
+            {([
+              { key: 'message' as const, label: 'Message' },
+              { key: 'classification' as const, label: 'Classification' },
+              { key: 'reconciliation' as const, label: 'Reconciliation' },
+            ]).map(t => (
+              <button key={t.key} onClick={() => setExceptionTab(t.key)}
+                className={`w-full text-left px-5 py-4 text-[14px] transition-colors border-l-[4px] ${
+                  exceptionTab === t.key
+                    ? 'text-gray-900 font-bold border-[#2322F0] bg-[#EDEEFA]'
+                    : 'text-gray-600 font-normal border-transparent hover:bg-gray-50'
+                }`}>
+                {t.label}
+              </button>
+            ))}
+          </CardLayout>
         </div>
+
+        {/* Content */}
+        <div className="flex-1 min-w-0 pl-4">
+          <CardLayout padding="STANDARD" showShadow={true} showBorder={false} shape="SEMI_ROUNDED">
 
         {/* Message Exceptions Table */}
         {exceptionTab === 'message' && (
@@ -1342,7 +1353,9 @@ function ExceptionsView() {
             </table>
           </div>
         )}
-      </CardLayout>
+          </CardLayout>
+        </div>
+      </div>
     </div>
   )
 }
