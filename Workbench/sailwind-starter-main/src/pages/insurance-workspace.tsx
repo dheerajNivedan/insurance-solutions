@@ -748,8 +748,6 @@ function CreateSubmissionWizard({ open, onClose, onCreate }: { open: boolean; on
 function SubmissionSummaryView({ onBack, subId, subTitle }: { onBack: () => void; subId: string; subTitle: string }) {
   const [overviewTab, setOverviewTab] = useState<'customer' | 'broker'>('customer')
   const [taskTab, setTaskTab] = useState<'open' | 'completed' | 'not-needed'>('open')
-  const [riskTab, setRiskTab] = useState<'score' | 'coverage' | 'loss'>('score')
-  const [subDetailTab, setSubDetailTab] = useState<'policy' | 'related'>('policy')
   const [chatInput, setChatInput] = useState('')
   const [chatOpen, setChatOpen] = useState(true)
   const [aiSummaryOpen, setAiSummaryOpen] = useState(true)
@@ -885,9 +883,9 @@ function SubmissionSummaryView({ onBack, subId, subTitle }: { onBack: () => void
                 <div>
                   <div className="flex items-center justify-between mb-3"><p className="text-[15px] font-bold text-gray-900">Customer and Broker Information</p><Icon icon="edit" size="MEDIUM" color="ACCENT" /></div>
                   <CardLayout padding="MORE" showShadow={true} showBorder={false} shape="SEMI_ROUNDED">
-                    <div className="flex border-b border-gray-200 mb-4">
-                      <button onClick={() => setOverviewTab('customer')} className={`px-4 pb-2 text-[13px] font-medium border-b-[3px] -mb-[1px] transition-colors ${overviewTab === 'customer' ? 'text-gray-900 font-bold border-[#2322F0]' : 'text-gray-400 border-transparent hover:text-gray-600'}`}>Customer</button>
-                      <button onClick={() => setOverviewTab('broker')} className={`px-4 pb-2 text-[13px] font-medium border-b-[3px] -mb-[1px] transition-colors ${overviewTab === 'broker' ? 'text-gray-900 font-bold border-[#2322F0]' : 'text-gray-400 border-transparent hover:text-gray-600'}`}>Broker</button>
+                    <div className="flex gap-6 border-b border-gray-200 mb-4 px-2">
+                      <button onClick={() => setOverviewTab('customer')} className={`pb-2 text-[13px] font-medium border-b-[3px] -mb-[1px] transition-colors ${overviewTab === 'customer' ? 'text-gray-900 font-bold border-[#2322F0]' : 'text-gray-400 border-transparent hover:text-gray-600'}`}>Customer</button>
+                      <button onClick={() => setOverviewTab('broker')} className={`pb-2 text-[13px] font-medium border-b-[3px] -mb-[1px] transition-colors ${overviewTab === 'broker' ? 'text-gray-900 font-bold border-[#2322F0]' : 'text-gray-400 border-transparent hover:text-gray-600'}`}>Broker</button>
                     </div>
                     {overviewTab === 'customer' ? (
                       <div className="grid grid-cols-3 gap-8">
@@ -933,115 +931,80 @@ function SubmissionSummaryView({ onBack, subId, subTitle }: { onBack: () => void
                   </CardLayout>
                 </div>
 
-                {/* Risk Information (tabbed) */}
+                {/* Risk Information */}
                 <div>
                   <div className="flex items-center justify-between mb-3"><p className="text-[15px] font-bold text-gray-900">Risk Information</p><Icon icon="edit" size="MEDIUM" color="ACCENT" /></div>
                   <CardLayout padding="MORE" showShadow={true} showBorder={false} shape="SEMI_ROUNDED">
-                    <div className="flex border-b border-gray-200 mb-4">
-                      {([{ key: 'score' as const, label: 'Submission Score' }, { key: 'coverage' as const, label: 'Exposure and Coverage' }, { key: 'loss' as const, label: 'Loss History' }]).map(t => (
-                        <button key={t.key} onClick={() => setRiskTab(t.key)} className={`px-4 pb-2 text-[13px] font-medium border-b-[3px] -mb-[1px] transition-colors ${riskTab === t.key ? 'text-gray-900 font-bold border-[#2322F0]' : 'text-gray-400 border-transparent hover:text-gray-600'}`}>{t.label}</button>
-                      ))}
+
+                    {/* Top row: Score + Exposure side by side */}
+                    <div className="flex gap-4 mb-4">
+
+                      {/* Submission Score — compact left panel */}
+                      <div className="w-[240px] flex-shrink-0 border border-gray-100 rounded-lg p-4 bg-white">
+                        <div className="flex items-center justify-between mb-4">
+                          <p className="text-[14px] font-bold text-gray-900">Submission Score</p>
+                          <Icon icon="info" size="SMALL" color="ACCENT" />
+                        </div>
+                        <div className="flex items-center gap-5">
+                          <div className="relative w-20 h-20 flex-shrink-0">
+                            <svg viewBox="0 0 36 36" className="w-full h-full -rotate-90">
+                              <circle cx="18" cy="18" r="15.9" fill="none" stroke="#E5E7EB" strokeWidth="2.5" />
+                              <circle cx="18" cy="18" r="15.9" fill="none" stroke="#F59E0B" strokeWidth="2.5" strokeDasharray="54 46" strokeLinecap="round" />
+                            </svg>
+                            <span className="absolute inset-0 flex items-center justify-center text-[16px] font-bold text-gray-900">54%</span>
+                          </div>
+                          <div className="space-y-2.5">
+                            <div><p className="text-[11px] text-gray-400">Customer Employee Count</p><p className="text-[13px] font-bold text-gray-900">50</p></div>
+                            <div><p className="text-[11px] text-gray-400">Rush Status</p><p className="text-[13px] font-bold text-gray-900">0</p></div>
+                            <div><p className="text-[11px] text-gray-400">Submission Channel</p><p className="text-[13px] font-bold text-gray-900">4</p></div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Exposure and Coverage — fills remaining space */}
+                      <div className="flex-1 border border-gray-100 rounded-lg p-4 bg-white">
+                        <p className="text-[14px] font-bold text-gray-900 mb-3">Exposure and Coverage Information</p>
+                        <div className="flex gap-8 mb-4">
+                          <div><p className="text-[11px] text-gray-400">Total Assets</p><p className="text-[13px] text-gray-500">-</p></div>
+                          <div><p className="text-[11px] text-gray-400">Calculated FTE</p><p className="text-[13px] text-gray-500">-</p></div>
+                        </div>
+                        <div className="flex items-center gap-2 mb-3">
+                          <p className="text-[13px] font-bold text-gray-900">Coverage Details</p>
+                          <Icon icon="edit" size="SMALL" color="ACCENT" />
+                        </div>
+                        <table className="w-full text-left table-fixed">
+                          <thead><tr className="border-b border-gray-200">{['Coverage', 'Per Claim Limit', 'Aggregate Limit', 'Retention'].map(h => <th key={h} className="text-[11px] font-semibold text-gray-900 py-2 pr-3">{h}</th>)}</tr></thead>
+                          <tbody>
+                            <tr className="border-b border-gray-100"><td className="py-2.5 pr-3 text-[13px] text-gray-900">D&O</td><td className="py-2.5 pr-3 text-[13px] text-gray-400">-</td><td className="py-2.5 pr-3 text-[13px] text-gray-400">-</td><td className="py-2.5 pr-3 text-[13px] text-gray-400">-</td></tr>
+                            <tr><td className="py-2.5 pr-3 text-[13px] text-gray-900">EPL</td><td className="py-2.5 pr-3 text-[13px] text-gray-400">-</td><td className="py-2.5 pr-3 text-[13px] text-gray-400">-</td><td className="py-2.5 pr-3 text-[13px] text-gray-400">-</td></tr>
+                          </tbody>
+                        </table>
+                      </div>
+
                     </div>
-                    {riskTab === 'score' && (
-                      <div>
-                        <div className="mb-4 mt-4">
-                          <ProgressBar percentage={55} label="" labelPosition="COLLAPSED" marginAbove="NONE" marginBelow="NONE" />
-                        </div>
-                        <div className="grid grid-cols-2 gap-x-6 gap-y-3">
-                          <div><p className="text-[12px] text-gray-400">Tier</p><p className="text-[13px] text-gray-900">B+</p></div>
-                          <div><p className="text-[12px] text-gray-400">Risk</p><p className="text-[13px] text-gray-900">Medium</p></div>
-                          <div><p className="text-[12px] text-gray-400">Channel</p><p className="text-[13px] text-gray-900">Email</p></div>
+
+                    {/* Loss History — full width bottom */}
+                    <div className="border border-gray-100 rounded-lg p-4 bg-white">
+                      <p className="text-[14px] font-bold text-gray-900 mb-2">Loss History</p>
+                      <div className="flex items-center gap-3 py-2">
+                        <FileText size={24} className="text-gray-300" />
+                        <div>
+                          <p className="text-[13px] text-gray-500">No loss history information available.</p>
+                          <button className="text-[13px] text-[#2322F0] hover:underline">Update Information</button>
                         </div>
                       </div>
-                    )}
-                    {riskTab === 'coverage' && (
-                      <div>
-                        <div className="grid grid-cols-2 gap-4 mb-3">
-                          <div><p className="text-[11px] text-gray-400">Total Insured Value</p><p className="text-[15px] font-bold text-gray-900">$1,500,000</p></div>
-                          <div><p className="text-[11px] text-gray-400">Annual Premium</p><p className="text-[15px] font-bold text-gray-900">$7,500</p></div>
-                        </div>
-                        <div className="grid grid-cols-4 gap-2 py-2 border-b border-gray-200">{['Coverage', 'Per Occ.', 'Aggregate', 'Retention'].map(h => <p key={h} className="text-[11px] font-semibold text-gray-500 uppercase">{h}</p>)}</div>
-                        <div className="grid grid-cols-4 gap-2 py-2 border-b border-gray-100"><p className="text-[13px]">D&O</p><p className="text-[13px] text-gray-700">$1M</p><p className="text-[13px] text-gray-700">$2M</p><p className="text-[13px] text-gray-700">$25K</p></div>
-                        <div className="grid grid-cols-4 gap-2 py-2"><p className="text-[13px]">EPL</p><p className="text-[13px] text-gray-700">$500K</p><p className="text-[13px] text-gray-700">$1M</p><p className="text-[13px] text-gray-700">$10K</p></div>
-                      </div>
-                    )}
-                    {riskTab === 'loss' && (
-                      <div className="flex flex-col items-center justify-center py-6 text-center">
-                        <FileText size={28} className="text-gray-300 mb-2" />
-                        <p className="text-[13px] text-gray-500">No loss history information available.</p>
-                        <button className="text-[13px] text-[#2322F0] hover:underline mt-1">Update Information</button>
-                      </div>
-                    )}
+                    </div>
+
                   </CardLayout>
                 </div>
-                <div>
-                  <div className="flex items-center justify-between mb-3"><p className="text-[15px] font-bold text-gray-900">Tasks</p><ButtonWidget label="CREATE TASK" style="OUTLINE" color="ACCENT" size="SMALL" /></div>
-                  <CardLayout padding="STANDARD" showShadow={true} showBorder={false} shape="SEMI_ROUNDED">
-                    <div className="flex border-b border-gray-200 mb-3">
-                      {([{ key: 'open' as const, label: 'Open' }, { key: 'completed' as const, label: 'Completed' }, { key: 'not-needed' as const, label: 'Not Needed' }]).map(t => (
-                        <button key={t.key} onClick={() => setTaskTab(t.key)} className={`px-4 pb-2 text-[13px] font-medium border-b-[3px] -mb-[1px] transition-colors ${taskTab === t.key ? 'text-gray-900 font-bold border-[#2322F0]' : 'text-gray-400 border-transparent hover:text-gray-600'}`}>{t.label}</button>
-                      ))}
-                    </div>
-                    <table className="w-full text-left"><thead><tr className="border-b border-gray-200">{['Alerts', 'Type', 'Assignee', 'Due Date', 'Status'].map(h => <th key={h} className="text-[11px] font-semibold text-gray-500 uppercase py-2 pr-3">{h}</th>)}</tr></thead><tbody><tr><td colSpan={5} className="py-8 text-center text-[13px] text-gray-400">No tasks available</td></tr></tbody></table>
-                  </CardLayout>
-                </div>
-              </div>
-
-              {/* Right inner column (40%) */}
-              <div className="flex-[2] flex-shrink-0 space-y-5">
-
-                {/* Submission Details */}
-                <div>
-                  <div className="flex items-center justify-between mb-3"><p className="text-[15px] font-bold text-gray-900">Submission Details</p><Icon icon="edit" size="MEDIUM" color="ACCENT" /></div>
-                  <CardLayout padding="STANDARD" showShadow={true} showBorder={false} shape="SEMI_ROUNDED">
-                    <div className="flex border-b border-gray-200 mb-3">
-                      <button onClick={() => setSubDetailTab('policy')} className={`px-4 pb-2 text-[13px] font-medium border-b-[3px] -mb-[1px] transition-colors ${subDetailTab === 'policy' ? 'text-gray-900 font-bold border-[#2322F0]' : 'text-gray-400 border-transparent hover:text-gray-600'}`}>Policy Details</button>
-                      <button onClick={() => setSubDetailTab('related')} className={`px-4 pb-2 text-[13px] font-medium border-b-[3px] -mb-[1px] transition-colors ${subDetailTab === 'related' ? 'text-gray-900 font-bold border-[#2322F0]' : 'text-gray-400 border-transparent hover:text-gray-600'}`}>Related Submissions</button>
-                    </div>
-                    {subDetailTab === 'policy' && (
-                      <div className="grid grid-cols-2 gap-x-6 gap-y-3">
-                        <div><p className="text-[12px] text-gray-400">Product Segment</p><p className="text-[13px] text-gray-900">Commercial</p></div>
-                        <div><p className="text-[12px] text-gray-400">Insurance Carrier Branch</p><p className="text-[13px] text-gray-900">LIC</p></div>
-                        <div><p className="text-[12px] text-gray-400">Proposed Effective Date</p><p className="text-[13px] text-gray-900">04/01/2026</p></div>
-                        <div><p className="text-[12px] text-gray-400">Proposed Expiration Date</p><p className="text-[13px] text-gray-900">04/30/2026</p></div>
-                        <div><p className="text-[12px] text-gray-400">Total Insurance Value</p><p className="text-[13px] text-gray-900">$1,000,000</p></div>
-                        <div><p className="text-[12px] text-gray-400">Expiring Premium</p><p className="text-[13px] text-gray-900">$500,000</p></div>
-                        <div><p className="text-[12px] text-gray-400">Rush Status</p><p className="text-[13px] text-gray-900">Standard</p></div>
-                        <div><p className="text-[12px] text-gray-400">Primary / Excess Status</p><p className="text-[13px] text-gray-900">Primary</p></div>
-                        <div><p className="text-[12px] text-gray-400">Status</p><TagField tags={[{ text: "Ready to Quote", backgroundColor: "POSITIVE" }]} size="SMALL" marginBelow="NONE" /></div>
-                      </div>
-                    )}
-                    {subDetailTab === 'related' && (
-                      <div>
-                        <div className="flex items-center justify-between mb-2"><span className="text-[12px] text-gray-400">1 related submission</span></div>
-                        <div className="flex items-center gap-3 py-2">
-                          <StampField icon="file-text" backgroundColor="#E8E7FD" contentColor="#2322F0" size="SMALL" marginBelow="NONE" />
-                          <div><p className="text-[13px] font-semibold text-[#2322F0] hover:underline cursor-pointer">SUB0401XUSC</p><p className="text-[12px] text-gray-400">Renewal · Bound 4/1/2025</p></div>
-                        </div>
-                      </div>
-                    )}
-                  </CardLayout>
-                </div>
-
-                {/* Open Alerts */}
-                <div>
-                  <div className="flex items-center justify-between mb-3"><p className="text-[15px] font-bold text-gray-900">Open Alerts</p><span className="text-[11px] text-gray-400">1 of 1</span></div>
-                  <CardLayout padding="STANDARD" showShadow={true} showBorder={false} shape="SEMI_ROUNDED">
-                  <div className="flex items-start gap-2.5 py-2">
-                    <StampField icon="mail" backgroundColor="#E8E7FD" contentColor="#2322F0" size="MEDIUM" marginBelow="NONE" shape="SEMI_ROUNDED" />
-                    <div><p className="text-[13px] font-semibold text-[#2322F0]">Duplicate Submission Detected</p><p className="text-[12px] text-gray-400">Match: SUB0401XUSC</p></div>
-                  </div>
-                </CardLayout>
-                </div>
-
-                {/* Comments */}
+                {/* Comments (moved from right column) */}
                 <div>
                   <p className="text-[15px] font-bold text-gray-900 mb-3">Comments</p>
                   <CardLayout padding="STANDARD" showShadow={true} showBorder={false} shape="SEMI_ROUNDED">
                     {/* Tabs */}
-                    <div className="flex border-b border-gray-200 mb-3">
-                      <button onClick={() => setCommentTab('all')} className={`px-4 pb-2 text-[13px] font-medium border-b-[3px] -mb-[1px] transition-colors ${commentTab === 'all' ? 'text-gray-900 font-bold border-[#2322F0]' : 'text-gray-400 border-transparent hover:text-gray-600'}`}>All</button>
-                      <button onClick={() => setCommentTab('pinned')} className={`px-4 pb-2 text-[13px] font-medium border-b-[3px] -mb-[1px] transition-colors ${commentTab === 'pinned' ? 'text-gray-900 font-bold border-[#2322F0]' : 'text-gray-400 border-transparent hover:text-gray-600'}`}>Pinned</button>
+                    <div className="flex gap-6 border-b border-gray-200 mb-3 px-2">
+                      <button onClick={() => setCommentTab('all')} className={`pb-2 text-[13px] font-medium border-b-[3px] -mb-[1px] transition-colors ${commentTab === 'all' ? 'text-gray-900 font-bold border-[#2322F0]' : 'text-gray-400 border-transparent hover:text-gray-600'}`}>All</button>
+                      <button onClick={() => setCommentTab('pinned')} className={`pb-2 text-[13px] font-medium border-b-[3px] -mb-[1px] transition-colors ${commentTab === 'pinned' ? 'text-gray-900 font-bold border-[#2322F0]' : 'text-gray-400 border-transparent hover:text-gray-600'}`}>Pinned</button>
                     </div>
 
                     {/* Add Comment button + Search row */}
@@ -1177,6 +1140,118 @@ function SubmissionSummaryView({ onBack, subId, subTitle }: { onBack: () => void
                         </div>
                       ))}
                     </div>
+                  </CardLayout>
+                </div>
+
+              </div>
+
+              {/* Right inner column (40%) */}
+              <div className="flex-[2] flex-shrink-0 space-y-5">
+
+                {/* Policy Details */}
+                <div>
+                  <div className="flex items-center justify-between mb-3"><p className="text-[15px] font-bold text-gray-900">Policy Details</p><Icon icon="edit" size="MEDIUM" color="ACCENT" /></div>
+                  <CardLayout padding="STANDARD" showShadow={true} showBorder={false} shape="SEMI_ROUNDED">
+                    <div className="grid grid-cols-2 gap-x-6 gap-y-3">
+                      <div><p className="text-[12px] text-gray-400">Product Segment</p><p className="text-[13px] text-gray-900">Commercial</p></div>
+                      <div><p className="text-[12px] text-gray-400">Insurance Carrier Branch</p><p className="text-[13px] text-gray-900">LIC</p></div>
+                      <div><p className="text-[12px] text-gray-400">Proposed Effective Date</p><p className="text-[13px] text-gray-900">04/01/2026</p></div>
+                      <div><p className="text-[12px] text-gray-400">Proposed Expiration Date</p><p className="text-[13px] text-gray-900">04/30/2026</p></div>
+                      <div><p className="text-[12px] text-gray-400">Total Insurance Value</p><p className="text-[13px] text-gray-900">$1,000,000</p></div>
+                      <div><p className="text-[12px] text-gray-400">Expiring Premium</p><p className="text-[13px] text-gray-900">$500,000</p></div>
+                      <div><p className="text-[12px] text-gray-400">Rush Status</p><p className="text-[13px] text-gray-900">Standard</p></div>
+                      <div><p className="text-[12px] text-gray-400">Primary / Excess Status</p><p className="text-[13px] text-gray-900">Primary</p></div>
+                      <div><p className="text-[12px] text-gray-400">Status</p><TagField tags={[{ text: "Ready to Quote", backgroundColor: "POSITIVE" }]} size="SMALL" marginBelow="NONE" /></div>
+                    </div>
+                  </CardLayout>
+                </div>
+
+                {/* Related Submissions */}
+                <div>
+                  <div className="flex items-center justify-between mb-3"><p className="text-[15px] font-bold text-gray-900">Related Submissions</p></div>
+                  <CardLayout padding="STANDARD" showShadow={true} showBorder={false} shape="SEMI_ROUNDED">
+                    <div className="flex items-center justify-between mb-2"><span className="text-[12px] text-gray-400">3 related submissions</span></div>
+                    <div className="flex items-center gap-3 py-2 border-b border-gray-100">
+                      <StampField icon="file-text" backgroundColor="#E8E7FD" contentColor="#2322F0" size="SMALL" marginBelow="NONE" />
+                      <div><p className="text-[13px] font-semibold text-[#2322F0] hover:underline cursor-pointer">SUB0401XUSC</p><p className="text-[12px] text-gray-400">Renewal · Bound 4/1/2025</p></div>
+                    </div>
+                    <div className="flex items-center gap-3 py-2 border-b border-gray-100">
+                      <StampField icon="file-text" backgroundColor="#E8E7FD" contentColor="#2322F0" size="SMALL" marginBelow="NONE" />
+                      <div><p className="text-[13px] font-semibold text-[#2322F0] hover:underline cursor-pointer">SUB0312PRPC</p><p className="text-[12px] text-gray-400">New Business · Quoted 3/12/2025</p></div>
+                    </div>
+                    <div className="flex items-center gap-3 py-2">
+                      <StampField icon="file-text" backgroundColor="#E8E7FD" contentColor="#2322F0" size="SMALL" marginBelow="NONE" />
+                      <div><p className="text-[13px] font-semibold text-[#2322F0] hover:underline cursor-pointer">SUB0228GLXS</p><p className="text-[12px] text-gray-400">Renewal · Bound 2/28/2025</p></div>
+                    </div>
+                  </CardLayout>
+                </div>
+
+                {/* Open Alerts */}
+                <div>
+                  <div className="flex items-center justify-between mb-3"><p className="text-[15px] font-bold text-gray-900">Open Alerts</p><span className="text-[11px] text-gray-400">1 of 1</span></div>
+                  <CardLayout padding="STANDARD" showShadow={true} showBorder={false} shape="SEMI_ROUNDED">
+                  <div className="flex items-start gap-2.5 py-2">
+                    <StampField icon="mail" backgroundColor="#E8E7FD" contentColor="#2322F0" size="MEDIUM" marginBelow="NONE" shape="SEMI_ROUNDED" />
+                    <div><p className="text-[13px] font-semibold text-[#2322F0]">Duplicate Submission Detected</p><p className="text-[12px] text-gray-400">Match: SUB0401XUSC</p></div>
+                  </div>
+                </CardLayout>
+                </div>
+
+                {/* Tasks */}
+                <div>
+                  <div className="flex items-center justify-between mb-3"><p className="text-[15px] font-bold text-gray-900">Tasks</p><ButtonWidget label="CREATE TASK" style="OUTLINE" color="ACCENT" size="SMALL" /></div>
+                  <CardLayout padding="STANDARD" showShadow={true} showBorder={false} shape="SEMI_ROUNDED">
+                    <div className="flex gap-6 border-b border-gray-200 mb-3 px-2">
+                      {([{ key: 'open' as const, label: 'Open' }, { key: 'completed' as const, label: 'Completed' }, { key: 'not-needed' as const, label: 'Not Needed' }]).map(t => (
+                        <button key={t.key} onClick={() => setTaskTab(t.key)} className={`pb-2 text-[13px] font-medium border-b-[3px] -mb-[1px] transition-colors ${taskTab === t.key ? 'text-gray-900 font-bold border-[#2322F0]' : 'text-gray-400 border-transparent hover:text-gray-600'}`}>{t.label}</button>
+                      ))}
+                    </div>
+                    <table className="w-full text-left table-fixed">
+                      <thead>
+                        <tr className="border-b border-gray-200">
+                          {(taskTab === 'completed' ? ['Task', 'Type', 'Completed On'] : ['Task', 'Type', 'Due Date']).map((h, i) => <th key={h} className={`text-[11px] font-semibold text-gray-900 py-2 pr-3 ${i === 0 ? 'w-[50%]' : 'w-[25%]'}`}>{h}</th>)}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {taskTab === 'open' && (<>
+                          <tr className="border-b border-gray-100">
+                            <td className="py-3 pr-3"><p className="text-[13px] font-semibold text-gray-900">Upload loss runs for Acme Corp</p><p className="text-[12px] text-gray-400">Anna Underwriter</p></td>
+                            <td className="py-3 pr-3 text-[13px] text-gray-700">Upload Document</td>
+                            <td className="py-3 pr-3 text-[13px] text-gray-900">Due 2 days ago</td>
+                          </tr>
+                          <tr className="border-b border-gray-100">
+                            <td className="py-3 pr-3"><p className="text-[13px] font-semibold text-gray-900">Complete sanctions review for TechStart</p><p className="text-[12px] text-gray-400">Anna Underwriter</p></td>
+                            <td className="py-3 pr-3 text-[13px] text-gray-700">Sanctions Check</td>
+                            <td className="py-3 pr-3 text-[13px] text-gray-900">Due today</td>
+                          </tr>
+                          <tr className="border-b border-gray-100">
+                            <td className="py-3 pr-3"><p className="text-[13px] font-semibold text-gray-900">Confirm broker details for Global Logistics</p><p className="text-[12px] text-gray-400">Dhruva K.</p></td>
+                            <td className="py-3 pr-3 text-[13px] text-gray-700">Confirmation</td>
+                            <td className="py-3 pr-3 text-[13px] text-gray-900">Due in 3 days</td>
+                          </tr>
+                          <tr className="border-b border-gray-100">
+                            <td className="py-3 pr-3"><p className="text-[13px] font-semibold text-gray-900">Manager referral — TIV exceeds authority</p><p className="text-[12px] text-gray-400">Anna Underwriter</p></td>
+                            <td className="py-3 pr-3 text-[13px] text-gray-700">Referral</td>
+                            <td className="py-3 pr-3 text-[13px] text-gray-900">Due in 5 days</td>
+                          </tr>
+                        </>)}
+                        {taskTab === 'completed' && (<>
+                          <tr className="border-b border-gray-100">
+                            <td className="py-3 pr-3"><p className="text-[13px] font-semibold text-gray-900">Upload ACORD 125 for Summit Construction</p><p className="text-[12px] text-gray-400">Anna Underwriter</p></td>
+                            <td className="py-3 pr-3 text-[13px] text-gray-700">Upload Document</td>
+                            <td className="py-3 pr-3 text-[13px] text-gray-700">Apr 22, 2026</td>
+                          </tr>
+                          <tr className="border-b border-gray-100">
+                            <td className="py-3 pr-3"><p className="text-[13px] font-semibold text-gray-900">Review extracted ACORD 140 data</p><p className="text-[12px] text-gray-400">Dhruva K.</p></td>
+                            <td className="py-3 pr-3 text-[13px] text-gray-700">Document Review</td>
+                            <td className="py-3 pr-3 text-[13px] text-gray-700">Apr 20, 2026</td>
+                          </tr>
+                        </>)}
+                        {taskTab === 'not-needed' && (
+                          <tr><td colSpan={3} className="py-8 text-center text-[13px] text-gray-400">No tasks available</td></tr>
+                        )}
+                      </tbody>
+                    </table>
                   </CardLayout>
                 </div>
               </div>
