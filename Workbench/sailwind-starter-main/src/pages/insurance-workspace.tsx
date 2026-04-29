@@ -1265,8 +1265,8 @@ function SubmissionSummaryView({ onBack, subId, subTitle }: { onBack: () => void
                 {/* Policy Details */}
                 <div>
                   <div className="flex items-center justify-between mb-3"><p className="text-[15px] font-bold text-gray-900">Policy Information</p><button onClick={() => setEditPolicyOpen(true)}><Icon icon="edit" size="MEDIUM" color="ACCENT" /></button></div>
-                  <CardLayout padding="STANDARD" showShadow={true} showBorder={false} shape="SEMI_ROUNDED">
-                    <div className="grid grid-cols-2 gap-x-6 gap-y-3">
+                  <CardLayout padding="MORE" showShadow={true} showBorder={false} shape="SEMI_ROUNDED">
+                    <div className="grid grid-cols-2 gap-x-6 gap-y-4">
                       <div><p className="text-[12px] text-gray-400">Product Segment</p><p className="text-[13px] text-gray-900">Commercial</p></div>
                       <div><p className="text-[12px] text-gray-400">Insurance Carrier Branch</p><p className="text-[13px] text-gray-900">LIC</p></div>
                       <div><p className="text-[12px] text-gray-400">Proposed Effective Date</p><p className="text-[13px] text-gray-900">04/01/2026</p></div>
@@ -1281,11 +1281,29 @@ function SubmissionSummaryView({ onBack, subId, subTitle }: { onBack: () => void
 
                 {/* Open Alerts */}
                 <div>
-                  <div className="flex items-center justify-between mb-3"><p className="text-[15px] font-bold text-gray-900">Open Alerts</p><span className="text-[11px] text-gray-400">1 of 1</span></div>
+                  <div className="flex items-center justify-between mb-3"><p className="text-[15px] font-bold text-gray-900">Open Alerts</p><span className="text-[11px] text-gray-400">5 of 5</span></div>
                   <CardLayout padding="STANDARD" showShadow={true} showBorder={false} shape="SEMI_ROUNDED">
-                  <div className="flex items-start gap-2.5 py-2">
-                    <StampField icon="mail" backgroundColor="#E8E7FD" contentColor="#2322F0" size="MEDIUM" marginBelow="NONE" shape="SEMI_ROUNDED" />
-                    <div><p className="text-[13px] font-semibold text-[#2322F0]">Duplicate Submission Detected</p><p className="text-[12px] text-gray-400">Match: SUB0401XUSC</p></div>
+                  <div className="space-y-0">
+                    <div className="flex items-start gap-2.5 py-3 border-b border-gray-100">
+                      <StampField icon="file-text" backgroundColor="#E8E7FD" contentColor="#2322F0" size="MEDIUM" marginBelow="NONE" shape="SEMI_ROUNDED" />
+                      <div><p className="text-[13px] font-semibold text-[#2322F0]">New document received</p><p className="text-[12px] text-gray-400">SUB-10482 · 2 hours ago</p></div>
+                    </div>
+                    <div className="flex items-start gap-2.5 py-3 border-b border-gray-100">
+                      <StampField icon="copy" backgroundColor="#E8E7FD" contentColor="#2322F0" size="MEDIUM" marginBelow="NONE" shape="SEMI_ROUNDED" />
+                      <div><p className="text-[13px] font-semibold text-[#2322F0]">Duplicate Submission Detected</p><p className="text-[12px] text-gray-400">SUB-10475 · 4/3/2026</p></div>
+                    </div>
+                    <div className="flex items-start gap-2.5 py-3 border-b border-gray-100">
+                      <StampField icon="list" backgroundColor="#E8E7FD" contentColor="#2322F0" size="MEDIUM" marginBelow="NONE" shape="SEMI_ROUNDED" />
+                      <div><p className="text-[13px] font-semibold text-[#2322F0]">Missing TIV and Proposed Dates</p><p className="text-[12px] text-gray-400">SUB-10471 · 4/3/2026</p></div>
+                    </div>
+                    <div className="flex items-start gap-2.5 py-3 border-b border-gray-100">
+                      <StampField icon="message-square" backgroundColor="#E8E7FD" contentColor="#2322F0" size="MEDIUM" marginBelow="NONE" shape="SEMI_ROUNDED" />
+                      <div><p className="text-[13px] font-semibold text-[#2322F0]">New broker message received</p><p className="text-[12px] text-gray-400">SUB-10479 · 4/2/2026</p></div>
+                    </div>
+                    <div className="flex items-start gap-2.5 py-3">
+                      <StampField icon="shield" backgroundColor="#E8E7FD" contentColor="#2322F0" size="MEDIUM" marginBelow="NONE" shape="SEMI_ROUNDED" />
+                      <div><p className="text-[13px] font-semibold text-[#2322F0]">Sanctions match found</p><p className="text-[12px] text-gray-400">SUB-10468 · 4/1/2026</p></div>
+                    </div>
                   </div>
                 </CardLayout>
                 </div>
