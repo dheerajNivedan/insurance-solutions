@@ -41,20 +41,20 @@ const submissions = [
 ]
 
 const tasks = [
-  { sub: 'SUB-10482', type: 'Upload Document', title: 'Upload loss runs for Acme Corp', due: 'Due 2 days ago', status: 'OPEN', icon: 'loader', bgColor: '#FFF3CD', iconColor: '#E69500' },
-  { sub: 'SUB-10479', type: 'Sanctions Check', title: 'Complete sanctions review for TechStart', due: 'Due today', status: 'OPEN', icon: 'loader', bgColor: '#FFF3CD', iconColor: '#E69500' },
-  { sub: 'SUB-10475', type: 'Confirmation', title: 'Confirm broker details for Global Logistics', due: 'Due in 3 days', status: 'OPEN', icon: 'loader', bgColor: '#FFF3CD', iconColor: '#E69500' },
-  { sub: 'SUB-10482', type: 'Referral', title: 'Manager referral — TIV exceeds authority', due: 'Due in 5 days', status: 'OPEN', icon: 'loader', bgColor: '#FFF3CD', iconColor: '#E69500' },
-  { sub: 'SUB-10468', type: 'Upload Document', title: 'Upload ACORD 125 for Summit Construction', due: 'Due in 5 days', status: 'COMPLETE', icon: 'target', bgColor: '#E8E7FD', iconColor: '#1A237E' },
-  { sub: 'SUB-10471', type: 'Document Review', title: 'Review extracted ACORD 140 data', due: 'Due in 8 days', status: 'COMPLETE', icon: 'target', bgColor: '#E8E7FD', iconColor: '#1A237E' },
+  { sub: 'SUB-10482', type: 'Upload Document', title: 'Upload loss runs for Acme Corp', due: 'Apr 27, 2026', status: 'OPEN', icon: 'loader', bgColor: '#FFF3CD', iconColor: '#E69500' },
+  { sub: 'SUB-10479', type: 'Sanctions Check', title: 'Complete sanctions review for TechStart', due: 'Apr 29, 2026', status: 'OPEN', icon: 'loader', bgColor: '#FFF3CD', iconColor: '#E69500' },
+  { sub: 'SUB-10475', type: 'Confirmation', title: 'Confirm broker details for Global Logistics', due: 'May 2, 2026', status: 'OPEN', icon: 'loader', bgColor: '#FFF3CD', iconColor: '#E69500' },
+  { sub: 'SUB-10482', type: 'Referral', title: 'Manager referral — TIV exceeds authority', due: 'May 4, 2026', status: 'OPEN', icon: 'loader', bgColor: '#FFF3CD', iconColor: '#E69500' },
+  { sub: 'SUB-10468', type: 'Upload Document', title: 'Upload ACORD 125 for Summit Construction', due: 'May 4, 2026', status: 'COMPLETE', icon: 'target', bgColor: '#E8E7FD', iconColor: '#1A237E' },
+  { sub: 'SUB-10471', type: 'Document Review', title: 'Review extracted ACORD 140 data', due: 'May 7, 2026', status: 'COMPLETE', icon: 'target', bgColor: '#E8E7FD', iconColor: '#1A237E' },
 ]
 
 const alerts = [
-  { title: 'New document received', sub: 'SUB-10482', date: '2 hours ago', icon: 'file-text' },
-  { title: 'Duplicate Submission Detected', sub: 'SUB-10475', date: '4/3/2026', icon: 'copy' },
-  { title: 'Missing TIV and Proposed Dates', sub: 'SUB-10471', date: '4/3/2026', icon: 'list' },
-  { title: 'New broker message received', sub: 'SUB-10479', date: '4/2/2026', icon: 'message-square' },
-  { title: 'Sanctions match found', sub: 'SUB-10468', date: '4/1/2026', icon: 'shield' },
+  { title: 'New document received', sub: 'SUB-10482', date: '2 hours ago', icon: 'file-text', group: 'today' },
+  { title: 'Duplicate Submission Detected', sub: 'SUB-10475', date: '4/3/2026', icon: 'copy', group: 'older' },
+  { title: 'Missing TIV and Proposed Dates', sub: 'SUB-10471', date: '4/3/2026', icon: 'list', group: 'older' },
+  { title: 'New broker message received', sub: 'SUB-10479', date: '4/2/2026', icon: 'message-square', group: 'older' },
+  { title: 'Sanctions match found', sub: 'SUB-10468', date: '4/1/2026', icon: 'shield', group: 'older' },
 ]
 
 // ── Chart Data ──
@@ -859,7 +859,7 @@ function SubmissionSummaryView({ onBack, subId, subTitle }: { onBack: () => void
   const [newCommentText, setNewCommentText] = useState('')
   const [comments, setComments] = useState([
     { id: 1, user: 'Anna Underwriter', initials: 'AU', text: 'Customer requested expedited review due to upcoming board meeting. Please prioritize this submission.', date: 'Apr 12, 2026 3:45 PM', pinned: true, edited: false, replies: [
-      { id: 11, user: 'Dheeraj Nair', initials: 'DN', text: 'Noted. Moving this to the top of the queue.', date: 'Apr 12, 2026 4:10 PM', edited: false },
+      { id: 11, user: 'Dheeraj Nivedan', initials: 'DN', text: 'Noted. Moving this to the top of the queue.', date: 'Apr 12, 2026 4:10 PM', edited: false },
     ] },
     { id: 2, user: 'System', initials: 'SY', text: 'ACORD 125 received via email. Documents classified and extraction initiated.', date: 'Apr 10, 2026 9:15 AM', pinned: false, edited: false, replies: [] },
     { id: 3, user: 'Avinash Thangaretinam', initials: 'AT', text: 'Broker confirmed the total insurance value. Updated the policy details accordingly.', date: 'Apr 8, 2026 11:30 AM', pinned: false, edited: true, replies: [] },
@@ -876,7 +876,7 @@ function SubmissionSummaryView({ onBack, subId, subTitle }: { onBack: () => void
 
   const submitComment = () => {
     if (!newCommentText.trim()) return
-    setComments(prev => [{ id: Date.now(), user: 'Dheeraj Nair', initials: 'DN', text: newCommentText, date: 'Apr 27, 2026 ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), pinned: false, edited: false, replies: [] }, ...prev])
+    setComments(prev => [{ id: Date.now(), user: 'Dheeraj Nivedan', initials: 'DN', text: newCommentText, date: 'Apr 27, 2026 ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), pinned: false, edited: false, replies: [] }, ...prev])
     setNewCommentText('')
     setIsAddingComment(false)
   }
@@ -892,7 +892,7 @@ function SubmissionSummaryView({ onBack, subId, subTitle }: { onBack: () => void
 
   const submitReply = (parentId: number) => {
     if (!replyText.trim()) return
-    setComments(prev => prev.map(c => c.id === parentId ? { ...c, replies: [...c.replies, { id: Date.now(), user: 'Dheeraj Nair', initials: 'DN', text: replyText, date: 'Apr 27, 2026 ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), edited: false }] } : c))
+    setComments(prev => prev.map(c => c.id === parentId ? { ...c, replies: [...c.replies, { id: Date.now(), user: 'Dheeraj Nivedan', initials: 'DN', text: replyText, date: 'Apr 27, 2026 ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), edited: false }] } : c))
     setReplyText('')
     setReplyingTo(null)
   }
@@ -1315,10 +1315,12 @@ function SubmissionSummaryView({ onBack, subId, subTitle }: { onBack: () => void
                   <div className="flex items-center justify-between mb-3"><p className="text-[15px] font-bold text-gray-900">Open Alerts</p><span className="text-[11px] text-gray-400">5 of 5</span></div>
                   <CardLayout padding="STANDARD" showShadow={true} showBorder={false} shape="SEMI_ROUNDED">
                   <div className="space-y-0">
+                    <p className="text-[12px] font-semibold text-gray-500 uppercase tracking-wide pb-2">Today</p>
                     <div className="flex items-start gap-2.5 py-3 border-b border-gray-100">
                       <StampField icon="file-text" backgroundColor="#E8E7FD" contentColor="#2322F0" size="MEDIUM" marginBelow="NONE" shape="SEMI_ROUNDED" />
                       <div><p className="text-[13px] font-semibold text-[#2322F0]">New document received</p><p className="text-[12px] text-gray-400">SUB-10482 · 2 hours ago</p></div>
                     </div>
+                    <p className="text-[12px] font-semibold text-gray-500 uppercase tracking-wide pt-3 pb-2">Older</p>
                     <div className="flex items-start gap-2.5 py-3 border-b border-gray-100">
                       <StampField icon="copy" backgroundColor="#E8E7FD" contentColor="#2322F0" size="MEDIUM" marginBelow="NONE" shape="SEMI_ROUNDED" />
                       <div><p className="text-[13px] font-semibold text-[#2322F0]">Duplicate Submission Detected</p><p className="text-[12px] text-gray-400">SUB-10475 · 4/3/2026</p></div>
@@ -1359,22 +1361,22 @@ function SubmissionSummaryView({ onBack, subId, subTitle }: { onBack: () => void
                           <tr className="border-b border-gray-100">
                             <td className="py-3 pr-3"><p className="text-[13px] font-semibold text-gray-900">Upload loss runs for Acme Corp</p><p className="text-[12px] text-gray-400">Anna Underwriter</p></td>
                             <td className="py-3 pr-3 text-[13px] text-gray-700">Upload Document</td>
-                            <td className="py-3 pr-3 text-[13px] text-gray-900">Due 2 days ago</td>
+                            <td className="py-3 pr-3 text-[13px] text-gray-900">Apr 27, 2026</td>
                           </tr>
                           <tr className="border-b border-gray-100">
                             <td className="py-3 pr-3"><p className="text-[13px] font-semibold text-gray-900">Complete sanctions review for TechStart</p><p className="text-[12px] text-gray-400">Anna Underwriter</p></td>
                             <td className="py-3 pr-3 text-[13px] text-gray-700">Sanctions Check</td>
-                            <td className="py-3 pr-3 text-[13px] text-gray-900">Due today</td>
+                            <td className="py-3 pr-3 text-[13px] text-gray-900">Apr 29, 2026</td>
                           </tr>
                           <tr className="border-b border-gray-100">
                             <td className="py-3 pr-3"><p className="text-[13px] font-semibold text-gray-900">Confirm broker details for Global Logistics</p><p className="text-[12px] text-gray-400">Dhruva K.</p></td>
                             <td className="py-3 pr-3 text-[13px] text-gray-700">Confirmation</td>
-                            <td className="py-3 pr-3 text-[13px] text-gray-900">Due in 3 days</td>
+                            <td className="py-3 pr-3 text-[13px] text-gray-900">May 2, 2026</td>
                           </tr>
                           <tr className="border-b border-gray-100">
                             <td className="py-3 pr-3"><p className="text-[13px] font-semibold text-gray-900">Manager referral — TIV exceeds authority</p><p className="text-[12px] text-gray-400">Anna Underwriter</p></td>
                             <td className="py-3 pr-3 text-[13px] text-gray-700">Referral</td>
-                            <td className="py-3 pr-3 text-[13px] text-gray-900">Due in 5 days</td>
+                            <td className="py-3 pr-3 text-[13px] text-gray-900">May 4, 2026</td>
                           </tr>
                         </>)}
                         {taskTab === 'completed' && (<>
@@ -2342,55 +2344,78 @@ export default function InsuranceWorkspace() {
 
           {/* ═══ SUBMISSIONS / EXCEPTIONS RIGHT PANE ═══ */}
           {contentTab !== 'dashboard' && (<>
-            <div className="flex items-center justify-between mb-3 pb-2 border-b border-gray-200 flex-shrink-0">
+            <div className="flex items-center justify-between mb-3 flex-shrink-0">
               <p className="text-[15px] font-bold text-gray-900">Activity Panel</p>
               <button onClick={() => setRightPaneOpen(false)} className="text-gray-400 hover:text-gray-600"><PanelRightClose size={16} /></button>
             </div>
 
-            {/* To-do box */}
-            <CardLayout padding="STANDARD" showShadow={false} showBorder={true} shape="SEMI_ROUNDED" marginBelow="STANDARD">
+            {/* To-do */}
+            <CardLayout padding="STANDARD" showShadow={false} showBorder={false} shape="SEMI_ROUNDED" marginBelow="STANDARD">
               <div className="flex items-center justify-between mb-3 -mx-4 -mt-4 px-4 py-2 rounded-t-sm cursor-pointer" style={{ backgroundColor: '#E8E7FD' }} onClick={() => setTodoOpen(!todoOpen)}>
                 <span className="text-[15px] font-semibold text-gray-900">To-do</span>
                 <ChevronDown size={16} className={`text-gray-400 transition-transform ${todoOpen ? '' : '-rotate-90'}`} />
               </div>
               {todoOpen && (
-              <div className="space-y-2">
-                {tasks.map((task, idx) => (
-                  <div key={idx} className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-100">
+              <div>
+                {tasks.filter(t => t.status !== 'COMPLETE').map((task, idx, arr) => (
+                  <div key={idx} className={`flex items-center gap-3 py-3 ${idx < arr.length - 1 ? 'border-b border-gray-200' : ''}`}>
                     <StampField icon={task.icon} backgroundColor={task.bgColor} contentColor={task.iconColor} size="MEDIUM" marginBelow="NONE" shape="SEMI_ROUNDED" />
                     <div className="flex-1 min-w-0">
                       <p className="text-[12px] text-gray-500">{task.sub} · {task.type}</p>
                       <p className="text-[13px] font-bold text-gray-900 leading-snug">{task.title}</p>
                       <p className="text-[12px] text-gray-400 flex items-center gap-1 mt-0.5"><Clock size={10} /> {task.due}</p>
                     </div>
-                    <span className={`text-[11px] font-semibold flex-shrink-0 px-2 py-1 rounded border cursor-pointer uppercase ${task.status === 'COMPLETE' ? 'text-gray-400 border-gray-200 bg-gray-50' : 'text-[#2322F0] border-[#2322F0] hover:bg-[#E8E7FD]'}`}>{task.status === 'COMPLETE' ? 'Completed' : 'Complete'}</span>
+                    <span className="text-[11px] font-semibold flex-shrink-0 px-2 py-1 rounded border cursor-pointer uppercase text-[#2322F0] border-[#2322F0] hover:bg-[#E8E7FD]">Complete</span>
                   </div>
                 ))}
               </div>
               )}
             </CardLayout>
 
-            {/* Open Alerts box */}
-            <CardLayout padding="STANDARD" showShadow={false} showBorder={true} shape="SEMI_ROUNDED">
+            {/* Open Alerts */}
+            <CardLayout padding="STANDARD" showShadow={false} showBorder={false} shape="SEMI_ROUNDED">
               <div className="flex items-center justify-between mb-3 -mx-4 -mt-4 px-4 py-2 rounded-t-sm cursor-pointer" style={{ backgroundColor: '#E8E7FD' }} onClick={() => setAlertsOpen(!alertsOpen)}>
                 <span className="text-[15px] font-semibold text-gray-900">Open Alerts</span>
                 <span className="flex items-center gap-2"><span className="text-[12px] text-gray-400">{visibleAlerts.length} of {alerts.length}</span><ChevronDown size={16} className={`text-gray-400 transition-transform ${alertsOpen ? '' : '-rotate-90'}`} /></span>
               </div>
               {alertsOpen && (
-              <div className="space-y-2">
-                {visibleAlerts.map((alert) => {
-                  const oi = alerts.indexOf(alert)
-                  return (
-                    <div key={oi} className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-100">
-                      <StampField icon={alert.icon} backgroundColor="#E8E7FD" contentColor="#2322F0" size="MEDIUM" marginBelow="NONE" shape="SEMI_ROUNDED" />
-                      <div className="flex-1 min-w-0">
-                        <p className="text-[13px] font-bold text-[#2322F0]">{alert.title}</p>
-                        <p className="text-[12px] text-gray-400">{alert.sub} · {alert.date}</p>
-                      </div>
-                      <button onClick={() => setDismissedAlerts(prev => [...prev, oi])} className="text-[#2322F0] leading-none flex-shrink-0 hover:text-[#1a19b0]"><X size={14} /></button>
-                    </div>
-                  )
-                })}
+              <div>
+                {visibleAlerts.some(a => a.group === 'today') && (
+                  <>
+                    <p className="text-[12px] font-semibold text-gray-500 uppercase tracking-wide pt-1 pb-1">Today</p>
+                    {visibleAlerts.filter(a => a.group === 'today').map((alert, idx, arr) => {
+                      const oi = alerts.indexOf(alert)
+                      return (
+                        <div key={oi} className={`flex items-center gap-3 py-3 ${idx < arr.length - 1 || visibleAlerts.some(a => a.group === 'older') ? 'border-b border-gray-200' : ''}`}>
+                          <StampField icon={alert.icon} backgroundColor="#E8E7FD" contentColor="#2322F0" size="MEDIUM" marginBelow="NONE" shape="SEMI_ROUNDED" />
+                          <div className="flex-1 min-w-0">
+                            <p className="text-[13px] font-bold text-[#2322F0]">{alert.title}</p>
+                            <p className="text-[12px] text-gray-400">{alert.sub} · {alert.date}</p>
+                          </div>
+                          <button onClick={() => setDismissedAlerts(prev => [...prev, oi])} className="text-[#2322F0] leading-none flex-shrink-0 hover:text-[#1a19b0]"><X size={14} /></button>
+                        </div>
+                      )
+                    })}
+                  </>
+                )}
+                {visibleAlerts.some(a => a.group === 'older') && (
+                  <>
+                    <p className="text-[12px] font-semibold text-gray-500 uppercase tracking-wide pt-2 pb-1">Older</p>
+                    {visibleAlerts.filter(a => a.group === 'older').map((alert, idx, arr) => {
+                      const oi = alerts.indexOf(alert)
+                      return (
+                        <div key={oi} className={`flex items-center gap-3 py-3 ${idx < arr.length - 1 ? 'border-b border-gray-200' : ''}`}>
+                          <StampField icon={alert.icon} backgroundColor="#E8E7FD" contentColor="#2322F0" size="MEDIUM" marginBelow="NONE" shape="SEMI_ROUNDED" />
+                          <div className="flex-1 min-w-0">
+                            <p className="text-[13px] font-bold text-[#2322F0]">{alert.title}</p>
+                            <p className="text-[12px] text-gray-400">{alert.sub} · {alert.date}</p>
+                          </div>
+                          <button onClick={() => setDismissedAlerts(prev => [...prev, oi])} className="text-[#2322F0] leading-none flex-shrink-0 hover:text-[#1a19b0]"><X size={14} /></button>
+                        </div>
+                      )
+                    })}
+                  </>
+                )}
               </div>
               )}
             </CardLayout>
