@@ -23,8 +23,9 @@ import {
   List, LayoutGrid, Search, FileText,
   AlertTriangle, X, ChevronRight, ChevronDown,
   Clock, User, Users,
-  Phone, Mail, MapPin, Building2, Sparkles, ExternalLink,
+  Phone, Mail, Building2, Sparkles,
   PanelRightClose, PanelRightOpen, Bookmark,
+  Calendar,
 } from 'lucide-react'
 
 // ── Submission Data ──
@@ -279,7 +280,7 @@ function CreateSubmissionWizard({ open, onClose, onCreate }: { open: boolean; on
   const lastStep = steps.length
 
   return (
-    <DialogField open={open} onOpenChange={(o) => { if (!o) resetAndClose() }} title="" width="FIT" height="FIT" showCloseButton={false}>
+    <DialogField open={open} onOpenChange={(o) => { if (!o) resetAndClose() }} title="" width="FIT" showCloseButton={false}>
       <div className="flex flex-col rounded-md overflow-hidden" style={{ backgroundColor: '#ffffff', height: '70vh', maxHeight: '70vh' }}>
 
         {/* ── Header (top of form) ── */}
@@ -346,6 +347,14 @@ function CreateSubmissionWizard({ open, onClose, onCreate }: { open: boolean; on
                       />
                       <div />
                     </div>
+                    <div>
+                    <TextField
+                      label="Title"
+                      value={title}
+                      saveInto={(v) => setTitle(v)}
+                      required={true}
+                    />
+                    </div>
                     <div className="grid grid-cols-2 gap-4">
                       <DropdownField
                         label="Products"
@@ -402,20 +411,19 @@ function CreateSubmissionWizard({ open, onClose, onCreate }: { open: boolean; on
                       placeholder="Select Product"
                       required={true}
                     />
-                      <div />
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
-                    <TextField
-                      label="Title"
-                      value={title}
-                      saveInto={(v) => setTitle(v)}
-                      required={true}
-                    />
-                    <div />
+                      <DropdownField
+                        label="Assignee"
+                        choiceLabels={['Anna Underwriter', 'Dhruva K.', 'John W.', 'Riley H.', 'Robert K.']}
+                        choiceValues={['anna-underwriter', 'dhruva-k', 'john-w', 'riley-h', 'robert-k']}
+                        value={accountCoordinator}
+                        saveInto={(v) => setAccountCoordinator(v)}
+                        placeholder="Select Assignee"
+                        required={true}
+                      />
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <p className="text-[13px] font-semibold text-gray-900 mb-2">Supporting Documents</p>
+                      <p className="text-[14px] font-semibold text-gray-900 mb-2">Supporting Documents</p>
                       <div className="border border-dashed border-gray-300 rounded px-4 py-3 flex items-center gap-3">
                         <ButtonWidget label="UPLOAD" style="OUTLINE" color="SECONDARY" size="SMALL" />
                         <span className="text-[13px] text-gray-400 italic">Drop files here</span>
@@ -566,7 +574,7 @@ function CreateSubmissionWizard({ open, onClose, onCreate }: { open: boolean; on
                 {customerOpen && (
                   <div className="space-y-4">
                     <div>
-                      <p className="text-[13px] font-semibold text-gray-900 mb-1">Customer</p>
+                      <p className="text-[14px] font-semibold text-gray-900 mb-1">Customer</p>
                       <RadioButtonField
                         choiceLabels={['Existing', 'New']}
                         choiceValues={['existing', 'new']}
@@ -638,7 +646,7 @@ function CreateSubmissionWizard({ open, onClose, onCreate }: { open: boolean; on
                 {brokerOpen && (
                   <div className="space-y-4">
                     <div>
-                      <p className="text-[13px] font-semibold text-gray-900 mb-1">Office Name</p>
+                      <p className="text-[14px] font-semibold text-gray-900 mb-1">Office Name</p>
                       <RadioButtonField
                         choiceLabels={['Existing', 'New']}
                         choiceValues={['existing', 'new']}
@@ -671,7 +679,7 @@ function CreateSubmissionWizard({ open, onClose, onCreate }: { open: boolean; on
                       </div>
                     )}
                     <div>
-                      <p className="text-[13px] font-semibold text-gray-900 mb-1">Broker Name</p>
+                      <p className="text-[14px] font-semibold text-gray-900 mb-1">Broker Name</p>
                       <RadioButtonField
                         choiceLabels={['Existing', 'New']}
                         choiceValues={['existing', 'new']}
@@ -751,6 +759,69 @@ function SubmissionSummaryView({ onBack, subId, subTitle }: { onBack: () => void
   const [chatInput, setChatInput] = useState('')
   const [chatOpen, setChatOpen] = useState(true)
   const [aiSummaryOpen, setAiSummaryOpen] = useState(true)
+
+  // Edit dialog states
+  const [editPolicyOpen, setEditPolicyOpen] = useState(false)
+  const [editCustBrokerOpen, setEditCustBrokerOpen] = useState(false)
+  const [editCustBrokerTab, setEditCustBrokerTab] = useState<'customer' | 'broker'>('customer')
+  const [editSubmissionDetailsOpen, setEditSubmissionDetailsOpen] = useState(false)
+
+  // Edit Risk/Coverage dialog
+  const [editCoverageOpen, setEditCoverageOpen] = useState(false)
+  const [editDnoPerClaim, setEditDnoPerClaim] = useState('')
+  const [editDnoAggregate, setEditDnoAggregate] = useState('')
+  const [editDnoRetention, setEditDnoRetention] = useState('')
+  const [editEplPerClaim, setEditEplPerClaim] = useState('')
+  const [editEplAggregate, setEditEplAggregate] = useState('')
+  const [editEplRetention, setEditEplRetention] = useState('')
+
+  // Editable Submission Details fields
+  const [editSubTitle, setEditSubTitle] = useState('TechStart Inc D&O Coverage')
+  const [editAccountCoordinator, setEditAccountCoordinator] = useState('anna-underwriter')
+  const [editSubStatus, setEditSubStatus] = useState('ready-to-quote')
+  const [editSubAssignee, setEditSubAssignee] = useState('anna-underwriter')
+
+  // Editable Policy Details fields
+  const [editProposedEffDate, setEditProposedEffDate] = useState('2026-04-01')
+  const [editProposedExpDate, setEditProposedExpDate] = useState('2026-04-30')
+  const [editRushStatus, setEditRushStatus] = useState('standard')
+  const [editTiv, setEditTiv] = useState('$1,000,000')
+  const [editExpiringPremium, setEditExpiringPremium] = useState('$500,000')
+  const [editPrimaryExcess, setEditPrimaryExcess] = useState('primary')
+  const [editCarrierBranch, setEditCarrierBranch] = useState('LIC')
+  const [editProductSegment, setEditProductSegment] = useState('commercial')
+
+  // Editable Customer fields
+  const [editCustName, setEditCustName] = useState('Universal Exports')
+  const [editCustOrgType, setEditCustOrgType] = useState('corporation')
+  const [editCustPhone, setEditCustPhone] = useState('(571) 412-7900')
+  const [editCustAddress1, setEditCustAddress1] = useState('7950 Jones Branch Dr')
+  const [editCustAddress2, setEditCustAddress2] = useState('')
+  const [editCustCity, setEditCustCity] = useState('McLean')
+  const [editCustState, setEditCustState] = useState('VA')
+  const [editCustZip, setEditCustZip] = useState('22102')
+  const [editCustSicCode, setEditCustSicCode] = useState('113')
+  const [editCustEmployeeCount, setEditCustEmployeeCount] = useState('50')
+  const [editCustIncYear, setEditCustIncYear] = useState('2005')
+  const [editCustContactName, setEditCustContactName] = useState('James Wilson')
+  const [editCustContactEmail, setEditCustContactEmail] = useState('j.wilson@universalexports.com')
+  const [editCustContactPhone, setEditCustContactPhone] = useState('(571) 412-7900')
+  const [editCustNaicsCode, setEditCustNaicsCode] = useState('481 - Air Transportation')
+  const [editCustSecondaryNaics, setEditCustSecondaryNaics] = useState('')
+  const [editCustNaicsLite, setEditCustNaicsLite] = useState('')
+
+  // Editable Broker fields
+  const [editBrokerName, setEditBrokerName] = useState('Amal Chen')
+  const [editBrokerEmail, setEditBrokerEmail] = useState('amal.chen@universalexports.com')
+  const [editBrokerPhone, setEditBrokerPhone] = useState('(555) 234-5678')
+  const [editBrokerOfficeName, setEditBrokerOfficeName] = useState('Universal Exports — Main Office')
+  const [editBrokerOfficePhone, setEditBrokerOfficePhone] = useState('(555) 234-5678')
+  const [editBrokerOfficeAddr1, setEditBrokerOfficeAddr1] = useState('100 Main St')
+  const [editBrokerOfficeAddr2, setEditBrokerOfficeAddr2] = useState('')
+  const [editBrokerOfficeCity, setEditBrokerOfficeCity] = useState('McLean')
+  const [editBrokerOfficeState, setEditBrokerOfficeState] = useState('VA')
+  const [editBrokerOfficeZip, setEditBrokerOfficeZip] = useState('22102')
+
   const [commentTab, setCommentTab] = useState<'all' | 'pinned'>('all')
   const [commentSearch, setCommentSearch] = useState('')
   const [isAddingComment, setIsAddingComment] = useState(false)
@@ -805,7 +876,6 @@ function SubmissionSummaryView({ onBack, subId, subTitle }: { onBack: () => void
         <div className="flex items-center justify-between mb-4">
           <div>
             <h1 className="text-[22px] font-bold text-gray-900">{subId} | {subTitle}</h1>
-            <p className="text-[12px] text-gray-400 mt-0.5">Created 4/3/2026 · Last modified 4/14/2026</p>
           </div>
         </div>
 
@@ -851,6 +921,12 @@ function SubmissionSummaryView({ onBack, subId, subTitle }: { onBack: () => void
             <div className="grid grid-cols-4 gap-4 mb-5">
           <CardLayout padding="STANDARD" showShadow={true} showBorder={false} shape="SEMI_ROUNDED">
             <div className="flex items-center gap-3">
+              <StampField icon="file-text" backgroundColor="#FDDEDE" contentColor="#b91c1c" size="LARGE" marginBelow="NONE" shape="SEMI_ROUNDED" />
+              <div><p className="text-[11px] text-gray-400">Submission Type</p><p className="text-[13px] font-semibold text-gray-900">New Business</p></div>
+            </div>
+          </CardLayout>
+          <CardLayout padding="STANDARD" showShadow={true} showBorder={false} shape="SEMI_ROUNDED">
+            <div className="flex items-center gap-3">
               <StampField icon="shield" backgroundColor="#E8E7FD" contentColor="#2322F0" size="LARGE" marginBelow="NONE" shape="SEMI_ROUNDED" />
               <div><p className="text-[11px] text-gray-400">Product</p><p className="text-[13px] font-semibold text-gray-900">Directors & Officers (D&O)</p></div>
             </div>
@@ -863,14 +939,8 @@ function SubmissionSummaryView({ onBack, subId, subTitle }: { onBack: () => void
           </CardLayout>
           <CardLayout padding="STANDARD" showShadow={true} showBorder={false} shape="SEMI_ROUNDED">
             <div className="flex items-center gap-3">
-              <StampField icon="file-text" backgroundColor="#FDDEDE" contentColor="#b91c1c" size="LARGE" marginBelow="NONE" shape="SEMI_ROUNDED" />
-              <div><p className="text-[11px] text-gray-400">Submission Type</p><p className="text-[13px] font-semibold text-gray-900">New Business</p></div>
-            </div>
-          </CardLayout>
-          <CardLayout padding="STANDARD" showShadow={true} showBorder={false} shape="SEMI_ROUNDED">
-            <div className="flex items-center gap-3">
-              <StampField icon="users" backgroundColor="#E2E3E5" contentColor="#374151" size="LARGE" marginBelow="NONE" shape="SEMI_ROUNDED" />
-              <div><p className="text-[11px] text-gray-400">Assignment Group</p><p className="text-[13px] font-semibold text-gray-900">ISU Sample</p><p className="text-[11px] text-[#2322F0] cursor-pointer hover:underline">Reassign</p></div>
+              <StampField icon="dollar-sign" backgroundColor="#E2E3E5" contentColor="#374151" size="LARGE" marginBelow="NONE" shape="SEMI_ROUNDED" />
+              <div><p className="text-[11px] text-gray-400">Total Insurance Value</p><p className="text-[13px] font-semibold text-gray-900">$1,000,000</p></div>
             </div>
           </CardLayout>
         </div>
@@ -879,52 +949,99 @@ function SubmissionSummaryView({ onBack, subId, subTitle }: { onBack: () => void
               {/* Left inner column (60%) */}
               <div className="flex-[3] min-w-0 space-y-5">
 
+                {/* Submission Information */}
+                <div>
+                  <div className="flex items-center justify-between mb-3"><p className="text-[15px] font-bold text-gray-900">Submission Information</p><button onClick={() => setEditSubmissionDetailsOpen(true)}><Icon icon="edit" size="MEDIUM" color="ACCENT" /></button></div>
+                  <CardLayout padding="MORE" showShadow={true} showBorder={false} shape="SEMI_ROUNDED">
+                    <div className="space-y-4">
+                      {/* Title + Status */}
+                      <div className="flex items-center justify-between">
+                        <p className="text-[14px] font-bold text-gray-900">{editSubTitle}</p>
+                        <TagField tags={[{ text: "Ready to Quote", backgroundColor: "POSITIVE" }]} size="SMALL" marginBelow="NONE" />
+                      </div>
+
+                      {/* Progress Bar */}
+                      <div>
+                        <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+                          <div className="h-full bg-[#2322F0] rounded-full" style={{ width: '65%' }} />
+                        </div>
+                        <p className="text-[12px] text-gray-400 mt-1.5">Submission Progress: 65% · 4/6 tasks resolved</p>
+                      </div>
+
+                      {/* Assignee + Date stacked */}
+                      <div className="space-y-2">
+                        <div title="Assignee" className="flex items-center gap-1.5 cursor-default">
+                          <User size={14} className="text-gray-400" />
+                          <p className="text-[13px] text-gray-900">{editSubAssignee === 'anna-underwriter' ? 'Anna Underwriter' : editSubAssignee === 'dhruva-k' ? 'Dhruva K.' : editSubAssignee === 'john-w' ? 'John W.' : editSubAssignee === 'riley-h' ? 'Riley H.' : 'Robert K.'}</p>
+                        </div>
+                        <div title="Created by" className="flex items-center gap-1.5 cursor-default">
+                          <Calendar size={14} className="text-gray-400" />
+                          <p className="text-[13px] text-gray-900">4/3/2026</p>
+                        </div>
+                      </div>
+
+                      <hr className="border-gray-200" />
+
+                      {/* Account Coordinator */}
+                      <div><p className="text-[12px] text-gray-400">Account Coordinator</p><p className="text-[13px] text-gray-900">{editAccountCoordinator === 'anna-underwriter' ? 'Anna Underwriter' : editAccountCoordinator === 'dhruva-k' ? 'Dhruva K.' : editAccountCoordinator === 'john-w' ? 'John W.' : editAccountCoordinator === 'riley-h' ? 'Riley H.' : 'Robert K.'}</p></div>
+                    </div>
+                  </CardLayout>
+                </div>
+
                 {/* Customer and Broker Information */}
                 <div>
-                  <div className="flex items-center justify-between mb-3"><p className="text-[15px] font-bold text-gray-900">Customer and Broker Information</p><Icon icon="edit" size="MEDIUM" color="ACCENT" /></div>
+                  <div className="flex items-center justify-between mb-3"><p className="text-[15px] font-bold text-gray-900">Customer and Broker Information</p><button onClick={() => { setEditCustBrokerTab(overviewTab === 'broker' ? 'broker' : 'customer'); setEditCustBrokerOpen(true) }}><Icon icon="edit" size="MEDIUM" color="ACCENT" /></button></div>
                   <CardLayout padding="MORE" showShadow={true} showBorder={false} shape="SEMI_ROUNDED">
                     <div className="flex gap-6 border-b border-gray-200 mb-4 px-2">
                       <button onClick={() => setOverviewTab('customer')} className={`pb-2 text-[13px] font-medium border-b-[3px] -mb-[1px] transition-colors ${overviewTab === 'customer' ? 'text-gray-900 font-bold border-[#2322F0]' : 'text-gray-400 border-transparent hover:text-gray-600'}`}>Customer</button>
                       <button onClick={() => setOverviewTab('broker')} className={`pb-2 text-[13px] font-medium border-b-[3px] -mb-[1px] transition-colors ${overviewTab === 'broker' ? 'text-gray-900 font-bold border-[#2322F0]' : 'text-gray-400 border-transparent hover:text-gray-600'}`}>Broker</button>
                     </div>
                     {overviewTab === 'customer' ? (
-                      <div className="grid grid-cols-3 gap-8">
-                        <div className="space-y-3">
-                          <div className="flex items-center gap-2 mb-1"><span className="text-[15px] font-bold text-[#2322F0]">Universal Exports</span><ExternalLink size={12} className="text-[#2322F0]" /></div>
-                          <p className="text-[11px] text-gray-400 uppercase tracking-wide">Contact</p>
-                          <div className="space-y-1.5">
-                            <div className="flex items-center gap-2 text-[13px] text-gray-700"><Building2 size={13} className="text-gray-400" /><span>7950 Jones Branch Dr</span></div>
-                            <div className="flex items-center gap-2 text-[13px] text-gray-700"><Phone size={13} className="text-gray-400" /><span>(571) 412-7900</span></div>
-                            <div className="flex items-center gap-2 text-[13px] text-gray-700"><Mail size={13} className="text-gray-400" /><span>info@universalexports.com</span></div>
-                            <div className="flex items-center gap-2 text-[13px] text-gray-700"><MapPin size={13} className="text-gray-400" /><span>McLean, VA 22102</span></div>
+                      <div className="space-y-5">
+                        {/* Grey card with name + contact info */}
+                        <div className="bg-gray-50 rounded-lg p-4">
+                          <div className="flex items-center gap-3 mb-4">
+                            <div className="w-10 h-10 rounded-full bg-[#152B99] text-white flex items-center justify-center text-[14px] font-bold flex-shrink-0">UE</div>
+                            <div>
+                              <p className="text-[15px] font-bold text-gray-900">Universal Exports</p>
+                              <p className="text-[12px] text-gray-400">James Wilson</p>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-8">
+                            <div className="flex items-center gap-1.5 text-[13px] text-gray-900"><Mail size={13} className="text-gray-400" /><span>info@universalexports.com</span></div>
+                            <div className="flex items-center gap-1.5 text-[13px] text-gray-900"><Phone size={13} className="text-gray-400" /><span>(571) 412-7900</span></div>
+                            <div className="flex items-center gap-1.5 text-[13px] text-gray-900"><Building2 size={13} className="text-gray-400" /><span>7950 Jones Branch Dr, McLean, VA 22102</span></div>
                           </div>
                         </div>
-                        <div className="space-y-3">
-                          <p className="text-[11px] text-gray-400 uppercase tracking-wide">Organization</p>
+                        {/* Org details grid */}
+                        <div className="grid grid-cols-3 gap-x-8 gap-y-4">
                           <div><p className="text-[12px] text-gray-400">Organization Type</p><p className="text-[13px] text-gray-900">Corporation</p></div>
-                          <div><p className="text-[12px] text-gray-400">Contact Name</p><p className="text-[13px] text-gray-900">James Wilson</p></div>
-                          <div><p className="text-[12px] text-gray-400">Contact Email</p><p className="text-[13px] text-gray-900">j.wilson@universalexports.com</p></div>
-                        </div>
-                        <div className="space-y-3">
-                          <p className="text-[11px] text-gray-400 uppercase tracking-wide">Additional</p>
+                          <div><p className="text-[12px] text-gray-400">Incorporation Year</p><p className="text-[13px] text-gray-900">2005</p></div>
+                          <div><p className="text-[12px] text-gray-400">Employee Count</p><p className="text-[13px] text-gray-900">50</p></div>
                           <div><p className="text-[12px] text-gray-400">NAICS Code</p><p className="text-[13px] text-gray-900">481 - Air Transportation</p></div>
-                          <div><p className="text-[12px] text-gray-400">SIC Description</p><p className="text-[13px] text-gray-900">113 - Small Production</p></div>
-                          <div><p className="text-[12px] text-gray-400">Industry</p><p className="text-[13px] text-gray-900">Agriculture, Forestry</p></div>
+                          <div><p className="text-[12px] text-gray-400">Secondary NAICS Code</p><p className="text-[13px] text-gray-900">923 - Administration of Human Resource Programs</p></div>
+                          <div><p className="text-[12px] text-gray-400">NAICS Lite ID</p><p className="text-[13px] text-gray-900">56 - Administrative and Support and Waste Management</p></div>
                         </div>
                       </div>
                     ) : (
-                      <div className="grid grid-cols-2 gap-8">
-                        <div className="space-y-3">
-                          <p className="text-[15px] font-bold text-[#2322F0]">Amal Chen</p>
-                          <p className="text-[11px] text-gray-400 uppercase tracking-wide">Broker Contact</p>
-                          <div className="flex items-center gap-2 text-[13px] text-gray-700"><Building2 size={13} className="text-gray-400" /><span>Universal Exports — Main Office</span></div>
-                          <div className="flex items-center gap-2 text-[13px] text-gray-700"><Phone size={13} className="text-gray-400" /><span>(555) 234-5678</span></div>
-                          <div className="flex items-center gap-2 text-[13px] text-gray-700"><Mail size={13} className="text-gray-400" /><span>amal.chen@universalexports.com</span></div>
+                      <div className="space-y-5">
+                        {/* Grey card with broker name + contact info */}
+                        <div className="bg-gray-50 rounded-lg p-4">
+                          <div className="flex items-center gap-3 mb-4">
+                            <div className="w-10 h-10 rounded-full bg-[#152B99] text-white flex items-center justify-center text-[14px] font-bold flex-shrink-0">AC</div>
+                            <p className="text-[15px] font-bold text-[#2322F0]">Amal Chen</p>
+                          </div>
+                          <div className="flex items-center gap-8">
+                            <div className="flex items-center gap-1.5 text-[13px] text-gray-900"><Mail size={13} className="text-gray-400" /><span>amal.chen@universalexports.com</span></div>
+                            <div className="flex items-center gap-1.5 text-[13px] text-gray-900"><Phone size={13} className="text-gray-400" /><span>(555) 234-5678</span></div>
+                            <div className="flex items-center gap-1.5 text-[13px] text-gray-900"><Building2 size={13} className="text-gray-400" /><span>100 Main St, McLean, VA 22102</span></div>
+                          </div>
                         </div>
-                        <div className="space-y-3">
-                          <p className="text-[11px] text-gray-400 uppercase tracking-wide">Office Details</p>
-                          <div><p className="text-[12px] text-gray-400">Office Name</p><p className="text-[13px] text-gray-900">Universal Exports — Main Office</p></div>
+                        {/* Office details grid */}
+                        <div className="grid grid-cols-2 gap-x-8 gap-y-4">
+                          <div><p className="text-[12px] text-gray-400">Broker Office Name</p><p className="text-[13px] text-[#2322F0] font-semibold">Universal Exports — Main Office</p></div>
                           <div><p className="text-[12px] text-gray-400">Broker Email</p><p className="text-[13px] text-gray-900">amal.chen@universalexports.com</p></div>
+                          <div><p className="text-[12px] text-gray-400">Phone Number</p><p className="text-[13px] text-gray-900">(555) 234-5678</p></div>
                         </div>
                       </div>
                     )}
@@ -933,44 +1050,54 @@ function SubmissionSummaryView({ onBack, subId, subTitle }: { onBack: () => void
 
                 {/* Risk Information */}
                 <div>
-                  <div className="flex items-center justify-between mb-3"><p className="text-[15px] font-bold text-gray-900">Risk Information</p><Icon icon="edit" size="MEDIUM" color="ACCENT" /></div>
+                  <div className="flex items-center justify-between mb-3"><p className="text-[15px] font-bold text-gray-900">Risk Information</p><button onClick={() => setEditCoverageOpen(true)}><Icon icon="edit" size="MEDIUM" color="ACCENT" /></button></div>
                   <CardLayout padding="MORE" showShadow={true} showBorder={false} shape="SEMI_ROUNDED">
+                    <div className="space-y-4">
 
-                    {/* Top row: Score + Exposure side by side */}
-                    <div className="flex gap-4 mb-4">
-
-                      {/* Submission Score — compact left panel */}
-                      <div className="w-[240px] flex-shrink-0 border border-gray-100 rounded-lg p-4 bg-white">
-                        <div className="flex items-center justify-between mb-4">
-                          <p className="text-[14px] font-bold text-gray-900">Submission Score</p>
-                          <Icon icon="info" size="SMALL" color="ACCENT" />
-                        </div>
-                        <div className="flex items-center gap-5">
-                          <div className="relative w-20 h-20 flex-shrink-0">
-                            <svg viewBox="0 0 36 36" className="w-full h-full -rotate-90">
-                              <circle cx="18" cy="18" r="15.9" fill="none" stroke="#E5E7EB" strokeWidth="2.5" />
-                              <circle cx="18" cy="18" r="15.9" fill="none" stroke="#F59E0B" strokeWidth="2.5" strokeDasharray="54 46" strokeLinecap="round" />
-                            </svg>
-                            <span className="absolute inset-0 flex items-center justify-center text-[16px] font-bold text-gray-900">54%</span>
+                      {/* Submission Score + Loss History side by side */}
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="bg-gray-50 rounded-lg p-4">
+                          <p className="text-[13px] font-bold text-gray-900 mb-3">Submission Score</p>
+                          <div className="flex items-stretch gap-5">
+                            <div className="relative w-24 flex-shrink-0 bg-white rounded-lg p-3 flex items-center justify-center aspect-square">
+                              <svg viewBox="0 0 36 36" className="w-full h-full -rotate-90">
+                                <circle cx="18" cy="18" r="15.9" fill="none" stroke="#E5E7EB" strokeWidth="2.5" />
+                                <circle cx="18" cy="18" r="15.9" fill="none" stroke="#F59E0B" strokeWidth="2.5" strokeDasharray="54 46" strokeLinecap="round" />
+                              </svg>
+                              <span className="absolute inset-0 flex items-center justify-center text-[16px] font-bold text-gray-900">54%</span>
+                            </div>
+                            <div className="flex-1 space-y-2.5">
+                              <div><p className="text-[11px] text-gray-400">Customer Employee Count</p><p className="text-[13px] font-bold text-gray-900">50</p></div>
+                              <div><p className="text-[11px] text-gray-400">Rush Status</p><p className="text-[13px] font-bold text-gray-900">0</p></div>
+                              <div><p className="text-[11px] text-gray-400">Submission Channel</p><p className="text-[13px] font-bold text-gray-900">4</p></div>
+                            </div>
                           </div>
-                          <div className="space-y-2.5">
-                            <div><p className="text-[11px] text-gray-400">Customer Employee Count</p><p className="text-[13px] font-bold text-gray-900">50</p></div>
-                            <div><p className="text-[11px] text-gray-400">Rush Status</p><p className="text-[13px] font-bold text-gray-900">0</p></div>
-                            <div><p className="text-[11px] text-gray-400">Submission Channel</p><p className="text-[13px] font-bold text-gray-900">4</p></div>
+                        </div>
+
+                        <div className="bg-gray-50 rounded-lg p-4">
+                          <p className="text-[13px] font-bold text-gray-900 mb-4">Loss History</p>
+                          <div className="space-y-4">
+                            <div className="flex items-center gap-3">
+                              <StampField icon="file-text" backgroundColor="#FFFFFF" contentColor="#152B99" size="LARGE" marginBelow="NONE" shape="SEMI_ROUNDED" />
+                              <div><p className="text-[12px] text-gray-400">Claims</p><p className="text-[22px] font-bold text-gray-900 leading-tight">3</p></div>
+                            </div>
+                            <div className="flex items-center gap-3">
+                              <StampField icon="dollar-sign" backgroundColor="#FFFFFF" contentColor="#152B99" size="LARGE" marginBelow="NONE" shape="SEMI_ROUNDED" />
+                              <div><p className="text-[12px] text-gray-400">Total Paid</p><p className="text-[22px] font-bold text-gray-900 leading-tight">$99,787</p></div>
+                            </div>
                           </div>
                         </div>
                       </div>
 
-                      {/* Exposure and Coverage — fills remaining space */}
-                      <div className="flex-1 border border-gray-100 rounded-lg p-4 bg-white">
-                        <p className="text-[14px] font-bold text-gray-900 mb-3">Exposure and Coverage Information</p>
+                      {/* Exposure and Coverage — full width below */}
+                      <div className="bg-gray-50 rounded-lg p-4">
+                        <p className="text-[13px] font-bold text-gray-900 mb-3">Exposure and Coverage Information</p>
                         <div className="flex gap-8 mb-4">
                           <div><p className="text-[11px] text-gray-400">Total Assets</p><p className="text-[13px] text-gray-500">-</p></div>
                           <div><p className="text-[11px] text-gray-400">Calculated FTE</p><p className="text-[13px] text-gray-500">-</p></div>
                         </div>
                         <div className="flex items-center gap-2 mb-3">
                           <p className="text-[13px] font-bold text-gray-900">Coverage Details</p>
-                          <Icon icon="edit" size="SMALL" color="ACCENT" />
                         </div>
                         <table className="w-full text-left table-fixed">
                           <thead><tr className="border-b border-gray-200">{['Coverage', 'Per Claim Limit', 'Aggregate Limit', 'Retention'].map(h => <th key={h} className="text-[11px] font-semibold text-gray-900 py-2 pr-3">{h}</th>)}</tr></thead>
@@ -982,19 +1109,6 @@ function SubmissionSummaryView({ onBack, subId, subTitle }: { onBack: () => void
                       </div>
 
                     </div>
-
-                    {/* Loss History — full width bottom */}
-                    <div className="border border-gray-100 rounded-lg p-4 bg-white">
-                      <p className="text-[14px] font-bold text-gray-900 mb-2">Loss History</p>
-                      <div className="flex items-center gap-3 py-2">
-                        <FileText size={24} className="text-gray-300" />
-                        <div>
-                          <p className="text-[13px] text-gray-500">No loss history information available.</p>
-                          <button className="text-[13px] text-[#2322F0] hover:underline">Update Information</button>
-                        </div>
-                      </div>
-                    </div>
-
                   </CardLayout>
                 </div>
                 {/* Comments (moved from right column) */}
@@ -1150,7 +1264,7 @@ function SubmissionSummaryView({ onBack, subId, subTitle }: { onBack: () => void
 
                 {/* Policy Details */}
                 <div>
-                  <div className="flex items-center justify-between mb-3"><p className="text-[15px] font-bold text-gray-900">Policy Details</p><Icon icon="edit" size="MEDIUM" color="ACCENT" /></div>
+                  <div className="flex items-center justify-between mb-3"><p className="text-[15px] font-bold text-gray-900">Policy Information</p><button onClick={() => setEditPolicyOpen(true)}><Icon icon="edit" size="MEDIUM" color="ACCENT" /></button></div>
                   <CardLayout padding="STANDARD" showShadow={true} showBorder={false} shape="SEMI_ROUNDED">
                     <div className="grid grid-cols-2 gap-x-6 gap-y-3">
                       <div><p className="text-[12px] text-gray-400">Product Segment</p><p className="text-[13px] text-gray-900">Commercial</p></div>
@@ -1161,27 +1275,6 @@ function SubmissionSummaryView({ onBack, subId, subTitle }: { onBack: () => void
                       <div><p className="text-[12px] text-gray-400">Expiring Premium</p><p className="text-[13px] text-gray-900">$500,000</p></div>
                       <div><p className="text-[12px] text-gray-400">Rush Status</p><p className="text-[13px] text-gray-900">Standard</p></div>
                       <div><p className="text-[12px] text-gray-400">Primary / Excess Status</p><p className="text-[13px] text-gray-900">Primary</p></div>
-                      <div><p className="text-[12px] text-gray-400">Status</p><TagField tags={[{ text: "Ready to Quote", backgroundColor: "POSITIVE" }]} size="SMALL" marginBelow="NONE" /></div>
-                    </div>
-                  </CardLayout>
-                </div>
-
-                {/* Related Submissions */}
-                <div>
-                  <div className="flex items-center justify-between mb-3"><p className="text-[15px] font-bold text-gray-900">Related Submissions</p></div>
-                  <CardLayout padding="STANDARD" showShadow={true} showBorder={false} shape="SEMI_ROUNDED">
-                    <div className="flex items-center justify-between mb-2"><span className="text-[12px] text-gray-400">3 related submissions</span></div>
-                    <div className="flex items-center gap-3 py-2 border-b border-gray-100">
-                      <StampField icon="file-text" backgroundColor="#E8E7FD" contentColor="#2322F0" size="SMALL" marginBelow="NONE" />
-                      <div><p className="text-[13px] font-semibold text-[#2322F0] hover:underline cursor-pointer">SUB0401XUSC</p><p className="text-[12px] text-gray-400">Renewal · Bound 4/1/2025</p></div>
-                    </div>
-                    <div className="flex items-center gap-3 py-2 border-b border-gray-100">
-                      <StampField icon="file-text" backgroundColor="#E8E7FD" contentColor="#2322F0" size="SMALL" marginBelow="NONE" />
-                      <div><p className="text-[13px] font-semibold text-[#2322F0] hover:underline cursor-pointer">SUB0312PRPC</p><p className="text-[12px] text-gray-400">New Business · Quoted 3/12/2025</p></div>
-                    </div>
-                    <div className="flex items-center gap-3 py-2">
-                      <StampField icon="file-text" backgroundColor="#E8E7FD" contentColor="#2322F0" size="SMALL" marginBelow="NONE" />
-                      <div><p className="text-[13px] font-semibold text-[#2322F0] hover:underline cursor-pointer">SUB0228GLXS</p><p className="text-[12px] text-gray-400">Renewal · Bound 2/28/2025</p></div>
                     </div>
                   </CardLayout>
                 </div>
@@ -1202,7 +1295,7 @@ function SubmissionSummaryView({ onBack, subId, subTitle }: { onBack: () => void
                   <div className="flex items-center justify-between mb-3"><p className="text-[15px] font-bold text-gray-900">Tasks</p><ButtonWidget label="CREATE TASK" style="OUTLINE" color="ACCENT" size="SMALL" /></div>
                   <CardLayout padding="STANDARD" showShadow={true} showBorder={false} shape="SEMI_ROUNDED">
                     <div className="flex gap-6 border-b border-gray-200 mb-3 px-2">
-                      {([{ key: 'open' as const, label: 'Open' }, { key: 'completed' as const, label: 'Completed' }, { key: 'not-needed' as const, label: 'Not Needed' }]).map(t => (
+                      {([{ key: 'open' as const, label: 'Active' }, { key: 'completed' as const, label: 'Resolved' }]).map(t => (
                         <button key={t.key} onClick={() => setTaskTab(t.key)} className={`pb-2 text-[13px] font-medium border-b-[3px] -mb-[1px] transition-colors ${taskTab === t.key ? 'text-gray-900 font-bold border-[#2322F0]' : 'text-gray-400 border-transparent hover:text-gray-600'}`}>{t.label}</button>
                       ))}
                     </div>
@@ -1247,11 +1340,28 @@ function SubmissionSummaryView({ onBack, subId, subTitle }: { onBack: () => void
                             <td className="py-3 pr-3 text-[13px] text-gray-700">Apr 20, 2026</td>
                           </tr>
                         </>)}
-                        {taskTab === 'not-needed' && (
-                          <tr><td colSpan={3} className="py-8 text-center text-[13px] text-gray-400">No tasks available</td></tr>
-                        )}
                       </tbody>
                     </table>
+                  </CardLayout>
+                </div>
+
+                {/* Related Submissions */}
+                <div>
+                  <div className="flex items-center justify-between mb-3"><p className="text-[15px] font-bold text-gray-900">Related Submissions</p></div>
+                  <CardLayout padding="STANDARD" showShadow={true} showBorder={false} shape="SEMI_ROUNDED">
+                    <div className="flex items-center justify-between mb-2"><span className="text-[12px] text-gray-400">3 related submissions</span></div>
+                    <div className="flex items-center gap-3 py-2 border-b border-gray-100">
+                      <StampField icon="file-text" backgroundColor="#E8E7FD" contentColor="#2322F0" size="SMALL" marginBelow="NONE" />
+                      <div><p className="text-[13px] font-semibold text-[#2322F0] hover:underline cursor-pointer">SUB0401XUSC</p><p className="text-[12px] text-gray-400">Renewal · Bound 4/1/2025</p></div>
+                    </div>
+                    <div className="flex items-center gap-3 py-2 border-b border-gray-100">
+                      <StampField icon="file-text" backgroundColor="#E8E7FD" contentColor="#2322F0" size="SMALL" marginBelow="NONE" />
+                      <div><p className="text-[13px] font-semibold text-[#2322F0] hover:underline cursor-pointer">SUB0312PRPC</p><p className="text-[12px] text-gray-400">New Business · Quoted 3/12/2025</p></div>
+                    </div>
+                    <div className="flex items-center gap-3 py-2">
+                      <StampField icon="file-text" backgroundColor="#E8E7FD" contentColor="#2322F0" size="SMALL" marginBelow="NONE" />
+                      <div><p className="text-[13px] font-semibold text-[#2322F0] hover:underline cursor-pointer">SUB0228GLXS</p><p className="text-[12px] text-gray-400">Renewal · Bound 2/28/2025</p></div>
+                    </div>
                   </CardLayout>
                 </div>
               </div>
@@ -1298,6 +1408,204 @@ function SubmissionSummaryView({ onBack, subId, subTitle }: { onBack: () => void
           <span title="AI Chat"><Sparkles size={16} className="text-[#2322F0]" /></span>
         </div>
       )}
+    {/* ══ Edit Coverage Details Dialog ══ */}
+    {/* ══ Custom Modal Overlay for Edit Forms ══ */}
+    {(editCoverageOpen || editSubmissionDetailsOpen || editPolicyOpen || editCustBrokerOpen) && (
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center">
+        <div className="absolute inset-0 bg-black/40" onClick={() => { setEditCoverageOpen(false); setEditSubmissionDetailsOpen(false); setEditPolicyOpen(false); setEditCustBrokerOpen(false) }} />
+        <div className="relative bg-white rounded-lg shadow-xl flex flex-col" style={{ minWidth: 800, height: '70vh' }}>
+
+          {/* ── Edit Coverage Details ── */}
+          {editCoverageOpen && (<>
+            <div className="p-6 pb-0 flex-shrink-0">
+              <div className="flex items-center justify-between mb-1"><p className="text-[20px] font-bold text-gray-900">Edit Coverage Details</p><button onClick={() => setEditCoverageOpen(false)} className="text-gray-400 hover:text-gray-600"><X size={20} /></button></div>
+              <p className="text-[11px] text-gray-400 mb-4">Mandatory fields are marked with an asterisk (*).</p>
+            </div>
+            <div className="flex-1 overflow-y-auto px-6">
+              <div className="border-t border-gray-200 pt-4">
+                <p className="text-[14px] font-bold text-gray-900 mb-3">Coverages</p>
+        <div className="border border-gray-200 rounded">
+          <table className="w-full text-left table-fixed">
+            <thead>
+              <tr className="border-b border-gray-200 bg-gray-50">
+                <th className="text-[12px] font-semibold text-gray-900 py-2.5 px-3 w-[15%]">Coverage</th>
+                <th className="text-[12px] font-semibold text-gray-900 py-2.5 px-3 w-[28%]">Per Claim Limit</th>
+                <th className="text-[12px] font-semibold text-gray-900 py-2.5 px-3 w-[29%]">Aggregate Limit</th>
+                <th className="text-[12px] font-semibold text-gray-900 py-2.5 px-3 w-[28%]">Retention</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="border-b border-gray-200">
+                <td className="py-2.5 px-3 text-[13px] text-gray-900">D&O</td>
+                <td className="py-2.5 px-3"><select value={editDnoPerClaim} onChange={(e) => setEditDnoPerClaim(e.target.value)} className="w-full border border-gray-300 rounded px-2 py-1.5 text-[13px] text-gray-600 outline-none"><option value="">Select Limit</option><option value="250k">$250K</option><option value="500k">$500K</option><option value="1m">$1M</option><option value="2m">$2M</option><option value="5m">$5M</option><option value="10m">$10M</option></select></td>
+                <td className="py-2.5 px-3"><select value={editDnoAggregate} onChange={(e) => setEditDnoAggregate(e.target.value)} className="w-full border border-gray-300 rounded px-2 py-1.5 text-[13px] text-gray-600 outline-none"><option value="">Select Limit</option><option value="500k">$500K</option><option value="1m">$1M</option><option value="2m">$2M</option><option value="5m">$5M</option><option value="10m">$10M</option><option value="25m">$25M</option></select></td>
+                <td className="py-2.5 px-3"><select value={editDnoRetention} onChange={(e) => setEditDnoRetention(e.target.value)} className="w-full border border-gray-300 rounded px-2 py-1.5 text-[13px] text-gray-600 outline-none"><option value="">Select Limit</option><option value="5k">$5K</option><option value="10k">$10K</option><option value="25k">$25K</option><option value="50k">$50K</option><option value="100k">$100K</option><option value="250k">$250K</option></select></td>
+              </tr>
+              <tr>
+                <td className="py-2.5 px-3 text-[13px] text-gray-900">EPL</td>
+                <td className="py-2.5 px-3"><select value={editEplPerClaim} onChange={(e) => setEditEplPerClaim(e.target.value)} className="w-full border border-gray-300 rounded px-2 py-1.5 text-[13px] text-gray-600 outline-none"><option value="">Select Limit</option><option value="250k">$250K</option><option value="500k">$500K</option><option value="1m">$1M</option><option value="2m">$2M</option><option value="5m">$5M</option><option value="10m">$10M</option></select></td>
+                <td className="py-2.5 px-3"><select value={editEplAggregate} onChange={(e) => setEditEplAggregate(e.target.value)} className="w-full border border-gray-300 rounded px-2 py-1.5 text-[13px] text-gray-600 outline-none"><option value="">Select Limit</option><option value="500k">$500K</option><option value="1m">$1M</option><option value="2m">$2M</option><option value="5m">$5M</option><option value="10m">$10M</option><option value="25m">$25M</option></select></td>
+                <td className="py-2.5 px-3"><select value={editEplRetention} onChange={(e) => setEditEplRetention(e.target.value)} className="w-full border border-gray-300 rounded px-2 py-1.5 text-[13px] text-gray-600 outline-none"><option value="">Select Limit</option><option value="5k">$5K</option><option value="10k">$10K</option><option value="25k">$25K</option><option value="50k">$50K</option><option value="100k">$100K</option><option value="250k">$250K</option></select></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        </div>
+            </div>
+            <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200 flex-shrink-0"><button onClick={() => setEditCoverageOpen(false)} className="text-[13px] font-semibold text-gray-500 hover:text-gray-700">CANCEL</button><ButtonWidget label="SAVE" style="SOLID" color="ACCENT" size="SMALL" onClick={() => setEditCoverageOpen(false)} /></div>
+          </>)}
+
+          {/* ── Edit Submission Details ── */}
+          {editSubmissionDetailsOpen && (<>
+            <div className="p-6 pb-0 flex-shrink-0">
+              <div className="flex items-center justify-between mb-1"><p className="text-[20px] font-bold text-gray-900">Edit Submission Information</p><button onClick={() => setEditSubmissionDetailsOpen(false)} className="text-gray-400 hover:text-gray-600"><X size={20} /></button></div>
+              <p className="text-[11px] text-gray-400 mb-4">Mandatory fields are marked with an asterisk (*).</p>
+            </div>
+            <div className="flex-1 overflow-y-auto px-6">
+              <div className="border-t border-gray-200 pt-4 space-y-4">
+                <TextField label="Submission Title" value={editSubTitle} saveInto={(v) => setEditSubTitle(v)} required={true} />
+                <div className="grid grid-cols-2 gap-4">
+                  <DropdownField label="Status" choiceLabels={['In Review', 'Ready to Quote', 'Missing Info', 'On Hold', 'Processing', 'Ready']} choiceValues={['in-review', 'ready-to-quote', 'missing-info', 'on-hold', 'processing', 'ready']} value={editSubStatus} saveInto={(v) => setEditSubStatus(v)} placeholder="Select Status" required={true} />
+                  <DropdownField label="Assignee" choiceLabels={['Anna Underwriter', 'Dhruva K.', 'John W.', 'Riley H.', 'Robert K.']} choiceValues={['anna-underwriter', 'dhruva-k', 'john-w', 'riley-h', 'robert-k']} value={editSubAssignee} saveInto={(v) => setEditSubAssignee(v)} placeholder="Select Assignee" required={true} />
+                </div>
+                <p className="text-[16px] font-bold text-gray-700 mt-2">Management Liability Info</p>
+                <DropdownField label="Account Coordinator" choiceLabels={['Anna Underwriter', 'Dhruva K.', 'John W.', 'Riley H.', 'Robert K.']} choiceValues={['anna-underwriter', 'dhruva-k', 'john-w', 'riley-h', 'robert-k']} value={editAccountCoordinator} saveInto={(v) => setEditAccountCoordinator(v)} placeholder="Select Coordinator" required={true} />
+              </div>
+            </div>
+            <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200 flex-shrink-0"><button onClick={() => setEditSubmissionDetailsOpen(false)} className="text-[13px] font-semibold text-gray-500 hover:text-gray-700">CANCEL</button><ButtonWidget label="SAVE" style="SOLID" color="ACCENT" size="SMALL" onClick={() => setEditSubmissionDetailsOpen(false)} /></div>
+          </>)}
+
+          {/* ── Edit Policy Details ── */}
+          {editPolicyOpen && (<>
+            <div className="p-6 pb-0 flex-shrink-0">
+              <div className="flex items-center justify-between mb-1"><p className="text-[20px] font-bold text-gray-900">Edit Policy Information</p><button onClick={() => setEditPolicyOpen(false)} className="text-gray-400 hover:text-gray-600"><X size={20} /></button></div>
+              <p className="text-[11px] text-gray-400 mb-4">Mandatory fields are marked with an asterisk (*).</p>
+            </div>
+            <div className="flex-1 overflow-y-auto px-6">
+              <div className="border-t border-gray-200 pt-4 space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-[14px] font-semibold text-gray-900 block mb-1">Proposed Effective Date <span className="text-[#2322F0]">*</span></label>
+                    <input type="date" value={editProposedEffDate} onChange={(e) => setEditProposedEffDate(e.target.value)} className="w-full border border-gray-300 rounded px-2.5 py-1.5 text-[14px] text-gray-900 outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+                  </div>
+                  <div>
+                    <label className="text-[14px] font-semibold text-gray-900 block mb-1">Proposed Expiration Date <span className="text-[#2322F0]">*</span></label>
+                    <input type="date" value={editProposedExpDate} onChange={(e) => setEditProposedExpDate(e.target.value)} className="w-full border border-gray-300 rounded px-2.5 py-1.5 text-[14px] text-gray-900 outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <TextField label="Total Insurance Value" value={editTiv} saveInto={(v) => setEditTiv(v)} required={true} placeholder="$1,000,000" />
+                  <TextField label="Expiring Premium" value={editExpiringPremium} saveInto={(v) => setEditExpiringPremium(v)} required={true} placeholder="500000" />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <DropdownField label="Product Segment" choiceLabels={['Commercial', 'D&O Private/NFP', 'EPLI', 'Energy', 'Excess Casualty', 'Financial Institutions', 'GMI', 'General Casualty', 'Property', 'SME']} choiceValues={['commercial', 'dno-private-nfp', 'epli', 'energy', 'excess-casualty', 'financial-institutions', 'gmi', 'general-casualty', 'property', 'sme']} value={editProductSegment} saveInto={(v) => setEditProductSegment(v)} placeholder="Select Product Segment" required={true} />
+                  <TextField label="Insurance Carrier Branch" value={editCarrierBranch} saveInto={(v) => setEditCarrierBranch(v)} required={true} placeholder="LIC" />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-[14px] font-semibold text-gray-900 mb-1">Rush Status <span className="text-[#2322F0]">*</span></p>
+                    <RadioButtonField choiceLabels={['Standard', 'Rush']} choiceValues={['standard', 'rush']} value={editRushStatus} saveInto={(v) => setEditRushStatus(v)} labelPosition="COLLAPSED" choiceLayout="COMPACT" />
+                  </div>
+                  <div>
+                    <p className="text-[14px] font-semibold text-gray-900 mb-1">Primary / Excess Status <span className="text-[#2322F0]">*</span></p>
+                    <RadioButtonField choiceLabels={['Primary', 'Excess']} choiceValues={['primary', 'excess']} value={editPrimaryExcess} saveInto={(v) => setEditPrimaryExcess(v)} labelPosition="COLLAPSED" choiceLayout="COMPACT" />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200 flex-shrink-0"><button onClick={() => setEditPolicyOpen(false)} className="text-[13px] font-semibold text-gray-500 hover:text-gray-700">CANCEL</button><ButtonWidget label="SAVE" style="SOLID" color="ACCENT" size="SMALL" onClick={() => setEditPolicyOpen(false)} /></div>
+          </>)}
+
+          {/* ── Edit Customer & Broker (combined) ── */}
+          {editCustBrokerOpen && (<>
+            <div className="p-6 pb-0 flex-shrink-0">
+              <div className="flex items-center justify-between mb-1"><p className="text-[20px] font-bold text-gray-900">Edit Customer & Broker Information</p><button onClick={() => setEditCustBrokerOpen(false)} className="text-gray-400 hover:text-gray-600"><X size={20} /></button></div>
+              <p className="text-[11px] text-gray-400 mb-4">Mandatory fields are marked with an asterisk (*).</p>
+            </div>
+            <div className="flex flex-1 min-h-0 border-t border-gray-200">
+              {/* Left side nav */}
+              <div className="w-48 flex-shrink-0 border-r border-gray-200 bg-white">
+                {([{ key: 'customer' as const, label: 'Customer Information' }, { key: 'broker' as const, label: 'Broker Information' }]).map(t => (
+                  <button key={t.key} onClick={() => setEditCustBrokerTab(t.key)}
+                    className={`w-full text-left px-5 py-4 text-[13px] transition-colors border-l-[4px] ${
+                      editCustBrokerTab === t.key
+                        ? 'text-gray-900 font-bold border-[#2322F0] bg-[#EDEEFA]'
+                        : 'text-gray-600 font-normal border-transparent hover:bg-gray-50'
+                    }`}>{t.label}</button>
+                ))}
+              </div>
+              {/* Right content */}
+              <div className="flex-1 overflow-y-auto p-6">
+                {editCustBrokerTab === 'customer' && (
+                  <div>
+                    {/* Customer Information */}
+                    <div className="mb-8">
+                    <CardLayout padding="STANDARD" showShadow={false} showBorder={true} shape="SEMI_ROUNDED" marginBelow="NONE">
+                      <div className="flex items-center justify-between mb-3 -mx-4 -mt-4 px-4 py-2 rounded-t-sm" style={{ backgroundColor: '#E8E7FD' }}>
+                        <span className="text-[14px] font-semibold text-gray-900">Customer Information</span>
+                      </div>
+                      <div className="space-y-4">
+                        <div className="grid grid-cols-2 gap-4"><TextField label="Customer Name" value={editCustName} saveInto={(v) => setEditCustName(v)} required={true} /><DropdownField label="Organization Type" choiceLabels={['Corporation', 'LLC', 'Partnership', 'Sole Proprietorship', 'Non-Profit']} choiceValues={['corporation', 'llc', 'partnership', 'sole-proprietorship', 'non-profit']} value={editCustOrgType} saveInto={(v) => setEditCustOrgType(v)} placeholder="Select Type" required={true} /></div>
+                        <div className="grid grid-cols-2 gap-4"><TextField label="SIC Code" value={editCustSicCode} saveInto={(v) => setEditCustSicCode(v)} required={true} /><TextField label="Phone" value={editCustPhone} saveInto={(v) => setEditCustPhone(v)} required={true} /></div>
+                        <div className="grid grid-cols-2 gap-4"><TextField label="Incorporation Year" value={editCustIncYear} saveInto={(v) => setEditCustIncYear(v)} required={true} /><TextField label="Employee Count" value={editCustEmployeeCount} saveInto={(v) => setEditCustEmployeeCount(v)} required={true} /></div>
+                        <div className="grid grid-cols-2 gap-4"><TextField label="NAICS Code" value={editCustNaicsCode} saveInto={(v) => setEditCustNaicsCode(v)} required={true} /><TextField label="Secondary NAICS Code" value={editCustSecondaryNaics} saveInto={(v) => setEditCustSecondaryNaics(v)} required={true} /></div>
+                        <div className="grid grid-cols-2 gap-4"><TextField label="NAICS Lite" value={editCustNaicsLite} saveInto={(v) => setEditCustNaicsLite(v)} required={true} /><div /></div>
+                        <div className="grid grid-cols-2 gap-4"><TextField label="Address Line 1" value={editCustAddress1} saveInto={(v) => setEditCustAddress1(v)} required={true} /><TextField label="Address Line 2" value={editCustAddress2} saveInto={(v) => setEditCustAddress2(v)} /></div>
+                        <div className="grid grid-cols-2 gap-4"><TextField label="City" value={editCustCity} saveInto={(v) => setEditCustCity(v)} required={true} /><div className="grid grid-cols-2 gap-3"><TextField label="State" value={editCustState} saveInto={(v) => setEditCustState(v)} required={true} /><TextField label="Zip Code" value={editCustZip} saveInto={(v) => setEditCustZip(v)} required={true} /></div></div>
+                      </div>
+                    </CardLayout>
+                    </div>
+                    {/* Point of Contact */}
+                    <div className="mb-8">
+                    <CardLayout padding="STANDARD" showShadow={false} showBorder={true} shape="SEMI_ROUNDED" marginBelow="NONE">
+                      <div className="flex items-center justify-between mb-3 -mx-4 -mt-4 px-4 py-2 rounded-t-sm" style={{ backgroundColor: '#E8E7FD' }}>
+                        <span className="text-[14px] font-semibold text-gray-900">Point of Contact</span>
+                      </div>
+                      <div className="space-y-4">
+                        <div className="grid grid-cols-2 gap-4"><TextField label="Contact Name" value={editCustContactName} saveInto={(v) => setEditCustContactName(v)} required={true} /><TextField label="Contact Email" value={editCustContactEmail} saveInto={(v) => setEditCustContactEmail(v)} required={true} /></div>
+                        <div className="grid grid-cols-2 gap-4"><TextField label="Contact Phone" value={editCustContactPhone} saveInto={(v) => setEditCustContactPhone(v)} required={true} /><div /></div>
+                      </div>
+                    </CardLayout>
+                    </div>
+                  </div>
+                )}
+                {editCustBrokerTab === 'broker' && (
+                  <div>
+                    {/* Broker Details */}
+                    <div className="mb-8">
+                    <CardLayout padding="STANDARD" showShadow={false} showBorder={true} shape="SEMI_ROUNDED" marginBelow="NONE">
+                      <div className="flex items-center justify-between mb-3 -mx-4 -mt-4 px-4 py-2 rounded-t-sm" style={{ backgroundColor: '#E8E7FD' }}>
+                        <span className="text-[14px] font-semibold text-gray-900">Broker Details</span>
+                      </div>
+                      <div className="space-y-4">
+                        <div className="grid grid-cols-2 gap-4"><TextField label="Broker Name" value={editBrokerName} saveInto={(v) => setEditBrokerName(v)} required={true} /><TextField label="Broker Email" value={editBrokerEmail} saveInto={(v) => setEditBrokerEmail(v)} required={true} /></div>
+                        <div className="grid grid-cols-2 gap-4"><TextField label="Phone" value={editBrokerPhone} saveInto={(v) => setEditBrokerPhone(v)} required={true} /><div /></div>
+                      </div>
+                    </CardLayout>
+                    </div>
+                    {/* Office Information */}
+                    <div className="mb-8">
+                    <CardLayout padding="STANDARD" showShadow={false} showBorder={true} shape="SEMI_ROUNDED" marginBelow="NONE">
+                      <div className="flex items-center justify-between mb-3 -mx-4 -mt-4 px-4 py-2 rounded-t-sm" style={{ backgroundColor: '#E8E7FD' }}>
+                        <span className="text-[14px] font-semibold text-gray-900">Office Information</span>
+                      </div>
+                      <div className="space-y-4">
+                        <div className="grid grid-cols-2 gap-4"><TextField label="Office Name" value={editBrokerOfficeName} saveInto={(v) => setEditBrokerOfficeName(v)} required={true} /><TextField label="Office Phone" value={editBrokerOfficePhone} saveInto={(v) => setEditBrokerOfficePhone(v)} required={true} /></div>
+                        <div className="grid grid-cols-2 gap-4"><TextField label="Address Line 1" value={editBrokerOfficeAddr1} saveInto={(v) => setEditBrokerOfficeAddr1(v)} required={true} /><TextField label="Address Line 2" value={editBrokerOfficeAddr2} saveInto={(v) => setEditBrokerOfficeAddr2(v)} /></div>
+                        <div className="grid grid-cols-2 gap-4"><TextField label="City" value={editBrokerOfficeCity} saveInto={(v) => setEditBrokerOfficeCity(v)} required={true} /><div className="grid grid-cols-2 gap-3"><TextField label="State" value={editBrokerOfficeState} saveInto={(v) => setEditBrokerOfficeState(v)} required={true} /><TextField label="Zip Code" value={editBrokerOfficeZip} saveInto={(v) => setEditBrokerOfficeZip(v)} required={true} /></div></div>
+                      </div>
+                    </CardLayout>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200 flex-shrink-0"><button onClick={() => setEditCustBrokerOpen(false)} className="text-[13px] font-semibold text-gray-500 hover:text-gray-700">CANCEL</button><ButtonWidget label="SAVE" style="SOLID" color="ACCENT" size="SMALL" onClick={() => setEditCustBrokerOpen(false)} /></div>
+          </>)}
+
+        </div>
+      </div>
+    )}
     </>
   )
 }

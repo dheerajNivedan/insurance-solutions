@@ -164,7 +164,9 @@ div[role="dialog"] { z-index: 9999 !important; }
 
 /* ── Field sizing ── */
 div[role="dialog"] input[type="text"],
-div[role="dialog"] select {
+div[role="dialog"] select,
+.fixed.inset-0.z-\[9999\] input[type="text"],
+.fixed.inset-0.z-\[9999\] select {
   width: 100% !important;
   font-size: 14px !important;
   padding: 6px 10px !important;
@@ -173,7 +175,8 @@ div[role="dialog"] select {
 }
 
 /* Match dropdown button size to text inputs */
-div[role="dialog"] button[aria-haspopup="listbox"] {
+div[role="dialog"] button[aria-haspopup="listbox"],
+.fixed.inset-0.z-\[9999\] button[aria-haspopup="listbox"] {
   font-size: 14px !important;
   padding: 6px 10px !important;
 }
@@ -294,4 +297,22 @@ div[role="dialog"] .relative > .absolute.z-50 input[type="text"]:focus {
 /* Submission summary light gray labels → #6C6C75 */
 .submission-summary-content .text-gray-400 {
   color: #6C6C75 !important;
+}
+
+/* ── Modal label size override — all modals use 14px labels ── */
+.fixed.inset-0.z-\[9999\] label,
+.fixed.inset-0.z-\[9999\] p.font-semibold,
+div[role="dialog"] label,
+div[role="dialog"] p.font-semibold {
+  font-size: 14px !important;
+}
+
+/* ── Modal input value size — match labels at 14px ── */
+.fixed.inset-0.z-\[9999\] input,
+.fixed.inset-0.z-\[9999\] select,
+.fixed.inset-0.z-\[9999\] button[aria-haspopup="listbox"],
+.fixed.inset-0.z-\[9999\] button[aria-haspopup="listbox"] span,
+.fixed.inset-0.z-\[9999\] [class*="RadioButton"] label,
+.fixed.inset-0.z-\[9999\] [class*="radio"] label {
+  font-size: 14px !important;
 }
