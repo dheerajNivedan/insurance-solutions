@@ -50,11 +50,11 @@ const tasks = [
 ]
 
 const alerts = [
-  { title: 'New document received', sub: 'SUB-10482', date: '2 hours ago' },
-  { title: 'Duplicate Submission Detected', sub: 'SUB-10475', date: '4/3/2026' },
-  { title: 'Missing TIV and Proposed Dates', sub: 'SUB-10471', date: '4/3/2026' },
-  { title: 'New broker message received', sub: 'SUB-10479', date: '4/2/2026' },
-  { title: 'Sanctions match found', sub: 'SUB-10468', date: '4/1/2026' },
+  { title: 'New document received', sub: 'SUB-10482', date: '2 hours ago', icon: 'file-text' },
+  { title: 'Duplicate Submission Detected', sub: 'SUB-10475', date: '4/3/2026', icon: 'copy' },
+  { title: 'Missing TIV and Proposed Dates', sub: 'SUB-10471', date: '4/3/2026', icon: 'list' },
+  { title: 'New broker message received', sub: 'SUB-10479', date: '4/2/2026', icon: 'message-square' },
+  { title: 'Sanctions match found', sub: 'SUB-10468', date: '4/1/2026', icon: 'shield' },
 ]
 
 // ── Chart Data ──
@@ -90,6 +90,30 @@ const cycleTimeData = [
   { month: 'Feb', days: 4.9 },
   { month: 'Mar', days: 4.5 },
   { month: 'Apr', days: 4.2 },
+]
+
+// ── Dashboard Right Pane Chart Data ──
+const taskStatusData = [
+  { name: 'Overdue', value: 2, color: '#ef4444' },
+  { name: 'In Progress', value: 6, color: '#152B99' },
+  { name: 'Completed', value: 4, color: '#22c55e' },
+  { name: 'Not Started', value: 3, color: '#FFB300' },
+]
+
+const tasksByTypeData = [
+  { name: 'Upload Doc', count: 5 },
+  { name: 'Sanctions', count: 3 },
+  { name: 'Confirmation', count: 4 },
+  { name: 'Referral', count: 2 },
+  { name: 'Doc Review', count: 6 },
+]
+
+const tasksByAssigneeData = [
+  { name: 'Anna U.', active: 6, completed: 3 },
+  { name: 'Dhruva K.', active: 4, completed: 5 },
+  { name: 'John W.', active: 3, completed: 2 },
+  { name: 'Riley H.', active: 2, completed: 4 },
+  { name: 'Robert K.', active: 1, completed: 3 },
 ]
 
 
@@ -768,6 +792,13 @@ function SubmissionSummaryView({ onBack, subId, subTitle }: { onBack: () => void
 
   // Edit Risk/Coverage dialog
   const [editCoverageOpen, setEditCoverageOpen] = useState(false)
+
+  // Create Task dialog
+  const [createTaskOpen, setCreateTaskOpen] = useState(false)
+  const [newTaskTitle, setNewTaskTitle] = useState('')
+  const [newTaskType, setNewTaskType] = useState('')
+  const [newTaskAssignee, setNewTaskAssignee] = useState('')
+  const [newTaskDueDate, setNewTaskDueDate] = useState('')
   const [editDnoPerClaim, setEditDnoPerClaim] = useState('')
   const [editDnoAggregate, setEditDnoAggregate] = useState('')
   const [editDnoRetention, setEditDnoRetention] = useState('')
@@ -1310,7 +1341,7 @@ function SubmissionSummaryView({ onBack, subId, subTitle }: { onBack: () => void
 
                 {/* Tasks */}
                 <div>
-                  <div className="flex items-center justify-between mb-3"><p className="text-[15px] font-bold text-gray-900">Tasks</p><button title="Create Task" className="text-[#2322F0] hover:opacity-80"><PlusCircle size={20} /></button></div>
+                  <div className="flex items-center justify-between mb-3"><p className="text-[15px] font-bold text-gray-900">Tasks</p><button title="Create Task" className="text-[#2322F0] hover:opacity-80" onClick={() => setCreateTaskOpen(true)}><PlusCircle size={20} /></button></div>
                   <CardLayout padding="STANDARD" showShadow={true} showBorder={false} shape="SEMI_ROUNDED">
                     <div className="flex gap-6 border-b border-gray-200 mb-3 px-2">
                       {([{ key: 'open' as const, label: 'Active' }, { key: 'completed' as const, label: 'Resolved' }]).map(t => (
@@ -1428,9 +1459,9 @@ function SubmissionSummaryView({ onBack, subId, subTitle }: { onBack: () => void
       )}
     {/* ══ Edit Coverage Details Dialog ══ */}
     {/* ══ Custom Modal Overlay for Edit Forms ══ */}
-    {(editCoverageOpen || editSubmissionDetailsOpen || editPolicyOpen || editCustBrokerOpen) && (
+    {(editCoverageOpen || editSubmissionDetailsOpen || editPolicyOpen || editCustBrokerOpen || createTaskOpen) && (
       <div className="fixed inset-0 z-[9999] flex items-center justify-center">
-        <div className="absolute inset-0 bg-black/40" onClick={() => { setEditCoverageOpen(false); setEditSubmissionDetailsOpen(false); setEditPolicyOpen(false); setEditCustBrokerOpen(false) }} />
+        <div className="absolute inset-0 bg-black/40" onClick={() => { setEditCoverageOpen(false); setEditSubmissionDetailsOpen(false); setEditPolicyOpen(false); setEditCustBrokerOpen(false); setCreateTaskOpen(false) }} />
         <div className="relative bg-white rounded-lg shadow-xl flex flex-col" style={{ minWidth: 800, height: '70vh' }}>
 
           {/* ── Edit Coverage Details ── */}
@@ -1470,7 +1501,7 @@ function SubmissionSummaryView({ onBack, subId, subTitle }: { onBack: () => void
         </div>
         </div>
             </div>
-            <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200 flex-shrink-0"><button onClick={() => setEditCoverageOpen(false)} className="text-[13px] font-semibold text-gray-500 hover:text-gray-700">CANCEL</button><ButtonWidget label="SAVE" style="SOLID" color="ACCENT" size="SMALL" onClick={() => setEditCoverageOpen(false)} /></div>
+            <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200 flex-shrink-0"><button onClick={() => setEditCoverageOpen(false)} className="text-[13px] font-semibold text-gray-500 hover:text-gray-700">CANCEL</button><ButtonWidget label="EDIT" style="SOLID" color="ACCENT" size="SMALL" onClick={() => setEditCoverageOpen(false)} /></div>
           </>)}
 
           {/* ── Edit Submission Details ── */}
@@ -1490,7 +1521,7 @@ function SubmissionSummaryView({ onBack, subId, subTitle }: { onBack: () => void
                 <DropdownField label="Account Coordinator" choiceLabels={['Anna Underwriter', 'Dhruva K.', 'John W.', 'Riley H.', 'Robert K.']} choiceValues={['anna-underwriter', 'dhruva-k', 'john-w', 'riley-h', 'robert-k']} value={editAccountCoordinator} saveInto={(v) => setEditAccountCoordinator(v)} placeholder="Select Coordinator" required={true} />
               </div>
             </div>
-            <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200 flex-shrink-0"><button onClick={() => setEditSubmissionDetailsOpen(false)} className="text-[13px] font-semibold text-gray-500 hover:text-gray-700">CANCEL</button><ButtonWidget label="SAVE" style="SOLID" color="ACCENT" size="SMALL" onClick={() => setEditSubmissionDetailsOpen(false)} /></div>
+            <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200 flex-shrink-0"><button onClick={() => setEditSubmissionDetailsOpen(false)} className="text-[13px] font-semibold text-gray-500 hover:text-gray-700">CANCEL</button><ButtonWidget label="EDIT" style="SOLID" color="ACCENT" size="SMALL" onClick={() => setEditSubmissionDetailsOpen(false)} /></div>
           </>)}
 
           {/* ── Edit Policy Details ── */}
@@ -1531,7 +1562,7 @@ function SubmissionSummaryView({ onBack, subId, subTitle }: { onBack: () => void
                 </div>
               </div>
             </div>
-            <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200 flex-shrink-0"><button onClick={() => setEditPolicyOpen(false)} className="text-[13px] font-semibold text-gray-500 hover:text-gray-700">CANCEL</button><ButtonWidget label="SAVE" style="SOLID" color="ACCENT" size="SMALL" onClick={() => setEditPolicyOpen(false)} /></div>
+            <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200 flex-shrink-0"><button onClick={() => setEditPolicyOpen(false)} className="text-[13px] font-semibold text-gray-500 hover:text-gray-700">CANCEL</button><ButtonWidget label="EDIT" style="SOLID" color="ACCENT" size="SMALL" onClick={() => setEditPolicyOpen(false)} /></div>
           </>)}
 
           {/* ── Edit Customer & Broker (combined) ── */}
@@ -1618,7 +1649,32 @@ function SubmissionSummaryView({ onBack, subId, subTitle }: { onBack: () => void
                 )}
               </div>
             </div>
-            <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200 flex-shrink-0"><button onClick={() => setEditCustBrokerOpen(false)} className="text-[13px] font-semibold text-gray-500 hover:text-gray-700">CANCEL</button><ButtonWidget label="SAVE" style="SOLID" color="ACCENT" size="SMALL" onClick={() => setEditCustBrokerOpen(false)} /></div>
+            <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200 flex-shrink-0"><button onClick={() => setEditCustBrokerOpen(false)} className="text-[13px] font-semibold text-gray-500 hover:text-gray-700">CANCEL</button><ButtonWidget label="EDIT" style="SOLID" color="ACCENT" size="SMALL" onClick={() => setEditCustBrokerOpen(false)} /></div>
+          </>)}
+
+          {/* ── Create Task ── */}
+          {createTaskOpen && (<>
+            <div className="p-6 pb-0 flex-shrink-0">
+              <div className="flex items-center justify-between mb-1"><p className="text-[20px] font-bold text-gray-900">Create Task</p><button onClick={() => setCreateTaskOpen(false)} className="text-gray-400 hover:text-gray-600"><X size={20} /></button></div>
+              <p className="text-[11px] text-gray-400 mb-4">Mandatory fields are marked with an asterisk (*).</p>
+            </div>
+            <div className="flex-1 overflow-y-auto px-6">
+              <div className="border-t border-gray-200 pt-4 space-y-4">
+                <TextField label="Title" value={newTaskTitle} saveInto={(v) => setNewTaskTitle(v)} required={true} />
+                <div className="grid grid-cols-2 gap-4">
+                  <DropdownField label="Type" choiceLabels={['Upload Document', 'Sanctions Check', 'Confirmation', 'Referral', 'Document Review']} choiceValues={['upload-document', 'sanctions-check', 'confirmation', 'referral', 'document-review']} value={newTaskType} saveInto={(v) => setNewTaskType(v)} placeholder="Select Type" required={true} />
+                  <DropdownField label="Assignee" choiceLabels={['Anna Underwriter', 'Dhruva K.', 'John W.', 'Riley H.', 'Robert K.']} choiceValues={['anna-underwriter', 'dhruva-k', 'john-w', 'riley-h', 'robert-k']} value={newTaskAssignee} saveInto={(v) => setNewTaskAssignee(v)} placeholder="Select Assignee" required={true} />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-[14px] font-semibold text-gray-900 block mb-1">Due Date <span className="text-[#2322F0]">*</span></label>
+                    <input type="date" value={newTaskDueDate} onChange={(e) => setNewTaskDueDate(e.target.value)} className="w-full border border-gray-300 rounded px-2.5 py-1.5 text-[14px] text-gray-900 outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+                  </div>
+                  <div />
+                </div>
+              </div>
+            </div>
+            <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200 flex-shrink-0"><button onClick={() => { setCreateTaskOpen(false); setNewTaskTitle(''); setNewTaskType(''); setNewTaskAssignee(''); setNewTaskDueDate('') }} className="text-[13px] font-semibold text-gray-500 hover:text-gray-700">CANCEL</button><ButtonWidget label="CREATE" style="SOLID" color="ACCENT" size="SMALL" onClick={() => { setCreateTaskOpen(false); setNewTaskTitle(''); setNewTaskType(''); setNewTaskAssignee(''); setNewTaskDueDate('') }} /></div>
           </>)}
 
         </div>
@@ -2220,76 +2276,125 @@ export default function InsuranceWorkspace() {
       {/* ══════ FIXED RIGHT PANE ══════ */}
       {rightPaneOpen ? (
         <div className="fixed right-0 w-[25vw] bg-gray-50 border-l border-gray-200 px-4 pb-4 pt-4 z-20 top-[200px] bottom-0" style={{ overflowY: 'auto' }}>
-          <div className="flex items-center justify-between mb-3 pb-2 border-b border-gray-200 flex-shrink-0">
-            <p className="text-[15px] font-bold text-gray-900">Task List</p>
-            <button onClick={() => setRightPaneOpen(false)} className="text-gray-400 hover:text-gray-600"><PanelRightClose size={16} /></button>
-          </div>
 
-          {/* Status box */}
-          <CardLayout padding="STANDARD" showShadow={false} showBorder={true} shape="SEMI_ROUNDED" marginBelow="STANDARD">
-            <div className="flex items-center justify-between mb-3 -mx-4 -mt-4 px-4 py-2 rounded-t-sm cursor-pointer" style={{ backgroundColor: '#E8E7FD' }} onClick={() => setStatusOpen(!statusOpen)}>
-              <span className="text-[15px] font-semibold text-gray-900">Status</span>
-              <ChevronDown size={16} className={`text-gray-400 transition-transform ${statusOpen ? '' : '-rotate-90'}`} />
+          {/* ═══ DASHBOARD RIGHT PANE ═══ */}
+          {contentTab === 'dashboard' && (<>
+            <div className="flex items-center justify-between mb-3 pb-2 border-b border-gray-200 flex-shrink-0">
+              <p className="text-[15px] font-bold text-gray-900">Task Overview</p>
+              <button onClick={() => setRightPaneOpen(false)} className="text-gray-400 hover:text-gray-600"><PanelRightClose size={16} /></button>
             </div>
-            {statusOpen && (
-            <ResponsiveContainer width="100%" height={160}>
-              <PieChart>
-                <Pie data={[{ name: 'Overdue', value: 2 }, { name: 'Due this week', value: 4 }, { name: 'Due later', value: 2 }]} cx="50%" cy="50%" innerRadius={40} outerRadius={60} dataKey="value" paddingAngle={3} stroke="none" isAnimationActive={false}>
-                  <Cell fill="#ef4444" /><Cell fill="#152B99" /><Cell fill="#FFB300" />
-                </Pie>
-                <Legend verticalAlign="bottom" height={32} iconType="circle" iconSize={7} wrapperStyle={{ fontSize: 11, paddingTop: 16 }} formatter={(value: string) => <span style={{ color: '#111827' }}>{value}</span>} />
-              </PieChart>
-            </ResponsiveContainer>
-            )}
-          </CardLayout>
 
-          {/* To-do box */}
-          <CardLayout padding="STANDARD" showShadow={false} showBorder={true} shape="SEMI_ROUNDED" marginBelow="STANDARD">
-            <div className="flex items-center justify-between mb-3 -mx-4 -mt-4 px-4 py-2 rounded-t-sm cursor-pointer" style={{ backgroundColor: '#E8E7FD' }} onClick={() => setTodoOpen(!todoOpen)}>
-              <span className="text-[15px] font-semibold text-gray-900">To-do</span>
-              <ChevronDown size={16} className={`text-gray-400 transition-transform ${todoOpen ? '' : '-rotate-90'}`} />
-            </div>
-            {todoOpen && (
-            <div className="space-y-2">
-              {tasks.map((task, idx) => (
-                <div key={idx} className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-100">
-                  <StampField icon={task.icon} backgroundColor={task.bgColor} contentColor={task.iconColor} size="MEDIUM" marginBelow="NONE" shape="SEMI_ROUNDED" />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-[12px] text-gray-500">{task.sub} · {task.type}</p>
-                    <p className="text-[13px] font-bold text-gray-900 leading-snug">{task.title}</p>
-                    <p className="text-[12px] text-gray-400 flex items-center gap-1 mt-0.5"><Clock size={10} /> {task.due}</p>
-                  </div>
-                  <span className={`text-[11px] font-semibold flex-shrink-0 px-2 py-1 rounded border ${task.status === 'COMPLETE' ? 'text-gray-500 border-gray-300' : 'text-[#2322F0] border-[#2322F0]'}`}>{task.status}</span>
-                </div>
-              ))}
-            </div>
-            )}
-          </CardLayout>
+            {/* Task Status — donut */}
+            <CardLayout padding="STANDARD" showShadow={false} showBorder={true} shape="SEMI_ROUNDED" marginBelow="STANDARD">
+              <div className="flex items-center justify-between mb-3 -mx-4 -mt-4 px-4 py-2 rounded-t-sm cursor-pointer" style={{ backgroundColor: '#E8E7FD' }} onClick={() => setStatusOpen(!statusOpen)}>
+                <span className="text-[15px] font-semibold text-gray-900">Task Status</span>
+                <ChevronDown size={16} className={`text-gray-400 transition-transform ${statusOpen ? '' : '-rotate-90'}`} />
+              </div>
+              {statusOpen && (
+              <ResponsiveContainer width="100%" height={200}>
+                <PieChart>
+                  <Pie data={taskStatusData} cx="50%" cy="45%" innerRadius={45} outerRadius={65} dataKey="value" paddingAngle={3} stroke="none" isAnimationActive={false}>
+                    {taskStatusData.map((entry) => (
+                      <Cell key={entry.name} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip contentStyle={{ fontSize: 12, borderRadius: 4, border: '1px solid #e5e7eb', boxShadow: 'none' }} />
+                  <Legend verticalAlign="bottom" height={40} iconType="circle" iconSize={7} wrapperStyle={{ fontSize: 11, paddingTop: 8 }} formatter={(value: string) => <span style={{ color: '#111827' }}>{value}</span>} />
+                </PieChart>
+              </ResponsiveContainer>
+              )}
+            </CardLayout>
 
-          {/* Open Alerts box */}
-          <CardLayout padding="STANDARD" showShadow={false} showBorder={true} shape="SEMI_ROUNDED">
-            <div className="flex items-center justify-between mb-3 -mx-4 -mt-4 px-4 py-2 rounded-t-sm cursor-pointer" style={{ backgroundColor: '#E8E7FD' }} onClick={() => setAlertsOpen(!alertsOpen)}>
-              <span className="text-[15px] font-semibold text-gray-900">Open Alerts</span>
-              <span className="flex items-center gap-2"><span className="text-[12px] text-gray-400">{visibleAlerts.length} of {alerts.length}</span><ChevronDown size={16} className={`text-gray-400 transition-transform ${alertsOpen ? '' : '-rotate-90'}`} /></span>
+            {/* Tasks by Type — vertical bar */}
+            <CardLayout padding="STANDARD" showShadow={false} showBorder={true} shape="SEMI_ROUNDED" marginBelow="STANDARD">
+              <div className="flex items-center justify-between mb-3 -mx-4 -mt-4 px-4 py-2 rounded-t-sm" style={{ backgroundColor: '#E8E7FD' }}>
+                <span className="text-[15px] font-semibold text-gray-900">Tasks by Type</span>
+              </div>
+              <ResponsiveContainer width="100%" height={220}>
+                <BarChart data={tasksByTypeData} margin={{ left: 0, right: 8, top: 0, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" vertical={false} />
+                  <XAxis dataKey="name" tick={{ fontSize: 10, fill: '#374151' }} axisLine={false} tickLine={false} />
+                  <YAxis tick={{ fontSize: 11, fill: '#9ca3af' }} axisLine={false} tickLine={false} />
+                  <Tooltip contentStyle={{ fontSize: 12, borderRadius: 4, border: '1px solid #e5e7eb', boxShadow: 'none' }} />
+                  <Bar dataKey="count" fill="#152B99" radius={[4, 4, 0, 0]} barSize={24} isAnimationActive={false} name="Tasks" />
+                </BarChart>
+              </ResponsiveContainer>
+            </CardLayout>
+
+            {/* Tasks by Assignee — vertical stacked bar */}
+            <CardLayout padding="STANDARD" showShadow={false} showBorder={true} shape="SEMI_ROUNDED">
+              <div className="flex items-center justify-between mb-3 -mx-4 -mt-4 px-4 py-2 rounded-t-sm" style={{ backgroundColor: '#E8E7FD' }}>
+                <span className="text-[15px] font-semibold text-gray-900">Tasks by Assignee</span>
+              </div>
+              <ResponsiveContainer width="100%" height={240}>
+                <BarChart data={tasksByAssigneeData} margin={{ left: 0, right: 8, top: 0, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" vertical={false} />
+                  <XAxis dataKey="name" tick={{ fontSize: 10, fill: '#374151' }} axisLine={false} tickLine={false} />
+                  <YAxis tick={{ fontSize: 11, fill: '#9ca3af' }} axisLine={false} tickLine={false} />
+                  <Tooltip contentStyle={{ fontSize: 12, borderRadius: 4, border: '1px solid #e5e7eb', boxShadow: 'none' }} />
+                  <Legend verticalAlign="bottom" height={32} iconType="circle" iconSize={7} wrapperStyle={{ fontSize: 11, paddingTop: 8 }} formatter={(value: string) => <span style={{ color: '#111827' }}>{value}</span>} />
+                  <Bar dataKey="active" stackId="a" fill="#152B99" name="Active" barSize={24} isAnimationActive={false} />
+                  <Bar dataKey="completed" stackId="a" fill="#00BFA5" name="Completed" radius={[4, 4, 0, 0]} isAnimationActive={false} />
+                </BarChart>
+              </ResponsiveContainer>
+            </CardLayout>
+          </>)}
+
+          {/* ═══ SUBMISSIONS / EXCEPTIONS RIGHT PANE ═══ */}
+          {contentTab !== 'dashboard' && (<>
+            <div className="flex items-center justify-between mb-3 pb-2 border-b border-gray-200 flex-shrink-0">
+              <p className="text-[15px] font-bold text-gray-900">Activity Panel</p>
+              <button onClick={() => setRightPaneOpen(false)} className="text-gray-400 hover:text-gray-600"><PanelRightClose size={16} /></button>
             </div>
-            {alertsOpen && (
-            <div className="space-y-2">
-              {visibleAlerts.map((alert) => {
-                const oi = alerts.indexOf(alert)
-                return (
-                  <div key={oi} className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-100">
-                    <StampField icon="mail" backgroundColor="#E8E7FD" contentColor="#2322F0" size="MEDIUM" marginBelow="NONE" shape="SEMI_ROUNDED" />
+
+            {/* To-do box */}
+            <CardLayout padding="STANDARD" showShadow={false} showBorder={true} shape="SEMI_ROUNDED" marginBelow="STANDARD">
+              <div className="flex items-center justify-between mb-3 -mx-4 -mt-4 px-4 py-2 rounded-t-sm cursor-pointer" style={{ backgroundColor: '#E8E7FD' }} onClick={() => setTodoOpen(!todoOpen)}>
+                <span className="text-[15px] font-semibold text-gray-900">To-do</span>
+                <ChevronDown size={16} className={`text-gray-400 transition-transform ${todoOpen ? '' : '-rotate-90'}`} />
+              </div>
+              {todoOpen && (
+              <div className="space-y-2">
+                {tasks.map((task, idx) => (
+                  <div key={idx} className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-100">
+                    <StampField icon={task.icon} backgroundColor={task.bgColor} contentColor={task.iconColor} size="MEDIUM" marginBelow="NONE" shape="SEMI_ROUNDED" />
                     <div className="flex-1 min-w-0">
-                      <p className="text-[13px] font-bold text-[#2322F0]">{alert.title}</p>
-                      <p className="text-[12px] text-gray-400">{alert.sub} · {alert.date}</p>
+                      <p className="text-[12px] text-gray-500">{task.sub} · {task.type}</p>
+                      <p className="text-[13px] font-bold text-gray-900 leading-snug">{task.title}</p>
+                      <p className="text-[12px] text-gray-400 flex items-center gap-1 mt-0.5"><Clock size={10} /> {task.due}</p>
                     </div>
-                    <button onClick={() => setDismissedAlerts(prev => [...prev, oi])} className="text-[#2322F0] leading-none flex-shrink-0 hover:text-[#1a19b0]"><X size={14} /></button>
+                    <span className={`text-[11px] font-semibold flex-shrink-0 px-2 py-1 rounded border cursor-pointer uppercase ${task.status === 'COMPLETE' ? 'text-gray-400 border-gray-200 bg-gray-50' : 'text-[#2322F0] border-[#2322F0] hover:bg-[#E8E7FD]'}`}>{task.status === 'COMPLETE' ? 'Completed' : 'Complete'}</span>
                   </div>
-                )
-              })}
-            </div>
-            )}
-          </CardLayout>
+                ))}
+              </div>
+              )}
+            </CardLayout>
+
+            {/* Open Alerts box */}
+            <CardLayout padding="STANDARD" showShadow={false} showBorder={true} shape="SEMI_ROUNDED">
+              <div className="flex items-center justify-between mb-3 -mx-4 -mt-4 px-4 py-2 rounded-t-sm cursor-pointer" style={{ backgroundColor: '#E8E7FD' }} onClick={() => setAlertsOpen(!alertsOpen)}>
+                <span className="text-[15px] font-semibold text-gray-900">Open Alerts</span>
+                <span className="flex items-center gap-2"><span className="text-[12px] text-gray-400">{visibleAlerts.length} of {alerts.length}</span><ChevronDown size={16} className={`text-gray-400 transition-transform ${alertsOpen ? '' : '-rotate-90'}`} /></span>
+              </div>
+              {alertsOpen && (
+              <div className="space-y-2">
+                {visibleAlerts.map((alert) => {
+                  const oi = alerts.indexOf(alert)
+                  return (
+                    <div key={oi} className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-100">
+                      <StampField icon={alert.icon} backgroundColor="#E8E7FD" contentColor="#2322F0" size="MEDIUM" marginBelow="NONE" shape="SEMI_ROUNDED" />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-[13px] font-bold text-[#2322F0]">{alert.title}</p>
+                        <p className="text-[12px] text-gray-400">{alert.sub} · {alert.date}</p>
+                      </div>
+                      <button onClick={() => setDismissedAlerts(prev => [...prev, oi])} className="text-[#2322F0] leading-none flex-shrink-0 hover:text-[#1a19b0]"><X size={14} /></button>
+                    </div>
+                  )
+                })}
+              </div>
+              )}
+            </CardLayout>
+          </>)}
         </div>
       ) : (
         <div className="fixed right-0 w-12 bg-white border-l border-gray-200 flex flex-col items-center pt-4 z-20 cursor-pointer hover:bg-gray-50" style={{ top: '200px', height: 'calc(100vh - 200px)' }} onClick={() => setRightPaneOpen(true)}>
