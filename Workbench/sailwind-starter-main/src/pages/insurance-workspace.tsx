@@ -25,7 +25,7 @@ import {
   Clock, User, Users,
   Phone, Mail, Building2, Sparkles,
   PanelRightClose, PanelRightOpen, Bookmark,
-  Calendar,
+  Calendar, PlusCircle,
 } from 'lucide-react'
 
 // ── Submission Data ──
@@ -1310,7 +1310,7 @@ function SubmissionSummaryView({ onBack, subId, subTitle }: { onBack: () => void
 
                 {/* Tasks */}
                 <div>
-                  <div className="flex items-center justify-between mb-3"><p className="text-[15px] font-bold text-gray-900">Tasks</p><ButtonWidget label="CREATE TASK" style="OUTLINE" color="ACCENT" size="SMALL" /></div>
+                  <div className="flex items-center justify-between mb-3"><p className="text-[15px] font-bold text-gray-900">Tasks</p><button title="Create Task" className="text-[#2322F0] hover:opacity-80"><PlusCircle size={20} /></button></div>
                   <CardLayout padding="STANDARD" showShadow={true} showBorder={false} shape="SEMI_ROUNDED">
                     <div className="flex gap-6 border-b border-gray-200 mb-3 px-2">
                       {([{ key: 'open' as const, label: 'Active' }, { key: 'completed' as const, label: 'Resolved' }]).map(t => (
