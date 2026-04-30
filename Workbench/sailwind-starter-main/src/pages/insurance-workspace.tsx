@@ -1090,7 +1090,7 @@ function SubmissionSummaryView({ onBack, subId, subTitle }: { onBack: () => void
                         <div className="bg-gray-50 rounded-lg p-4">
                           <p className="text-[13px] font-bold text-gray-900 mb-3">Submission Score</p>
                           <div className="flex items-stretch gap-5">
-                            <div className="relative w-24 flex-shrink-0 bg-white rounded-lg p-3 flex items-center justify-center aspect-square">
+                            <div className="relative w-24 flex-shrink-0 p-3 flex items-center justify-center aspect-square">
                               <svg viewBox="0 0 36 36" className="w-full h-full -rotate-90">
                                 <circle cx="18" cy="18" r="15.9" fill="none" stroke="#E5E7EB" strokeWidth="2.5" />
                                 <circle cx="18" cy="18" r="15.9" fill="none" stroke="#F59E0B" strokeWidth="2.5" strokeDasharray="54 46" strokeLinecap="round" />
@@ -1109,11 +1109,11 @@ function SubmissionSummaryView({ onBack, subId, subTitle }: { onBack: () => void
                           <p className="text-[13px] font-bold text-gray-900 mb-4">Loss History</p>
                           <div className="space-y-4">
                             <div className="flex items-center gap-3">
-                              <StampField icon="file-text" backgroundColor="#FFFFFF" contentColor="#152B99" size="LARGE" marginBelow="NONE" shape="SEMI_ROUNDED" />
+                              <StampField icon="file-text" backgroundColor="#FFFFFF" contentColor="#152B99" size="LARGE" marginBelow="NONE" shape="SQUARED" />
                               <div><p className="text-[12px] text-gray-400">Claims</p><p className="text-[22px] font-bold text-gray-900 leading-tight">3</p></div>
                             </div>
                             <div className="flex items-center gap-3">
-                              <StampField icon="dollar-sign" backgroundColor="#FFFFFF" contentColor="#152B99" size="LARGE" marginBelow="NONE" shape="SEMI_ROUNDED" />
+                              <StampField icon="dollar-sign" backgroundColor="#FFFFFF" contentColor="#152B99" size="LARGE" marginBelow="NONE" shape="SQUARED" />
                               <div><p className="text-[12px] text-gray-400">Total Paid</p><p className="text-[22px] font-bold text-gray-900 leading-tight">$99,787</p></div>
                             </div>
                           </div>
@@ -1353,41 +1353,41 @@ function SubmissionSummaryView({ onBack, subId, subTitle }: { onBack: () => void
                     <table className="w-full text-left table-fixed">
                       <thead>
                         <tr className="border-b border-gray-200">
-                          {(taskTab === 'completed' ? ['Task', 'Type', 'Completed On'] : ['Task', 'Type', 'Due Date']).map((h, i) => <th key={h} className={`text-[11px] font-semibold text-gray-900 py-2 pr-3 ${i === 0 ? 'w-[50%]' : 'w-[25%]'}`}>{h}</th>)}
+                          {(taskTab === 'completed' ? ['Task', 'Assignee', 'Completed On'] : ['Task', 'Assignee', 'Due Date']).map((h, i) => <th key={h} className={`text-[11px] font-semibold text-gray-900 py-2 pr-3 ${i === 0 ? 'w-[50%]' : 'w-[25%]'}`}>{h}</th>)}
                         </tr>
                       </thead>
                       <tbody>
                         {taskTab === 'open' && (<>
                           <tr className="border-b border-gray-100">
-                            <td className="py-3 pr-3"><p className="text-[13px] font-semibold text-gray-900">Upload loss runs for Acme Corp</p><p className="text-[12px] text-gray-400">Anna Underwriter</p></td>
-                            <td className="py-3 pr-3 text-[13px] text-gray-700">Upload Document</td>
+                            <td className="py-3 pr-3"><p className="text-[13px] font-semibold text-gray-900">Upload loss runs for Acme Corp</p><p className="text-[12px] text-gray-400">Upload Document</p></td>
+                            <td className="py-3 pr-3 text-[13px] text-gray-700">Anna Underwriter</td>
                             <td className="py-3 pr-3 text-[13px] text-gray-900">Apr 27, 2026</td>
                           </tr>
                           <tr className="border-b border-gray-100">
-                            <td className="py-3 pr-3"><p className="text-[13px] font-semibold text-gray-900">Complete sanctions review for TechStart</p><p className="text-[12px] text-gray-400">Anna Underwriter</p></td>
-                            <td className="py-3 pr-3 text-[13px] text-gray-700">Sanctions Check</td>
+                            <td className="py-3 pr-3"><p className="text-[13px] font-semibold text-gray-900">Complete sanctions review for TechStart</p><p className="text-[12px] text-gray-400">Sanctions Check</p></td>
+                            <td className="py-3 pr-3 text-[13px] text-gray-700">Anna Underwriter</td>
                             <td className="py-3 pr-3 text-[13px] text-gray-900">Apr 29, 2026</td>
                           </tr>
                           <tr className="border-b border-gray-100">
-                            <td className="py-3 pr-3"><p className="text-[13px] font-semibold text-gray-900">Confirm broker details for Global Logistics</p><p className="text-[12px] text-gray-400">Dhruva K.</p></td>
-                            <td className="py-3 pr-3 text-[13px] text-gray-700">Confirmation</td>
+                            <td className="py-3 pr-3"><p className="text-[13px] font-semibold text-gray-900">Confirm broker details for Global Logistics</p><p className="text-[12px] text-gray-400">Confirmation</p></td>
+                            <td className="py-3 pr-3 text-[13px] text-gray-700">Dhruva K.</td>
                             <td className="py-3 pr-3 text-[13px] text-gray-900">May 2, 2026</td>
                           </tr>
                           <tr className="border-b border-gray-100">
-                            <td className="py-3 pr-3"><p className="text-[13px] font-semibold text-gray-900">Manager referral — TIV exceeds authority</p><p className="text-[12px] text-gray-400">Anna Underwriter</p></td>
-                            <td className="py-3 pr-3 text-[13px] text-gray-700">Referral</td>
+                            <td className="py-3 pr-3"><p className="text-[13px] font-semibold text-gray-900">Manager referral — TIV exceeds authority</p><p className="text-[12px] text-gray-400">Referral</p></td>
+                            <td className="py-3 pr-3 text-[13px] text-gray-700">Anna Underwriter</td>
                             <td className="py-3 pr-3 text-[13px] text-gray-900">May 4, 2026</td>
                           </tr>
                         </>)}
                         {taskTab === 'completed' && (<>
                           <tr className="border-b border-gray-100">
-                            <td className="py-3 pr-3"><p className="text-[13px] font-semibold text-gray-900">Upload ACORD 125 for Summit Construction</p><p className="text-[12px] text-gray-400">Anna Underwriter</p></td>
-                            <td className="py-3 pr-3 text-[13px] text-gray-700">Upload Document</td>
+                            <td className="py-3 pr-3"><p className="text-[13px] font-semibold text-gray-900">Upload ACORD 125 for Summit Construction</p><p className="text-[12px] text-gray-400">Upload Document</p></td>
+                            <td className="py-3 pr-3 text-[13px] text-gray-700">Anna Underwriter</td>
                             <td className="py-3 pr-3 text-[13px] text-gray-700">Apr 22, 2026</td>
                           </tr>
                           <tr className="border-b border-gray-100">
-                            <td className="py-3 pr-3"><p className="text-[13px] font-semibold text-gray-900">Review extracted ACORD 140 data</p><p className="text-[12px] text-gray-400">Dhruva K.</p></td>
-                            <td className="py-3 pr-3 text-[13px] text-gray-700">Document Review</td>
+                            <td className="py-3 pr-3"><p className="text-[13px] font-semibold text-gray-900">Review extracted ACORD 140 data</p><p className="text-[12px] text-gray-400">Document Review</p></td>
+                            <td className="py-3 pr-3 text-[13px] text-gray-700">Dhruva K.</td>
                             <td className="py-3 pr-3 text-[13px] text-gray-700">Apr 20, 2026</td>
                           </tr>
                         </>)}
