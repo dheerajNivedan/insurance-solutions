@@ -318,3 +318,9 @@ div[role="dialog"] p.font-semibold {
 .fixed.inset-0.z-\[9999\] [class*="radio"] label {
   font-size: 14px !important;
 }
+
+/* ── Intake form Step 2 cards: thinner 1px border ── */
+div[role="dialog"] .border-2,
+.fixed.inset-0 .border-2 {
+  border-width: 1px !important;
+}

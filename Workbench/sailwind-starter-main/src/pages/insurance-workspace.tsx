@@ -25,7 +25,7 @@ import {
   Clock, User, Users,
   Phone, Mail, Building2, Sparkles,
   PanelRightClose, PanelRightOpen, Bookmark,
-  Calendar, PlusCircle,
+  Calendar, PlusCircle, MoreVertical,
 } from 'lucide-react'
 
 // ── Submission Data ──
@@ -293,19 +293,19 @@ function CreateSubmissionWizard({ open, onClose, onCreate }: { open: boolean; on
   const isMgmtLiability = product !== null && product.startsWith('mgmt-liability')
 
   const steps = isMgmtLiability ? [
-    { num: 1, label: 'Product & Policy Info' },
-    { num: 2, label: 'Customer & Broker Info' },
+    { num: 1, label: 'Product Information' },
+    { num: 2, label: 'Policy, Customer & Broker' },
     { num: 3, label: 'Management Liability Info' },
   ] : [
-    { num: 1, label: 'Product & Policy Info' },
-    { num: 2, label: 'Customer & Broker Info' },
+    { num: 1, label: 'Product Information' },
+    { num: 2, label: 'Policy, Customer & Broker' },
   ]
 
   const lastStep = steps.length
 
   return (
     <DialogField open={open} onOpenChange={(o) => { if (!o) resetAndClose() }} title="" width="FIT" showCloseButton={false}>
-      <div className="flex flex-col rounded-md overflow-hidden" style={{ backgroundColor: '#ffffff', height: '70vh', maxHeight: '70vh' }}>
+      <div className="flex flex-col rounded-md overflow-hidden" style={{ backgroundColor: '#FAFAFC', height: '70vh', maxHeight: '70vh' }}>
 
         {/* ── Header (top of form) ── */}
         <div className="px-6 pt-3 pb-0 flex-shrink-0">
@@ -318,7 +318,7 @@ function CreateSubmissionWizard({ open, onClose, onCreate }: { open: boolean; on
         <div className="flex flex-1 min-h-0">
 
           {/* Left Sidebar Stepper */}
-          <div className="w-60 flex-shrink-0 bg-white px-6 py-10 flex flex-col">
+          <div className="w-60 flex-shrink-0 px-6 py-10 flex flex-col" style={{ backgroundColor: '#FAFAFC' }}>
             <div className="flex flex-col">
               {steps.map((s, i) => {
                 const state = i + 1 < step ? 'completed' : i + 1 === step ? 'current' : 'future'
@@ -352,13 +352,8 @@ function CreateSubmissionWizard({ open, onClose, onCreate }: { open: boolean; on
             {step === 1 && (<>
               {/* Product Details */}
               <div className="mb-8">
-              <CardLayout padding="STANDARD" showShadow={false} showBorder={true} shape="SEMI_ROUNDED" marginBelow="NONE">
-                <div className="flex items-center justify-between mb-3 -mx-4 -mt-4 px-4 py-2 rounded-t-sm cursor-pointer" style={{ backgroundColor: '#E8E7FD' }} onClick={() => setProductOpen(!productOpen)}>
-                  <span className="text-[15px] font-semibold text-gray-900">Product Information</span>
-                  <ChevronDown size={16} className={`text-gray-400 transition-transform ${productOpen ? '' : '-rotate-90'}`} />
-                </div>
-                {productOpen && (
-                  <div className="space-y-4">
+                <p className="text-[16px] font-bold text-gray-700 mb-4">Product Information</p>
+                <div className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">
                       <RadioButtonField
                         label="Submission Type"
@@ -445,31 +440,41 @@ function CreateSubmissionWizard({ open, onClose, onCreate }: { open: boolean; on
                         required={true}
                       />
                     </div>
-                    <div className="grid grid-cols-2 gap-4">
                     <div>
                       <p className="text-[14px] font-semibold text-gray-900 mb-2">Supporting Documents</p>
-                      <div className="border border-dashed border-gray-300 rounded px-4 py-3 flex items-center gap-3">
+                      <div className="border border-dashed border-gray-300 rounded px-4 py-3 flex items-center gap-3 bg-white">
                         <ButtonWidget label="UPLOAD" style="OUTLINE" color="SECONDARY" size="SMALL" />
                         <span className="text-[13px] text-gray-400 italic">Drop files here</span>
                       </div>
                       <p className="text-[11px] mt-2" style={{ color: '#6C6C75' }}>Please ensure any uploaded ACORD 125s, 140s, and 127s are smaller than 7.0 MB and less than 15 pages each. These documents will be auto-extracted.</p>
                     </div>
-                    <div />
-                    </div>
-                  </div>
-                )}
-              </CardLayout>
-              </div>
-
-              {/* Policy Details */}
-              <div className="mb-8">
-              <CardLayout padding="STANDARD" showShadow={false} showBorder={true} shape="SEMI_ROUNDED" marginBelow="NONE">
-                <div className="flex items-center justify-between mb-3 -mx-4 -mt-4 px-4 py-2 rounded-t-sm cursor-pointer" style={{ backgroundColor: '#E8E7FD' }} onClick={() => setPolicyOpen(!policyOpen)}>
-                  <span className="text-[15px] font-semibold text-gray-900">Policy Information</span>
-                  <ChevronDown size={16} className={`text-gray-400 transition-transform ${policyOpen ? '' : '-rotate-90'}`} />
                 </div>
-                {policyOpen && (
-                  <div className="space-y-4">
+              </div>
+            </>)}
+
+            {/* ══ Step 2: Additional Info (Management Liability only) ══ */}
+            {isMgmtLiability && step === 3 && (
+              <div className="mb-8">
+                <div className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <TextField
+                      label="Account Coordinator"
+                      value={accountCoordinator}
+                      saveInto={(v) => setAccountCoordinator(v)}
+                      placeholder="Enter Account Coordinator"
+                    />
+                    <div />
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* ══ Customer & Broker Info (step 2) ══ */}
+            {step === 2 && (<>
+              {/* Policy Information */}
+              <p className="text-[16px] font-bold text-gray-700 mb-3">Policy Information</p>
+              <CardLayout padding="STANDARD" showShadow={false} showBorder={true} shape="SEMI_ROUNDED" marginBelow="STANDARD">
+                <div className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <label className="text-[14px] font-semibold text-gray-900 block mb-1">Proposed Effective Date</label>
@@ -477,7 +482,7 @@ function CreateSubmissionWizard({ open, onClose, onCreate }: { open: boolean; on
                           type="date"
                           value={proposedEffDate}
                           onChange={(e) => setProposedEffDate(e.target.value)}
-                          className="w-full border border-gray-300 rounded px-2.5 py-1.5 text-[14px] text-gray-900 outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          className="w-full border border-gray-300 rounded px-2.5 py-1.5 text-[14px] text-gray-900 outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
                         />
                       </div>
                       <div>
@@ -486,7 +491,7 @@ function CreateSubmissionWizard({ open, onClose, onCreate }: { open: boolean; on
                           type="date"
                           value={proposedExpDate}
                           onChange={(e) => setProposedExpDate(e.target.value)}
-                          className="w-full border border-gray-300 rounded px-2.5 py-1.5 text-[14px] text-gray-900 outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          className="w-full border border-gray-300 rounded px-2.5 py-1.5 text-[14px] text-gray-900 outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
                         />
                       </div>
                     </div>
@@ -558,40 +563,13 @@ function CreateSubmissionWizard({ open, onClose, onCreate }: { open: boolean; on
                         />
                       </div>
                     </div>
-                  </div>
-                )}
+                </div>
               </CardLayout>
-              </div>
-            </>)}
 
-            {/* ══ Step 2: Additional Info (Management Liability only) ══ */}
-            {isMgmtLiability && step === 3 && (
-              <div className="mb-8">
-                <div className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <TextField
-                      label="Account Coordinator"
-                      value={accountCoordinator}
-                      saveInto={(v) => setAccountCoordinator(v)}
-                      placeholder="Enter Account Coordinator"
-                    />
-                    <div />
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* ══ Customer & Broker Info (step 2) ══ */}
-            {step === 2 && (<>
               {/* Customer Information */}
-              <div className="mb-8">
-              <CardLayout padding="STANDARD" showShadow={false} showBorder={true} shape="SEMI_ROUNDED" marginBelow="NONE">
-                <div className="flex items-center justify-between mb-3 -mx-4 -mt-4 px-4 py-2 rounded-t-sm cursor-pointer" style={{ backgroundColor: '#E8E7FD' }} onClick={() => setCustomerOpen(!customerOpen)}>
-                  <span className="text-[15px] font-semibold text-gray-900">Customer Information</span>
-                  <ChevronDown size={16} className={`text-gray-400 transition-transform ${customerOpen ? '' : '-rotate-90'}`} />
-                </div>
-                {customerOpen && (
-                  <div className="space-y-4">
+              <p className="text-[16px] font-bold text-gray-700 mb-3">Customer Information</p>
+              <CardLayout padding="STANDARD" showShadow={false} showBorder={true} shape="SEMI_ROUNDED" marginBelow="STANDARD">
+                <div className="space-y-4">
                     <div>
                       <p className="text-[14px] font-semibold text-gray-900 mb-1">Customer</p>
                       <RadioButtonField
@@ -650,20 +628,13 @@ function CreateSubmissionWizard({ open, onClose, onCreate }: { open: boolean; on
                         />
                       </div>
                     </>)}
-                  </div>
-                )}
+                </div>
               </CardLayout>
-              </div>
 
               {/* Broker Information */}
-              <div className="mb-8">
+              <p className="text-[16px] font-bold text-gray-700 mb-3">Broker Information</p>
               <CardLayout padding="STANDARD" showShadow={false} showBorder={true} shape="SEMI_ROUNDED" marginBelow="NONE">
-                <div className="flex items-center justify-between mb-3 -mx-4 -mt-4 px-4 py-2 rounded-t-sm cursor-pointer" style={{ backgroundColor: '#E8E7FD' }} onClick={() => setBrokerOpen(!brokerOpen)}>
-                  <span className="text-[15px] font-semibold text-gray-900">Broker Information</span>
-                  <ChevronDown size={16} className={`text-gray-400 transition-transform ${brokerOpen ? '' : '-rotate-90'}`} />
-                </div>
-                {brokerOpen && (
-                  <div className="space-y-4">
+                <div className="space-y-4">
                     <div>
                       <p className="text-[14px] font-semibold text-gray-900 mb-1">Office Name</p>
                       <RadioButtonField
@@ -736,10 +707,8 @@ function CreateSubmissionWizard({ open, onClose, onCreate }: { open: boolean; on
                         />
                       </div>
                     )}
-                  </div>
-                )}
+                </div>
               </CardLayout>
-              </div>
             </>)}
 
           </div>
@@ -1237,7 +1206,7 @@ function SubmissionSummaryView({ onBack, subId, subTitle }: { onBack: () => void
                                   <p className="text-[11px] text-gray-400">{comment.date}{comment.edited ? ' (edited)' : ''}</p>
                                 </div>
                                 <div className="flex items-center gap-2">
-                                  <span className="text-gray-300 cursor-pointer hover:text-gray-500">⋮</span>
+                                  <MoreVertical size={16} className="cursor-pointer" style={{ color: "#6C6C75" }} />
                                   <button onClick={() => togglePin(comment.id)} className="hover:opacity-80" title={comment.pinned ? 'Unpin' : 'Pin'}>
                                     <Bookmark size={16} className={comment.pinned ? 'fill-[#2322F0] text-[#2322F0]' : 'text-gray-300'} />
                                   </button>
@@ -1318,25 +1287,25 @@ function SubmissionSummaryView({ onBack, subId, subTitle }: { onBack: () => void
                   <div className="space-y-0">
                     <p className="text-[12px] font-semibold text-gray-500 uppercase tracking-wide pb-2">Today</p>
                     <div className="flex items-start gap-2.5 py-3 border-b border-gray-100">
-                      <StampField icon="file-text" backgroundColor="#E8E7FD" contentColor="#2322F0" size="MEDIUM" marginBelow="NONE" shape="SEMI_ROUNDED" />
-                      <div><p className="text-[13px] font-semibold text-[#2322F0]">New document received</p><p className="text-[12px] text-gray-400">SUB-10482 · 2 hours ago</p></div>
+                      <StampField icon="file-text" backgroundColor="#DBECFF" contentColor="#115EBB" size="MEDIUM" marginBelow="NONE" shape="SEMI_ROUNDED" />
+                      <div><p className="text-[13px] font-semibold text-gray-900">New document received</p><p className="text-[12px] text-gray-400">SUB-10482 · 2 hours ago</p></div>
                     </div>
                     <p className="text-[12px] font-semibold text-gray-500 uppercase tracking-wide pt-3 pb-2">Older</p>
                     <div className="flex items-start gap-2.5 py-3 border-b border-gray-100">
-                      <StampField icon="copy" backgroundColor="#E8E7FD" contentColor="#2322F0" size="MEDIUM" marginBelow="NONE" shape="SEMI_ROUNDED" />
-                      <div><p className="text-[13px] font-semibold text-[#2322F0]">Duplicate Submission Detected</p><p className="text-[12px] text-gray-400">SUB-10475 · 4/3/2026</p></div>
+                      <StampField icon="copy" backgroundColor="#FFF5E6" contentColor="#D97706" size="MEDIUM" marginBelow="NONE" shape="SEMI_ROUNDED" />
+                      <div><p className="text-[13px] font-semibold text-gray-900">Duplicate Submission Detected</p><p className="text-[12px] text-gray-400">SUB-10475 · 4/3/2026</p></div>
                     </div>
                     <div className="flex items-start gap-2.5 py-3 border-b border-gray-100">
-                      <StampField icon="list" backgroundColor="#E8E7FD" contentColor="#2322F0" size="MEDIUM" marginBelow="NONE" shape="SEMI_ROUNDED" />
-                      <div><p className="text-[13px] font-semibold text-[#2322F0]">Missing TIV and Proposed Dates</p><p className="text-[12px] text-gray-400">SUB-10471 · 4/3/2026</p></div>
+                      <StampField icon="list" backgroundColor="#FDEDF0" contentColor="#B2002C" size="MEDIUM" marginBelow="NONE" shape="SEMI_ROUNDED" />
+                      <div><p className="text-[13px] font-semibold text-gray-900">Missing TIV and Proposed Dates</p><p className="text-[12px] text-gray-400">SUB-10471 · 4/3/2026</p></div>
                     </div>
                     <div className="flex items-start gap-2.5 py-3 border-b border-gray-100">
-                      <StampField icon="message-square" backgroundColor="#E8E7FD" contentColor="#2322F0" size="MEDIUM" marginBelow="NONE" shape="SEMI_ROUNDED" />
-                      <div><p className="text-[13px] font-semibold text-[#2322F0]">New broker message received</p><p className="text-[12px] text-gray-400">SUB-10479 · 4/2/2026</p></div>
+                      <StampField icon="message-square" backgroundColor="#E7F8F8" contentColor="#31808B" size="MEDIUM" marginBelow="NONE" shape="SEMI_ROUNDED" />
+                      <div><p className="text-[13px] font-semibold text-gray-900">New broker message received</p><p className="text-[12px] text-gray-400">SUB-10479 · 4/2/2026</p></div>
                     </div>
                     <div className="flex items-start gap-2.5 py-3">
-                      <StampField icon="shield" backgroundColor="#E8E7FD" contentColor="#2322F0" size="MEDIUM" marginBelow="NONE" shape="SEMI_ROUNDED" />
-                      <div><p className="text-[13px] font-semibold text-[#2322F0]">Sanctions match found</p><p className="text-[12px] text-gray-400">SUB-10468 · 4/1/2026</p></div>
+                      <StampField icon="shield" backgroundColor="#FDEDF0" contentColor="#B2002C" size="MEDIUM" marginBelow="NONE" shape="SEMI_ROUNDED" />
+                      <div><p className="text-[13px] font-semibold text-gray-900">Sanctions match found</p><p className="text-[12px] text-gray-400">SUB-10468 · 4/1/2026</p></div>
                     </div>
                   </div>
                 </CardLayout>
@@ -1351,68 +1320,68 @@ function SubmissionSummaryView({ onBack, subId, subTitle }: { onBack: () => void
                         <button key={t.key} onClick={() => setTaskTab(t.key)} className={`px-6 pb-2 text-[13px] font-medium border-b-[3px] -mb-[1px] transition-colors ${taskTab === t.key ? 'text-gray-900 font-bold border-[#2322F0]' : 'text-gray-400 border-transparent hover:text-gray-600'}`}>{t.label}</button>
                       ))}
                     </div>
-                    <table className="w-full text-left table-fixed">
-                      <thead>
-                        <tr className="border-b border-gray-200">
-                          {(taskTab === 'completed' ? ['Task', 'Assignee', 'Completed On'] : ['Task', 'Assignee', 'Due Date']).map((h, i) => <th key={h} className={`text-[11px] font-semibold text-gray-900 py-2 pr-3 ${i === 0 ? 'w-[50%]' : 'w-[25%]'}`}>{h}</th>)}
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {taskTab === 'open' && (<>
-                          <tr className="border-b border-gray-100">
-                            <td className="py-3 pr-3"><p className="text-[13px] font-semibold text-gray-900">Upload loss runs for Acme Corp</p><p className="text-[12px] text-gray-400">Upload Document</p></td>
-                            <td className="py-3 pr-3 text-[13px] text-gray-700">Anna Underwriter</td>
-                            <td className="py-3 pr-3 text-[13px] text-gray-900">Apr 27, 2026</td>
-                          </tr>
-                          <tr className="border-b border-gray-100">
-                            <td className="py-3 pr-3"><p className="text-[13px] font-semibold text-gray-900">Complete sanctions review for TechStart</p><p className="text-[12px] text-gray-400">Sanctions Check</p></td>
-                            <td className="py-3 pr-3 text-[13px] text-gray-700">Anna Underwriter</td>
-                            <td className="py-3 pr-3 text-[13px] text-gray-900">Apr 29, 2026</td>
-                          </tr>
-                          <tr className="border-b border-gray-100">
-                            <td className="py-3 pr-3"><p className="text-[13px] font-semibold text-gray-900">Confirm broker details for Global Logistics</p><p className="text-[12px] text-gray-400">Confirmation</p></td>
-                            <td className="py-3 pr-3 text-[13px] text-gray-700">Dhruva K.</td>
-                            <td className="py-3 pr-3 text-[13px] text-gray-900">May 2, 2026</td>
-                          </tr>
-                          <tr className="border-b border-gray-100">
-                            <td className="py-3 pr-3"><p className="text-[13px] font-semibold text-gray-900">Manager referral — TIV exceeds authority</p><p className="text-[12px] text-gray-400">Referral</p></td>
-                            <td className="py-3 pr-3 text-[13px] text-gray-700">Anna Underwriter</td>
-                            <td className="py-3 pr-3 text-[13px] text-gray-900">May 4, 2026</td>
-                          </tr>
-                        </>)}
-                        {taskTab === 'completed' && (<>
-                          <tr className="border-b border-gray-100">
-                            <td className="py-3 pr-3"><p className="text-[13px] font-semibold text-gray-900">Upload ACORD 125 for Summit Construction</p><p className="text-[12px] text-gray-400">Upload Document</p></td>
-                            <td className="py-3 pr-3 text-[13px] text-gray-700">Anna Underwriter</td>
-                            <td className="py-3 pr-3 text-[13px] text-gray-700">Apr 22, 2026</td>
-                          </tr>
-                          <tr className="border-b border-gray-100">
-                            <td className="py-3 pr-3"><p className="text-[13px] font-semibold text-gray-900">Review extracted ACORD 140 data</p><p className="text-[12px] text-gray-400">Document Review</p></td>
-                            <td className="py-3 pr-3 text-[13px] text-gray-700">Dhruva K.</td>
-                            <td className="py-3 pr-3 text-[13px] text-gray-700">Apr 20, 2026</td>
-                          </tr>
-                        </>)}
-                      </tbody>
-                    </table>
+
+                    <div className="space-y-0">
+                      {taskTab === 'open' && (<>
+                        {[
+                          { title: 'Upload loss runs for Acme Corp', type: 'Upload Document', assignee: 'Anna Underwriter', due: 'Apr 27, 2026', status: 'In Progress', statusColor: 'ACCENT' as const, icon: 'upload' },
+                          { title: 'Complete sanctions review for TechStart', type: 'Sanctions Check', assignee: 'Anna Underwriter', due: 'Apr 29, 2026', status: 'In Progress', statusColor: 'ACCENT' as const, icon: 'shield' },
+                          { title: 'Confirm broker details for Global Logistics', type: 'Confirmation', assignee: 'Dhruva K.', due: 'May 2, 2026', status: 'Ready', statusColor: 'POSITIVE' as const, icon: 'check-square' },
+                          { title: 'Manager referral — TIV exceeds authority', type: 'Referral', assignee: 'Anna Underwriter', due: 'May 4, 2026', status: 'Ready', statusColor: 'POSITIVE' as const, icon: 'send' },
+                        ].map((t, i, arr) => (
+                          <div key={i} className={`flex items-start gap-2.5 py-3 ${i < arr.length - 1 ? 'border-b border-gray-100' : ''}`}>
+                            <StampField icon={t.icon} backgroundColor="#E8E7FD" contentColor="#152B99" size="LARGE" marginBelow="NONE" shape="SEMI_ROUNDED" />
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-start justify-between gap-2">
+                                <p className="text-[13px] font-semibold text-[#2322F0] hover:underline cursor-pointer">{t.title}</p>
+                                <div className="flex items-center gap-1.5 flex-shrink-0">
+                                  <TagField tags={[{ text: t.status, backgroundColor: t.statusColor }]} size="SMALL" marginBelow="NONE" />
+                                  <MoreVertical size={16} className="cursor-pointer" style={{ color: "#6C6C75" }} />
+                                </div>
+                              </div>
+                              <p className="text-[12px] text-gray-400">{t.type} · {t.assignee}</p>
+                              <p className="text-[12px] text-gray-400 flex items-center gap-1 mt-0.5"><Clock size={10} /> {t.due}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </>)}
+                      {taskTab === 'completed' && (<>
+                        {[
+                          { title: 'Upload ACORD 125 for Summit Construction', type: 'Upload Document', assignee: 'Anna Underwriter', completed: 'Apr 22, 2026', status: 'Completed', statusColor: 'POSITIVE' as const, icon: 'upload' },
+                          { title: 'Review extracted ACORD 140 data', type: 'Document Review', assignee: 'Dhruva K.', completed: 'Apr 20, 2026', status: 'Not Needed', statusColor: 'SECONDARY' as const, icon: 'file-text' },
+                        ].map((t, i, arr) => (
+                          <div key={i} className={`flex items-start gap-2.5 py-3 ${i < arr.length - 1 ? 'border-b border-gray-100' : ''}`}>
+                            <StampField icon={t.icon} backgroundColor="#E8E7FD" contentColor="#152B99" size="LARGE" marginBelow="NONE" shape="SEMI_ROUNDED" />
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-start justify-between gap-2">
+                                <p className="text-[13px] font-semibold text-[#2322F0] hover:underline cursor-pointer">{t.title}</p>
+                                <div className="flex items-center gap-1.5 flex-shrink-0">
+                                  <TagField tags={[{ text: t.status, backgroundColor: t.statusColor }]} size="SMALL" marginBelow="NONE" />
+                                  <MoreVertical size={16} className="cursor-pointer" style={{ color: "#6C6C75" }} />
+                                </div>
+                              </div>
+                              <p className="text-[12px] text-gray-400">{t.type} · {t.assignee}</p>
+                              <p className="text-[12px] text-gray-400 flex items-center gap-1 mt-0.5"><Clock size={10} /> {t.completed}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </>)}
+                    </div>
                   </CardLayout>
                 </div>
 
                 {/* Related Submissions */}
                 <div>
-                  <div className="flex items-center justify-between mb-3"><p className="text-[15px] font-bold text-gray-900">Related Submissions</p></div>
+                  <div className="flex items-center justify-between mb-3"><p className="text-[15px] font-bold text-gray-900">Related Submissions</p><button><Icon icon="edit" size="MEDIUM" color="ACCENT" /></button></div>
                   <CardLayout padding="STANDARD" showShadow={true} showBorder={false} shape="SEMI_ROUNDED">
-                    <div className="flex items-center justify-between mb-2"><span className="text-[12px] text-gray-400">3 related submissions</span></div>
-                    <div className="flex items-center gap-3 py-2 border-b border-gray-100">
-                      <StampField icon="file-text" backgroundColor="#E8E7FD" contentColor="#2322F0" size="SMALL" marginBelow="NONE" />
-                      <div><p className="text-[13px] font-semibold text-[#2322F0] hover:underline cursor-pointer">SUB0401XUSC</p><p className="text-[12px] text-gray-400">Renewal · Bound 4/1/2025</p></div>
+                    <div className="py-2 border-b border-gray-100">
+                      <p className="text-[13px] font-semibold text-[#2322F0] hover:underline cursor-pointer">SUB0401XUSC — Acme Corp Property</p><p className="text-[12px] text-gray-400">Renewal · Bound 4/1/2025</p>
                     </div>
-                    <div className="flex items-center gap-3 py-2 border-b border-gray-100">
-                      <StampField icon="file-text" backgroundColor="#E8E7FD" contentColor="#2322F0" size="SMALL" marginBelow="NONE" />
-                      <div><p className="text-[13px] font-semibold text-[#2322F0] hover:underline cursor-pointer">SUB0312PRPC</p><p className="text-[12px] text-gray-400">New Business · Quoted 3/12/2025</p></div>
+                    <div className="py-2 border-b border-gray-100">
+                      <p className="text-[13px] font-semibold text-[#2322F0] hover:underline cursor-pointer">SUB0312PRPC — Pacific Retail Workers Comp</p><p className="text-[12px] text-gray-400">New Business · Quoted 3/12/2025</p>
                     </div>
-                    <div className="flex items-center gap-3 py-2">
-                      <StampField icon="file-text" backgroundColor="#E8E7FD" contentColor="#2322F0" size="SMALL" marginBelow="NONE" />
-                      <div><p className="text-[13px] font-semibold text-[#2322F0] hover:underline cursor-pointer">SUB0228GLXS</p><p className="text-[12px] text-gray-400">Renewal · Bound 2/28/2025</p></div>
+                    <div className="py-2">
+                      <p className="text-[13px] font-semibold text-[#2322F0] hover:underline cursor-pointer">SUB0228GLXS — Global Logistics Auto Fleet</p><p className="text-[12px] text-gray-400">Renewal · Bound 2/28/2025</p>
                     </div>
                   </CardLayout>
                 </div>
@@ -1465,7 +1434,7 @@ function SubmissionSummaryView({ onBack, subId, subTitle }: { onBack: () => void
     {(editCoverageOpen || editSubmissionDetailsOpen || editPolicyOpen || editCustBrokerOpen || createTaskOpen) && (
       <div className="fixed inset-0 z-[9999] flex items-center justify-center">
         <div className="absolute inset-0 bg-black/40" onClick={() => { setEditCoverageOpen(false); setEditSubmissionDetailsOpen(false); setEditPolicyOpen(false); setEditCustBrokerOpen(false); setCreateTaskOpen(false) }} />
-        <div className="relative bg-white rounded-lg shadow-xl flex flex-col" style={{ minWidth: 800, height: '70vh' }}>
+        <div className="relative rounded-lg shadow-xl flex flex-col" style={{ minWidth: 800, height: '70vh', backgroundColor: '#FAFAFC' }}>
 
           {/* ── Edit Coverage Details ── */}
           {editCoverageOpen && (<>
@@ -1517,7 +1486,7 @@ function SubmissionSummaryView({ onBack, subId, subTitle }: { onBack: () => void
               <div className="border-t border-gray-200 pt-4 space-y-4">
                 <TextField label="Submission Title" value={editSubTitle} saveInto={(v) => setEditSubTitle(v)} required={true} />
                 <div className="grid grid-cols-2 gap-4">
-                  <DropdownField label="Status" choiceLabels={['In Review', 'Ready to Quote', 'Missing Info', 'On Hold', 'Processing', 'Ready']} choiceValues={['in-review', 'ready-to-quote', 'missing-info', 'on-hold', 'processing', 'ready']} value={editSubStatus} saveInto={(v) => setEditSubStatus(v)} placeholder="Select Status" required={true} />
+                  <DropdownField label="Status" choiceLabels={['Ready', 'Hold', 'In Review', 'Cancelled']} choiceValues={['ready', 'hold', 'in-review', 'cancelled']} value={editSubStatus} saveInto={(v) => setEditSubStatus(v)} placeholder="Select Status" required={true} />
                   <DropdownField label="Assignee" choiceLabels={['Anna Underwriter', 'Dhruva K.', 'John W.', 'Riley H.', 'Robert K.']} choiceValues={['anna-underwriter', 'dhruva-k', 'john-w', 'riley-h', 'robert-k']} value={editSubAssignee} saveInto={(v) => setEditSubAssignee(v)} placeholder="Select Assignee" required={true} />
                 </div>
                 <p className="text-[16px] font-bold text-gray-700 mt-2">Management Liability Info</p>
@@ -1576,7 +1545,7 @@ function SubmissionSummaryView({ onBack, subId, subTitle }: { onBack: () => void
             </div>
             <div className="flex flex-1 min-h-0 border-t border-gray-200">
               {/* Left side nav */}
-              <div className="w-48 flex-shrink-0 border-r border-gray-200 bg-white">
+              <div className="w-48 flex-shrink-0 border-r border-gray-200" style={{ backgroundColor: '#FAFAFC' }}>
                 {([{ key: 'customer' as const, label: 'Customer Information' }, { key: 'broker' as const, label: 'Broker Information' }]).map(t => (
                   <button key={t.key} onClick={() => setEditCustBrokerTab(t.key)}
                     className={`w-full text-left px-5 py-4 text-[13px] transition-colors border-l-[4px] ${
@@ -1591,11 +1560,8 @@ function SubmissionSummaryView({ onBack, subId, subTitle }: { onBack: () => void
                 {editCustBrokerTab === 'customer' && (
                   <div>
                     {/* Customer Information */}
-                    <div className="mb-8">
-                    <CardLayout padding="STANDARD" showShadow={false} showBorder={true} shape="SEMI_ROUNDED" marginBelow="NONE">
-                      <div className="flex items-center justify-between mb-3 -mx-4 -mt-4 px-4 py-2 rounded-t-sm" style={{ backgroundColor: '#E8E7FD' }}>
-                        <span className="text-[14px] font-semibold text-gray-900">Customer Information</span>
-                      </div>
+                    <p className="text-[16px] font-bold text-gray-700 mb-3">Customer Information</p>
+                    <CardLayout padding="STANDARD" showShadow={false} showBorder={true} shape="SEMI_ROUNDED" marginBelow="STANDARD">
                       <div className="space-y-4">
                         <div className="grid grid-cols-2 gap-4"><TextField label="Customer Name" value={editCustName} saveInto={(v) => setEditCustName(v)} required={true} /><DropdownField label="Organization Type" choiceLabels={['Corporation', 'LLC', 'Partnership', 'Sole Proprietorship', 'Non-Profit']} choiceValues={['corporation', 'llc', 'partnership', 'sole-proprietorship', 'non-profit']} value={editCustOrgType} saveInto={(v) => setEditCustOrgType(v)} placeholder="Select Type" required={true} /></div>
                         <div className="grid grid-cols-2 gap-4"><TextField label="SIC Code" value={editCustSicCode} saveInto={(v) => setEditCustSicCode(v)} required={true} /><TextField label="Phone" value={editCustPhone} saveInto={(v) => setEditCustPhone(v)} required={true} /></div>
@@ -1606,48 +1572,35 @@ function SubmissionSummaryView({ onBack, subId, subTitle }: { onBack: () => void
                         <div className="grid grid-cols-2 gap-4"><TextField label="City" value={editCustCity} saveInto={(v) => setEditCustCity(v)} required={true} /><div className="grid grid-cols-2 gap-3"><TextField label="State" value={editCustState} saveInto={(v) => setEditCustState(v)} required={true} /><TextField label="Zip Code" value={editCustZip} saveInto={(v) => setEditCustZip(v)} required={true} /></div></div>
                       </div>
                     </CardLayout>
-                    </div>
                     {/* Point of Contact */}
-                    <div className="mb-8">
+                    <p className="text-[16px] font-bold text-gray-700 mb-3">Point of Contact</p>
                     <CardLayout padding="STANDARD" showShadow={false} showBorder={true} shape="SEMI_ROUNDED" marginBelow="NONE">
-                      <div className="flex items-center justify-between mb-3 -mx-4 -mt-4 px-4 py-2 rounded-t-sm" style={{ backgroundColor: '#E8E7FD' }}>
-                        <span className="text-[14px] font-semibold text-gray-900">Point of Contact</span>
-                      </div>
                       <div className="space-y-4">
                         <div className="grid grid-cols-2 gap-4"><TextField label="Contact Name" value={editCustContactName} saveInto={(v) => setEditCustContactName(v)} required={true} /><TextField label="Contact Email" value={editCustContactEmail} saveInto={(v) => setEditCustContactEmail(v)} required={true} /></div>
                         <div className="grid grid-cols-2 gap-4"><TextField label="Contact Phone" value={editCustContactPhone} saveInto={(v) => setEditCustContactPhone(v)} required={true} /><div /></div>
                       </div>
                     </CardLayout>
-                    </div>
                   </div>
                 )}
                 {editCustBrokerTab === 'broker' && (
                   <div>
                     {/* Broker Details */}
-                    <div className="mb-8">
-                    <CardLayout padding="STANDARD" showShadow={false} showBorder={true} shape="SEMI_ROUNDED" marginBelow="NONE">
-                      <div className="flex items-center justify-between mb-3 -mx-4 -mt-4 px-4 py-2 rounded-t-sm" style={{ backgroundColor: '#E8E7FD' }}>
-                        <span className="text-[14px] font-semibold text-gray-900">Broker Details</span>
-                      </div>
+                    <p className="text-[16px] font-bold text-gray-700 mb-3">Broker Details</p>
+                    <CardLayout padding="STANDARD" showShadow={false} showBorder={true} shape="SEMI_ROUNDED" marginBelow="STANDARD">
                       <div className="space-y-4">
                         <div className="grid grid-cols-2 gap-4"><TextField label="Broker Name" value={editBrokerName} saveInto={(v) => setEditBrokerName(v)} required={true} /><TextField label="Broker Email" value={editBrokerEmail} saveInto={(v) => setEditBrokerEmail(v)} required={true} /></div>
                         <div className="grid grid-cols-2 gap-4"><TextField label="Phone" value={editBrokerPhone} saveInto={(v) => setEditBrokerPhone(v)} required={true} /><div /></div>
                       </div>
                     </CardLayout>
-                    </div>
                     {/* Office Information */}
-                    <div className="mb-8">
+                    <p className="text-[16px] font-bold text-gray-700 mb-3">Office Information</p>
                     <CardLayout padding="STANDARD" showShadow={false} showBorder={true} shape="SEMI_ROUNDED" marginBelow="NONE">
-                      <div className="flex items-center justify-between mb-3 -mx-4 -mt-4 px-4 py-2 rounded-t-sm" style={{ backgroundColor: '#E8E7FD' }}>
-                        <span className="text-[14px] font-semibold text-gray-900">Office Information</span>
-                      </div>
                       <div className="space-y-4">
                         <div className="grid grid-cols-2 gap-4"><TextField label="Office Name" value={editBrokerOfficeName} saveInto={(v) => setEditBrokerOfficeName(v)} required={true} /><TextField label="Office Phone" value={editBrokerOfficePhone} saveInto={(v) => setEditBrokerOfficePhone(v)} required={true} /></div>
                         <div className="grid grid-cols-2 gap-4"><TextField label="Address Line 1" value={editBrokerOfficeAddr1} saveInto={(v) => setEditBrokerOfficeAddr1(v)} required={true} /><TextField label="Address Line 2" value={editBrokerOfficeAddr2} saveInto={(v) => setEditBrokerOfficeAddr2(v)} /></div>
                         <div className="grid grid-cols-2 gap-4"><TextField label="City" value={editBrokerOfficeCity} saveInto={(v) => setEditBrokerOfficeCity(v)} required={true} /><div className="grid grid-cols-2 gap-3"><TextField label="State" value={editBrokerOfficeState} saveInto={(v) => setEditBrokerOfficeState(v)} required={true} /><TextField label="Zip Code" value={editBrokerOfficeZip} saveInto={(v) => setEditBrokerOfficeZip(v)} required={true} /></div></div>
                       </div>
                     </CardLayout>
-                    </div>
                   </div>
                 )}
               </div>
