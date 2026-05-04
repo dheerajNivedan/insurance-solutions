@@ -274,11 +274,6 @@ function CreateSubmissionWizard({ open, onClose, onCreate }: { open: boolean; on
   const [carrierBranch, setCarrierBranch] = useState('')
   const [accountCoordinator, setAccountCoordinator] = useState('')
 
-  const [productOpen, setProductOpen] = useState(true)
-  const [policyOpen, setPolicyOpen] = useState(true)
-  const [brokerOpen, setBrokerOpen] = useState(true)
-  const [customerOpen, setCustomerOpen] = useState(true)
-
   const resetAndClose = () => {
     setStep(1); setProduct(null); setSubmissionType(null); setTitle('')
     setCustomerType('existing'); setCustomerSearch(''); setCustomerName(''); setOrgType(null); setContactEmail(''); setContactName(''); setOfficeType('existing')
@@ -1780,7 +1775,6 @@ export default function InsuranceWorkspace() {
   const [activeView, setActiveView] = useState<'cards' | 'list'>('cards')
   const [dismissedAlerts, setDismissedAlerts] = useState<number[]>([])
   const [rightPaneOpen, setRightPaneOpen] = useState(true)
-  const [statusOpen, setStatusOpen] = useState(true)
   const [todoOpen, setTodoOpen] = useState(true)
   const [alertsOpen, setAlertsOpen] = useState(true)
   const [showCreateModal, setShowCreateModal] = useState(false)
