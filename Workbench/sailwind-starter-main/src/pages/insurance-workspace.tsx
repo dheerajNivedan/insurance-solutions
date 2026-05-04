@@ -567,10 +567,6 @@ function CreateSubmissionWizard({ open, onClose, onCreate }: { open: boolean; on
             {/* ══ Step 2: Additional Info (Management Liability only) ══ */}
             {isMgmtLiability && step === 3 && (
               <div className="mb-8">
-              <CardLayout padding="STANDARD" showShadow={false} showBorder={true} shape="SEMI_ROUNDED" marginBelow="NONE">
-                <div className="flex items-center justify-between mb-3 -mx-4 -mt-4 px-4 py-2 rounded-t-sm cursor-pointer" style={{ backgroundColor: '#E8E7FD' }}>
-                  <span className="text-[15px] font-semibold text-gray-900">Management Liability Info</span>
-                </div>
                 <div className="space-y-4">
                   <div className="grid grid-cols-2 gap-4">
                     <TextField
@@ -582,7 +578,6 @@ function CreateSubmissionWizard({ open, onClose, onCreate }: { open: boolean; on
                     <div />
                   </div>
                 </div>
-              </CardLayout>
               </div>
             )}
 
@@ -853,16 +848,18 @@ function SubmissionSummaryView({ onBack, subId, subTitle }: { onBack: () => void
   const [editBrokerOfficeState, setEditBrokerOfficeState] = useState('VA')
   const [editBrokerOfficeZip, setEditBrokerOfficeZip] = useState('22102')
 
-  const [commentTab, setCommentTab] = useState<'all' | 'pinned'>('all')
+  const [commentTab, setCommentTab] = useState<'all' | 'submission' | 'pinned'>('all')
   const [commentSearch, setCommentSearch] = useState('')
   const [isAddingComment, setIsAddingComment] = useState(false)
   const [newCommentText, setNewCommentText] = useState('')
   const [comments, setComments] = useState([
-    { id: 1, user: 'Anna Underwriter', initials: 'AU', text: 'Customer requested expedited review due to upcoming board meeting. Please prioritize this submission.', date: 'Apr 12, 2026 3:45 PM', pinned: true, edited: false, replies: [
+    { id: 1, user: 'Anna Underwriter', initials: 'AU', text: 'Customer requested expedited review due to upcoming board meeting. Please prioritize this submission.', date: 'Apr 12, 2026 3:45 PM', pinned: true, edited: false, taskId: null as string | null, taskTitle: null as string | null, replies: [
       { id: 11, user: 'Dheeraj Nivedan', initials: 'DN', text: 'Noted. Moving this to the top of the queue.', date: 'Apr 12, 2026 4:10 PM', edited: false },
     ] },
-    { id: 2, user: 'System', initials: 'SY', text: 'ACORD 125 received via email. Documents classified and extraction initiated.', date: 'Apr 10, 2026 9:15 AM', pinned: false, edited: false, replies: [] },
-    { id: 3, user: 'Avinash Thangaretinam', initials: 'AT', text: 'Broker confirmed the total insurance value. Updated the policy details accordingly.', date: 'Apr 8, 2026 11:30 AM', pinned: false, edited: true, replies: [] },
+    { id: 4, user: 'Anna Underwriter', initials: 'AU', text: 'Loss runs uploaded. Waiting for manager referral approval before proceeding to quote.', date: 'Apr 11, 2026 2:20 PM', pinned: false, edited: false, taskId: 'T-001', taskTitle: 'Upload loss runs for Acme Corp', replies: [] },
+    { id: 2, user: 'System', initials: 'SY', text: 'ACORD 125 received via email. Documents classified and extraction initiated.', date: 'Apr 10, 2026 9:15 AM', pinned: false, edited: false, taskId: null as string | null, taskTitle: null as string | null, replies: [] },
+    { id: 5, user: 'Dheeraj Nivedan', initials: 'DN', text: 'Sanctions check cleared. No matches found in OFAC or EU lists.', date: 'Apr 9, 2026 4:50 PM', pinned: false, edited: false, taskId: 'T-002', taskTitle: 'Complete sanctions review for TechStart', replies: [] },
+    { id: 3, user: 'Avinash Thangaretinam', initials: 'AT', text: 'Broker confirmed the total insurance value. Updated the policy details accordingly.', date: 'Apr 8, 2026 11:30 AM', pinned: false, edited: true, taskId: null as string | null, taskTitle: null as string | null, replies: [] },
   ])
   const [chatMessages, setChatMessages] = useState<{ role: 'bot' | 'user'; text: string }[]>([
     { role: 'bot', text: 'Hi! I can help you with this submission. What would you like to know?' },
@@ -876,7 +873,7 @@ function SubmissionSummaryView({ onBack, subId, subTitle }: { onBack: () => void
 
   const submitComment = () => {
     if (!newCommentText.trim()) return
-    setComments(prev => [{ id: Date.now(), user: 'Dheeraj Nivedan', initials: 'DN', text: newCommentText, date: 'Apr 27, 2026 ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), pinned: false, edited: false, replies: [] }, ...prev])
+    setComments(prev => [{ id: Date.now(), user: 'Dheeraj Nivedan', initials: 'DN', text: newCommentText, date: 'Apr 27, 2026 ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), pinned: false, edited: false, taskId: null as string | null, taskTitle: null as string | null, replies: [] }, ...prev])
     setNewCommentText('')
     setIsAddingComment(false)
   }
@@ -885,7 +882,7 @@ function SubmissionSummaryView({ onBack, subId, subTitle }: { onBack: () => void
     setComments(prev => prev.map(c => c.id === id ? { ...c, pinned: !c.pinned } : c))
   }
 
-  const filteredComments = commentTab === 'pinned' ? comments.filter(c => c.pinned) : comments
+  const filteredComments = commentTab === 'pinned' ? comments.filter(c => c.pinned) : commentTab === 'submission' ? comments.filter(c => !c.taskId) : comments
   const searchedComments = commentSearch ? filteredComments.filter(c => c.text.toLowerCase().includes(commentSearch.toLowerCase())) : filteredComments
   const [replyingTo, setReplyingTo] = useState<number | null>(null)
   const [replyText, setReplyText] = useState('')
@@ -1023,9 +1020,9 @@ function SubmissionSummaryView({ onBack, subId, subTitle }: { onBack: () => void
                 <div>
                   <div className="flex items-center justify-between mb-3"><p className="text-[15px] font-bold text-gray-900">Customer and Broker Information</p><button onClick={() => { setEditCustBrokerTab(overviewTab === 'broker' ? 'broker' : 'customer'); setEditCustBrokerOpen(true) }}><Icon icon="edit" size="MEDIUM" color="ACCENT" /></button></div>
                   <CardLayout padding="MORE" showShadow={true} showBorder={false} shape="SEMI_ROUNDED">
-                    <div className="flex gap-6 border-b border-gray-200 mb-4 px-2">
-                      <button onClick={() => setOverviewTab('customer')} className={`pb-2 text-[13px] font-medium border-b-[3px] -mb-[1px] transition-colors ${overviewTab === 'customer' ? 'text-gray-900 font-bold border-[#2322F0]' : 'text-gray-400 border-transparent hover:text-gray-600'}`}>Customer</button>
-                      <button onClick={() => setOverviewTab('broker')} className={`pb-2 text-[13px] font-medium border-b-[3px] -mb-[1px] transition-colors ${overviewTab === 'broker' ? 'text-gray-900 font-bold border-[#2322F0]' : 'text-gray-400 border-transparent hover:text-gray-600'}`}>Broker</button>
+                    <div className="flex border-b border-gray-200 mb-4 -mx-5">
+                      <button onClick={() => setOverviewTab('customer')} className={`px-6 pb-2 text-[13px] font-medium border-b-[3px] -mb-[1px] transition-colors ${overviewTab === 'customer' ? 'text-gray-900 font-bold border-[#2322F0]' : 'text-gray-400 border-transparent hover:text-gray-600'}`}>Customer</button>
+                      <button onClick={() => setOverviewTab('broker')} className={`px-6 pb-2 text-[13px] font-medium border-b-[3px] -mb-[1px] transition-colors ${overviewTab === 'broker' ? 'text-gray-900 font-bold border-[#2322F0]' : 'text-gray-400 border-transparent hover:text-gray-600'}`}>Broker</button>
                     </div>
                     {overviewTab === 'customer' ? (
                       <div className="space-y-5">
@@ -1147,9 +1144,10 @@ function SubmissionSummaryView({ onBack, subId, subTitle }: { onBack: () => void
                   <p className="text-[15px] font-bold text-gray-900 mb-3">Comments</p>
                   <CardLayout padding="STANDARD" showShadow={true} showBorder={false} shape="SEMI_ROUNDED">
                     {/* Tabs */}
-                    <div className="flex gap-6 border-b border-gray-200 mb-3 px-2">
-                      <button onClick={() => setCommentTab('all')} className={`pb-2 text-[13px] font-medium border-b-[3px] -mb-[1px] transition-colors ${commentTab === 'all' ? 'text-gray-900 font-bold border-[#2322F0]' : 'text-gray-400 border-transparent hover:text-gray-600'}`}>All</button>
-                      <button onClick={() => setCommentTab('pinned')} className={`pb-2 text-[13px] font-medium border-b-[3px] -mb-[1px] transition-colors ${commentTab === 'pinned' ? 'text-gray-900 font-bold border-[#2322F0]' : 'text-gray-400 border-transparent hover:text-gray-600'}`}>Pinned</button>
+                    <div className="flex border-b border-gray-200 mb-3 -mx-4">
+                      <button onClick={() => setCommentTab('all')} className={`px-6 pb-2 text-[13px] font-medium border-b-[3px] -mb-[1px] transition-colors ${commentTab === 'all' ? 'text-gray-900 font-bold border-[#2322F0]' : 'text-gray-400 border-transparent hover:text-gray-600'}`}>All</button>
+                      <button onClick={() => setCommentTab('submission')} className={`px-6 pb-2 text-[13px] font-medium border-b-[3px] -mb-[1px] transition-colors ${commentTab === 'submission' ? 'text-gray-900 font-bold border-[#2322F0]' : 'text-gray-400 border-transparent hover:text-gray-600'}`}>Submission</button>
+                      <button onClick={() => setCommentTab('pinned')} className={`px-6 pb-2 text-[13px] font-medium border-b-[3px] -mb-[1px] transition-colors ${commentTab === 'pinned' ? 'text-gray-900 font-bold border-[#2322F0]' : 'text-gray-400 border-transparent hover:text-gray-600'}`}>Pinned</button>
                     </div>
 
                     {/* Add Comment button + Search row */}
@@ -1233,6 +1231,9 @@ function SubmissionSummaryView({ onBack, subId, subTitle }: { onBack: () => void
                               <div className="flex items-center justify-between">
                                 <div>
                                   <span className="text-[13px] font-semibold text-gray-900">{comment.user}</span>
+                                  {comment.taskId && commentTab === 'all' && (
+                                    <span className="text-[12px] text-gray-400"> on <span className="text-[#2322F0] font-medium cursor-pointer hover:underline">{comment.taskTitle}</span></span>
+                                  )}
                                   <p className="text-[11px] text-gray-400">{comment.date}{comment.edited ? ' (edited)' : ''}</p>
                                 </div>
                                 <div className="flex items-center gap-2">
@@ -1345,9 +1346,9 @@ function SubmissionSummaryView({ onBack, subId, subTitle }: { onBack: () => void
                 <div>
                   <div className="flex items-center justify-between mb-3"><p className="text-[15px] font-bold text-gray-900">Tasks</p><button title="Create Task" className="text-[#2322F0] hover:opacity-80" onClick={() => setCreateTaskOpen(true)}><PlusCircle size={20} /></button></div>
                   <CardLayout padding="STANDARD" showShadow={true} showBorder={false} shape="SEMI_ROUNDED">
-                    <div className="flex gap-6 border-b border-gray-200 mb-3 px-2">
+                    <div className="flex border-b border-gray-200 mb-3 -mx-4">
                       {([{ key: 'open' as const, label: 'Active' }, { key: 'completed' as const, label: 'Resolved' }]).map(t => (
-                        <button key={t.key} onClick={() => setTaskTab(t.key)} className={`pb-2 text-[13px] font-medium border-b-[3px] -mb-[1px] transition-colors ${taskTab === t.key ? 'text-gray-900 font-bold border-[#2322F0]' : 'text-gray-400 border-transparent hover:text-gray-600'}`}>{t.label}</button>
+                        <button key={t.key} onClick={() => setTaskTab(t.key)} className={`px-6 pb-2 text-[13px] font-medium border-b-[3px] -mb-[1px] transition-colors ${taskTab === t.key ? 'text-gray-900 font-bold border-[#2322F0]' : 'text-gray-400 border-transparent hover:text-gray-600'}`}>{t.label}</button>
                       ))}
                     </div>
                     <table className="w-full text-left table-fixed">
@@ -2003,6 +2004,7 @@ export default function InsuranceWorkspace() {
             {/* ═══ DASHBOARD ═══ */}
             {contentTab === 'dashboard' && (
               <div className="space-y-5">
+                <p className="text-[15px] font-bold text-gray-900">Submissions Overview</p>
                 {/* Persona Toggle */}
                 <div className="flex items-center justify-between">
                   <div className="flex border border-gray-300 rounded-md overflow-hidden">
@@ -2044,7 +2046,7 @@ export default function InsuranceWorkspace() {
 
                 {/* ── Row 2: Pie Chart + Bar Chart ── */}
                 <div className="grid grid-cols-2 gap-5">
-                  <CardLayout padding="MORE" showShadow={true}>
+                  <CardLayout padding="MORE" showShadow={true} showBorder={false}>
                     <RichTextDisplayField value={[<TextItem key="h" text="Submission Status" size="MEDIUM" style="STRONG" />]} marginBelow="LESS" />
                     <RichTextDisplayField value={[<TextItem key="sub" text="Distribution of 40 active submissions" size="SMALL" color="SECONDARY" />]} marginBelow="STANDARD" />
                     <ResponsiveContainer width="100%" height={280}>
@@ -2060,7 +2062,7 @@ export default function InsuranceWorkspace() {
                     </ResponsiveContainer>
                   </CardLayout>
 
-                  <CardLayout padding="MORE" showShadow={true}>
+                  <CardLayout padding="MORE" showShadow={true} showBorder={false}>
                     <RichTextDisplayField value={[<TextItem key="h" text="Volume by Line of Business" size="MEDIUM" style="STRONG" />]} marginBelow="LESS" />
                     <RichTextDisplayField value={[<TextItem key="sub" text="Submissions by LOB" size="SMALL" color="SECONDARY" />]} marginBelow="STANDARD" />
                     <ResponsiveContainer width="100%" height={280}>
@@ -2077,7 +2079,7 @@ export default function InsuranceWorkspace() {
 
                 {/* ── Row 3: My Pipeline + Upcoming Renewals ── */}
                 <div className="grid grid-cols-2 gap-5">
-                  <CardLayout padding="MORE" showShadow={true}>
+                  <CardLayout padding="MORE" showShadow={true} showBorder={false}>
                     <RichTextDisplayField value={[<TextItem key="h" text="My Submission Pipeline" size="MEDIUM" style="STRONG" />]} marginBelow="LESS" />
                     <RichTextDisplayField value={[<TextItem key="sub" text="Your submissions by current status" size="SMALL" color="SECONDARY" />]} marginBelow="STANDARD" />
                     <ResponsiveContainer width="100%" height={280}>
@@ -2098,7 +2100,7 @@ export default function InsuranceWorkspace() {
                     </ResponsiveContainer>
                   </CardLayout>
 
-                  <CardLayout padding="MORE" showShadow={true}>
+                  <CardLayout padding="MORE" showShadow={true} showBorder={false}>
                     <RichTextDisplayField value={[<TextItem key="h" text="Upcoming Renewals" size="MEDIUM" style="STRONG" />]} marginBelow="LESS" />
                     <RichTextDisplayField value={[<TextItem key="sub" text="Submissions approaching renewal date" size="SMALL" color="SECONDARY" />]} marginBelow="STANDARD" />
                     <div className="space-y-0">
@@ -2125,7 +2127,7 @@ export default function InsuranceWorkspace() {
                 </div>
 
                 {/* ── Row 4: Line Chart — Cycle Time Trend ── */}
-                <CardLayout padding="MORE" showShadow={true}>
+                <CardLayout padding="MORE" showShadow={true} showBorder={false}>
                   <RichTextDisplayField value={[<TextItem key="h" text="Avg. Cycle Time Trend" size="MEDIUM" style="STRONG" />]} marginBelow="LESS" />
                   <RichTextDisplayField value={[<TextItem key="sub" text="Average days to decision over the last 6 months" size="SMALL" color="SECONDARY" />]} marginBelow="STANDARD" />
                   <ResponsiveContainer width="100%" height={220}>
@@ -2145,7 +2147,7 @@ export default function InsuranceWorkspace() {
 
                 {/* Team Workload + Status Breakdown */}
                 <div className="grid grid-cols-2 gap-5">
-                  <CardLayout padding="MORE" showShadow={true}>
+                  <CardLayout padding="MORE" showShadow={true} showBorder={false}>
                     <RichTextDisplayField value={[<TextItem key="h" text="Team Workload" size="MEDIUM" style="STRONG" />]} marginBelow="LESS" />
                     <RichTextDisplayField value={[<TextItem key="sub" text="Submissions per underwriter" size="SMALL" color="SECONDARY" />]} marginBelow="STANDARD" />
                     <ResponsiveContainer width="100%" height={280}>
@@ -2161,7 +2163,7 @@ export default function InsuranceWorkspace() {
                     </ResponsiveContainer>
                   </CardLayout>
 
-                  <CardLayout padding="MORE" showShadow={true}>
+                  <CardLayout padding="MORE" showShadow={true} showBorder={false}>
                     <RichTextDisplayField value={[<TextItem key="h" text="Submission Assignment" size="MEDIUM" style="STRONG" />]} marginBelow="LESS" />
                     <RichTextDisplayField value={[<TextItem key="sub" text="Distribution by underwriter" size="SMALL" color="SECONDARY" />]} marginBelow="STANDARD" />
                     <ResponsiveContainer width="100%" height={280}>
@@ -2181,7 +2183,7 @@ export default function InsuranceWorkspace() {
 
                 {/* Cycle Time + Assignment Distribution */}
                 <div className="grid grid-cols-2 gap-5">
-                  <CardLayout padding="MORE" showShadow={true}>
+                  <CardLayout padding="MORE" showShadow={true} showBorder={false}>
                     <RichTextDisplayField value={[<TextItem key="h" text="Avg. Cycle Time Trend" size="MEDIUM" style="STRONG" />]} marginBelow="LESS" />
                     <RichTextDisplayField value={[<TextItem key="sub" text="Days to decision over 6 months" size="SMALL" color="SECONDARY" />]} marginBelow="STANDARD" />
                     <ResponsiveContainer width="100%" height={220}>
@@ -2195,7 +2197,7 @@ export default function InsuranceWorkspace() {
                     </ResponsiveContainer>
                   </CardLayout>
 
-                  <CardLayout padding="MORE" showShadow={true}>
+                  <CardLayout padding="MORE" showShadow={true} showBorder={false}>
                     <RichTextDisplayField value={[<TextItem key="h" text="Volume by LOB" size="MEDIUM" style="STRONG" />]} marginBelow="LESS" />
                     <RichTextDisplayField value={[<TextItem key="sub" text="Team-wide submission distribution" size="SMALL" color="SECONDARY" />]} marginBelow="STANDARD" />
                     <ResponsiveContainer width="100%" height={220}>
@@ -2281,18 +2283,14 @@ export default function InsuranceWorkspace() {
 
           {/* ═══ DASHBOARD RIGHT PANE ═══ */}
           {contentTab === 'dashboard' && (<>
-            <div className="flex items-center justify-between mb-3 pb-2 border-b border-gray-200 flex-shrink-0">
+            <div className="flex items-center justify-between mb-3 flex-shrink-0">
               <p className="text-[15px] font-bold text-gray-900">Task Overview</p>
               <button onClick={() => setRightPaneOpen(false)} className="text-gray-400 hover:text-gray-600"><PanelRightClose size={16} /></button>
             </div>
 
             {/* Task Status — donut */}
-            <CardLayout padding="STANDARD" showShadow={false} showBorder={true} shape="SEMI_ROUNDED" marginBelow="STANDARD">
-              <div className="flex items-center justify-between mb-3 -mx-4 -mt-4 px-4 py-2 rounded-t-sm cursor-pointer" style={{ backgroundColor: '#E8E7FD' }} onClick={() => setStatusOpen(!statusOpen)}>
-                <span className="text-[15px] font-semibold text-gray-900">Task Status</span>
-                <ChevronDown size={16} className={`text-gray-400 transition-transform ${statusOpen ? '' : '-rotate-90'}`} />
-              </div>
-              {statusOpen && (
+            <CardLayout padding="MORE" showShadow={true} showBorder={false} shape="SEMI_ROUNDED" marginBelow="STANDARD">
+              <RichTextDisplayField value={[<TextItem key="h" text="Task Status" size="MEDIUM" style="STRONG" />]} marginBelow="STANDARD" />
               <ResponsiveContainer width="100%" height={200}>
                 <PieChart>
                   <Pie data={taskStatusData} cx="50%" cy="45%" innerRadius={45} outerRadius={65} dataKey="value" paddingAngle={3} stroke="none" isAnimationActive={false}>
@@ -2304,14 +2302,11 @@ export default function InsuranceWorkspace() {
                   <Legend verticalAlign="bottom" height={40} iconType="circle" iconSize={7} wrapperStyle={{ fontSize: 11, paddingTop: 8 }} formatter={(value: string) => <span style={{ color: '#111827' }}>{value}</span>} />
                 </PieChart>
               </ResponsiveContainer>
-              )}
             </CardLayout>
 
             {/* Tasks by Type — vertical bar */}
-            <CardLayout padding="STANDARD" showShadow={false} showBorder={true} shape="SEMI_ROUNDED" marginBelow="STANDARD">
-              <div className="flex items-center justify-between mb-3 -mx-4 -mt-4 px-4 py-2 rounded-t-sm" style={{ backgroundColor: '#E8E7FD' }}>
-                <span className="text-[15px] font-semibold text-gray-900">Tasks by Type</span>
-              </div>
+            <CardLayout padding="MORE" showShadow={true} showBorder={false} shape="SEMI_ROUNDED" marginBelow="STANDARD">
+              <RichTextDisplayField value={[<TextItem key="h" text="Tasks by Type" size="MEDIUM" style="STRONG" />]} marginBelow="STANDARD" />
               <ResponsiveContainer width="100%" height={220}>
                 <BarChart data={tasksByTypeData} margin={{ left: 0, right: 8, top: 0, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" vertical={false} />
@@ -2324,10 +2319,8 @@ export default function InsuranceWorkspace() {
             </CardLayout>
 
             {/* Tasks by Assignee — vertical stacked bar */}
-            <CardLayout padding="STANDARD" showShadow={false} showBorder={true} shape="SEMI_ROUNDED">
-              <div className="flex items-center justify-between mb-3 -mx-4 -mt-4 px-4 py-2 rounded-t-sm" style={{ backgroundColor: '#E8E7FD' }}>
-                <span className="text-[15px] font-semibold text-gray-900">Tasks by Assignee</span>
-              </div>
+            <CardLayout padding="MORE" showShadow={true} showBorder={false} shape="SEMI_ROUNDED">
+              <RichTextDisplayField value={[<TextItem key="h" text="Tasks by Assignee" size="MEDIUM" style="STRONG" />]} marginBelow="STANDARD" />
               <ResponsiveContainer width="100%" height={240}>
                 <BarChart data={tasksByAssigneeData} margin={{ left: 0, right: 8, top: 0, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" vertical={false} />

@@ -243,7 +243,9 @@ div[role="dialog"] .space-y-4 .mb-2 {
 
 /* Required asterisk in accent blue */
 div[role="dialog"] label span.text-red-700,
-div[role="dialog"] label span.text-red-500 {
+div[role="dialog"] label span.text-red-500,
+.fixed.inset-0 label span.text-red-700,
+.fixed.inset-0 label span.text-red-500 {
   color: #2322F0 !important;
 }
 
